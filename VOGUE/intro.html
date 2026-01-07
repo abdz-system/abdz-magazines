@@ -1,123 +1,97 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ABDZ — Porte d’ouverture</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABDZ — Porte d’ouverture</title>
+
+<style>
     body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: radial-gradient(circle at top, #3a2b1a 0%, #000 60%);
-      color: #f5e5c8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        color: white;
+        background: radial-gradient(circle at top, #3a2d1a 0%, #000 70%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 
-    .wrapper {
-      max-width: 900px;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-      text-align: center;
+    .container {
+        max-width: 900px;
+        padding: 20px;
     }
 
     h1 {
-      font-size: 26px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
+        font-size: 26px;
+        margin-bottom: 10px;
+        letter-spacing: 2px;
     }
 
     p {
-      font-size: 15px;
-      line-height: 1.5;
-      margin-bottom: 20px;
-      opacity: 0.9;
+        font-size: 16px;
+        line-height: 1.5;
+        opacity: 0.9;
+        margin-bottom: 20px;
     }
 
-    .video-frame {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 16px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-      margin-bottom: 25px;
+    .video-wrapper {
+        max-width: 800px;
+        margin: 0 auto 25px auto;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
 
-    .video-frame iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      border-radius: 16px;
+    video {
+        width: 100%;
+        height: auto;
+        display: block;
+        background: black;
     }
 
-    .cta {
-      margin-top: 10px;
+    a.cta {
+        display: inline-block;
+        margin-top: 5px;
+        padding: 12px 26px;
+        background: #b48b43;
+        color: white;
+        font-size: 15px;
+        border-radius: 999px;
+        text-decoration: none;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        transition: 0.3s;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
 
-    .cta a {
-      display: inline-block;
-      padding: 12px 28px;
-      background: #000;
-      color: #f5e5c8;
-      text-decoration: none;
-      border-radius: 999px;
-      font-size: 15px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      border: 1px solid #f5e5c8;
-      transition: 0.2s;
+    a.cta:hover {
+        background: #d4a64d;
+        transform: translateY(-3px);
     }
-
-    .cta a:hover {
-      background: #b38b2b;
-      color: #000;
-      border-color: #b38b2b;
-    }
-
-    .hint {
-      font-size: 12px;
-      opacity: 0.7;
-      margin-top: 6px;
-    }
-  </style>
+</style>
 </head>
+
 <body>
+<div class="container">
 
-<div class="wrapper">
-  <h1>ABDZ — Porte d’ouverture</h1>
-  <p>
-    Quelques secondes pour ouvrir la sphère, voir le mouvement, 
-    puis entrer dans mon univers VOGUE.
-  </p>
+    <h1>ABDZ — PORTE D’OUVERTURE</h1>
 
-  <div class="video-frame">
-    <iframe 
-      src="https://drive.google.com/file/d/1sfy73Rc2_L7TjPeSUmzU3o0IHSVtnMSS/preview"
-      allow="autoplay"
-      allowfullscreen>
-    </iframe>
-  </div>
+    <p>Une sphère qui s’ouvre, puis un magazine à découvrir.</p>
 
-  <div class="cta">
-    <a href="./index.html">Entrer dans le magazine VOGUE</a>
-    <div class="hint">(Si la vidéo ne se lance pas automatiquement, cliquez sur ▶ puis sur le bouton.)</div>
-  </div>
+    <!-- 🎬 VIDÉO DE LA SPHÈRE -->
+    <div class="video-wrapper">
+        <video autoplay muted playsinline controls>
+            <source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
+            Votre navigateur ne peut pas lire cette vidéo.
+        </video>
+    </div>
+
+    <!-- 🔗 BOUTON VERS LE MAGAZINE -->
+    <a class="cta" href="index.html">ENTRER DANS LE MAGAZINE VOGUE</a>
+
 </div>
-
-<script>
-  setTimeout(function () {
-    window.location.href = "./index.html";
-  }, 8000);
-</script>
-
 </body>
 </html>
