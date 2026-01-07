@@ -1,281 +1,149 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>VOGUE — ABDZ</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      * {
-        box-sizing: border-box;
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VOGUE — ABDZ</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
         margin: 0;
         padding: 0;
-      }
+    }
 
-      body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-        background: #f3f3f3;
-        color: #111;
-      }
+    .viewer {
+        max-width: 900px;
+        margin: 40px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        position: relative;
+    }
 
-      .viewer-wrapper {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
-
-      .viewer {
-        padding: 32px 16px 16px;
-        display: flex;
-        justify-content: center;
-      }
-
-      .page {
+    .page {
         display: none;
-        align-items: center;
-        justify-content: center;
-        gap: 32px;
-        max-width: 1120px;
-        width: 100%;
-        margin: 0 auto;
-      }
+        text-align: center;
+    }
 
-      .page.active {
+    .page img {
+        max-width: 90%;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .nav-buttons {
+        margin-top: 20px;
         display: flex;
-      }
-
-      /* Pages "duo" (image + texte) */
-      .page--spread {
-        flex-direction: row;
-      }
-
-      .page--spread .page-image-wrapper {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-      }
-
-      .page--spread img {
-        width: 100%;
-        max-width: 520px;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-        background: #fff;
-      }
-
-      /* Pages "solo" (couverture / dernière couverture) */
-      .page--solo {
-        flex-direction: column;
-      }
-
-      .page--solo img {
-        width: 100%;
-        max-width: 520px;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-        background: #fff;
-      }
-
-      /* Navigation */
-      .nav-bar {
-        border-top: 1px solid #ddd;
-        background: #f8f8f8;
-        padding: 12px 16px 16px;
-        display: flex;
-        justify-content: center;
-      }
-
-      .nav-inner {
-        width: 100%;
-        max-width: 1120px;
-        display: flex;
-        align-items: center;
         justify-content: space-between;
-        gap: 16px;
-      }
+    }
 
-      .nav-buttons {
-        display: flex;
-        gap: 8px;
-      }
-
-      button.nav-btn {
+    button {
+        background: black;
+        color: white;
+        padding: 10px 20px;
         border: none;
-        border-radius: 999px;
-        padding: 8px 18px;
+        border-radius: 8px;
         cursor: pointer;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #b30000;
+    }
+
+    .page-number {
+        margin-top: 10px;
         font-size: 14px;
-        font-weight: 500;
-        background: #111;
-        color: #fff;
-        transition: background 0.15s, transform 0.1s;
-      }
+        color: #5a5a5a;
+    }
+</style>
 
-      button.nav-btn:hover:not(:disabled) {
-        background: #333;
-        transform: translateY(-1px);
-      }
+</head>
+<body>
 
-      button.nav-btn:disabled {
-        background: #ddd;
-        color: #888;
-        cursor: default;
-      }
+<div class="viewer">
 
-      .page-indicator {
-        font-size: 13px;
-        color: #555;
-        white-space: nowrap;
-      }
-
-      @media (max-width: 900px) {
-        .page--spread {
-          flex-direction: column;
-        }
-      }
-
-      @media (max-width: 600px) {
-        .viewer {
-          padding: 16px 8px 8px;
-        }
-
-        .page {
-          gap: 16px;
-        }
-
-        .nav-inner {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .nav-buttons {
-          justify-content: center;
-        }
-
-        .page-indicator {
-          text-align: center;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="viewer-wrapper">
-      <main class="viewer">
-        <!-- Page 1 : Couverture seule -->
-        <section class="page page--solo active">
-          <img src="IMAGES/couverture.png" alt="Couverture VOGUE" />
-        </section>
-
-        <!-- Page 2 : Image 1 + Texte 1 -->
-        <section class="page page--spread">
-          <div class="page-image-wrapper">
-            <img src="IMAGES/1.png" alt="Visuel 1" />
-          </div>
-          <div class="page-image-wrapper">
-            <img src="TEXTES/texte-01.png" alt="Texte 1" />
-          </div>
-        </section>
-
-        <!-- Page 3 : Image 2 + Texte 2 -->
-        <section class="page page--spread">
-          <div class="page-image-wrapper">
-            <img src="IMAGES/2.png" alt="Visuel 2" />
-          </div>
-          <div class="page-image-wrapper">
-            <img src="TEXTES/texte-02.png" alt="Texte 2" />
-          </div>
-        </section>
-
-        <!-- Page 4 : Image 3 + Texte 3 -->
-        <section class="page page--spread">
-          <div class="page-image-wrapper">
-            <img src="IMAGES/3.png" alt="Visuel 3" />
-          </div>
-          <div class="page-image-wrapper">
-            <img src="TEXTES/texte-03.png" alt="Texte 3" />
-          </div>
-        </section>
-
-        <!-- Page 5 : Image 4 + Texte 4 -->
-        <section class="page page--spread">
-          <div class="page-image-wrapper">
-            <img src="IMAGES/4.png" alt="Visuel 4" />
-          </div>
-          <div class="page-image-wrapper">
-            <img src="TEXTES/texte-04.png" alt="Texte 4" />
-          </div>
-        </section>
-
-        <!-- Page 6 : Image 5 + Texte 5 -->
-        <section class="page page--spread">
-          <div class="page-image-wrapper">
-            <img src="IMAGES/5.png" alt="Visuel 5" />
-          </div>
-          <div class="page-image-wrapper">
-            <img src="TEXTES/texte-05.png" alt="Texte 5" />
-          </div>
-        </section>
-
-        <!-- Page 7 : Dernière couverture seule -->
-        <section class="page page--solo">
-          <img
-            src="IMAGES/derniere-couverture.png"
-            alt="Dernière couverture - Me contacter"
-          />
-        </section>
-      </main>
-
-      <!-- Barre de navigation -->
-      <footer class="nav-bar">
-        <div class="nav-inner">
-          <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn">← Page précédente</button>
-            <button class="nav-btn" id="nextBtn">Page suivante →</button>
-          </div>
-          <div class="page-indicator" id="pageIndicator">Page 1 / 7</div>
-        </div>
-      </footer>
+    <!-- PAGE 1 : COUVERTURE -->
+    <div class="page">
+        <img src="IMAGES/couverture.png" alt="Couverture">
     </div>
 
-    <script>
-      const pages = Array.from(document.querySelectorAll(".page"));
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
-      const pageIndicator = document.getElementById("pageIndicator");
+    <!-- PAGE 2 -->
+    <div class="page">
+        <img src="IMAGES/1.png" alt="">
+        <img src="TEXTES/texte-01.png" alt="">
+    </div>
 
-      let current = 0;
+    <!-- PAGE 3 -->
+    <div class="page">
+        <img src="IMAGES/2.png" alt="">
+        <img src="TEXTES/texte-02.png" alt="">
+    </div>
 
-      function updateViewer() {
-        pages.forEach((page, index) => {
-          page.classList.toggle("active", index === current);
-        });
+    <!-- PAGE 4 -->
+    <div class="page">
+        <img src="IMAGES/3.png" alt="">
+        <img src="TEXTES/texte-03.png" alt="">
+    </div>
 
-        const total = pages.length;
-        pageIndicator.textContent = `Page ${current + 1} / ${total}`;
+    <!-- PAGE 5 -->
+    <div class="page">
+        <img src="IMAGES/4.png" alt="">
+        <img src="TEXTES/texte-04.png" alt="">
+    </div>
 
-        prevBtn.disabled = current === 0;
-        nextBtn.disabled = current === total - 1;
-      }
+    <!-- PAGE 6 -->
+    <div class="page">
+        <img src="IMAGES/5.png" alt="">
+        <img src="TEXTES/texte-05.png" alt="">
+    </div>
 
-      prevBtn.addEventListener("click", () => {
-        if (current > 0) {
-          current--;
-          updateViewer();
+    <!-- PAGE 7 : DERNIÈRE COUVERTURE -->
+    <div class="page">
+        <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
+    </div>
+
+    <div class="nav-buttons">
+        <button onclick="prevPage()">← Page précédente</button>
+        <button onclick="nextPage()">Page suivante →</button>
+    </div>
+
+    <div class="page-number" id="pageNumber"></div>
+
+</div>
+
+
+<script>
+    let currentPage = 0;
+    const pages = document.querySelectorAll('.page');
+    const pageNumber = document.getElementById('pageNumber');
+
+    function showPage(n) {
+        pages.forEach(p => p.style.display = "none");
+        pages[n].style.display = "block";
+        pageNumber.textContent = "Page " + (n+1) + " / " + pages.length;
+    }
+
+    function nextPage() {
+        if (currentPage < pages.length - 1) {
+            currentPage++;
+            showPage(currentPage);
         }
-      });
+    }
 
-      nextBtn.addEventListener("click", () => {
-        if (current < pages.length - 1) {
-          current++;
-          updateViewer();
+    function prevPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            showPage(currentPage);
         }
-      });
+    }
 
-      // Sécurité au cas où
-      updateViewer();
-    </script>
-  </body>
+    showPage(0);
+</script>
+
+</body>
 </html>
