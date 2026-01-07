@@ -32,6 +32,7 @@
         max-width: 90%;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        margin: 0 10px;
     }
 
     .nav-buttons {
@@ -127,18 +128,18 @@
         pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
     }
 
-    // ➜ ICI la modif : on boucle au lieu de bloquer
+    // 👉 ICI on a modifié pour que ça boucle
     function nextPage() {
-        currentPage = (currentPage + 1) % pages.length;      // après la 7 → retourne à 0
+        currentPage = (currentPage + 1) % pages.length; // après la 7 → revient à 0
         showPage(currentPage);
     }
 
     function prevPage() {
-        currentPage = (currentPage - 1 + pages.length) % pages.length; // avant la 1 → va à la 7
+        currentPage = (currentPage - 1 + pages.length) % pages.length; // avant la 0 → va à la 7
         showPage(currentPage);
     }
 
-    // On démarre sur la couverture
+    // On affiche la couverture au chargement
     showPage(0);
 </script>
 
