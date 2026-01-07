@@ -15,7 +15,7 @@
 
     .viewer {
         max-width: 900px;
-        margin: 40px auto;
+        margin: 0 auto;              /* collé en haut */
         background: white;
         padding: 20px;
         border-radius: 20px;
@@ -80,6 +80,49 @@
         margin-top: 10px;
         font-size: 14px;
         color: #5a5a5a;
+    }
+
+    /* ===== MODE MOBILE / TABLETTE ===== */
+    @media (max-width: 768px) {
+
+        body {
+            background: #f2f2f2;
+        }
+
+        .viewer {
+            max-width: 100%;
+            margin: 0;
+            padding: 10px 5px;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        /* Couvertures un peu plus larges sur petit écran */
+        .page.cover img {
+            max-width: 80%;
+            box-shadow: none;
+        }
+
+        /* Les doubles pages passent en colonne (une au-dessus de l’autre) */
+        .page.double.active {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page.double img {
+            max-width: 100%;
+            box-shadow: none;
+        }
+
+        .nav-buttons {
+            margin-top: 15px;
+        }
+
+        button {
+            width: 48%;
+            padding: 10px;
+            font-size: 14px;
+        }
     }
 </style>
 
