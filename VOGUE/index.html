@@ -3,62 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <title>VOGUE — ABDZ</title>
-
 <style>
 body {
-  margin: 0;
-  background: #ffffff;
-  font-family: Georgia, serif;
+    margin: 0;
+    background: #ffffff;
+    font-family: Arial, sans-serif;
 }
 
+/* Section avec image gauche + texte droite */
 .section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 60px;
-  padding: 80px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin: 80px 0;
 }
 
 .section img {
-  max-width: 480px;
-  height: auto;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    width: 480px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-/* mobile */
-@media (max-width: 900px) {
-  .section {
-    flex-direction: column;
-  }
+/* Couvertures seule (début + fin) */
+.cover-section {
+    text-align: center;
+    margin: 80px 0;
+}
+
+.cover-section img {
+    width: 600px;
+    max-width: 90vw;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.20);
 }
 </style>
 </head>
 
 <body>
 
-<div class="section">
-  <img src="IMAGES/1.png">
-  <img src="TEXTES/texte-01-qui-suis-je.png">
+<!-- 📘 COUVERTURE D'OUVERTURE -->
+<div class="cover-section">
+    <img src="IMAGES/cover.png" alt="Couverture VOGUE">
 </div>
 
+<!-- PAGE 1 -->
 <div class="section">
-  <img src="IMAGES/2.png">
-  <img src="TEXTES/texte-02-ma-vision.png">
+    <img src="IMAGES/1.png" alt="VOGUE visuel 1">
+    <img src="TEXTES/texte-01.png" alt="Texte 1">
 </div>
 
+<!-- PAGE 2 -->
 <div class="section">
-  <img src="IMAGES/3.png">
-  <img src="TEXTES/texte-03-ce-que-j-apporte.png">
+    <img src="IMAGES/2.png" alt="VOGUE visuel 2">
+    <img src="TEXTES/texte-02.png" alt="Texte 2">
 </div>
 
+<!-- PAGE 3 -->
 <div class="section">
-  <img src="IMAGES/4.png">
-  <img src="TEXTES/texte-04-ce-qui-me.png">
+    <img src="IMAGES/3.png" alt="VOGUE visuel 3">
+    <img src="TEXTES/texte-03.png" alt="Texte 3">
 </div>
 
+<!-- PAGE 4 -->
 <div class="section">
-  <img src="IMAGES/5.png">
-  <img src="TEXTES/texte-05-conclusion.png">
+    <img src="IMAGES/4.png" alt="VOGUE visuel 4">
+    <img src="TEXTES/texte-04.png" alt="Texte 4">
+</div>
+
+<!-- PAGE 5 -->
+<div class="section">
+    <img src="IMAGES/5.png" alt="VOGUE visuel 5">
+    <img src="TEXTES/texte-05.png" alt="Texte 5">
+</div>
+
+<!-- ⭐ DERNIÈRE COUVERTURE PHARE -->
+<div class="cover-section">
+    <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture VOGUE">
 </div>
 
 </body>
