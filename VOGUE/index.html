@@ -23,37 +23,36 @@
         position: relative;
     }
 
+    /* Base : toutes les pages sont cachées par défaut */
     .page {
         display: none;
         text-align: center;
     }
 
-    /* Couvertures (début et fin) : une seule image centrée */
+    /* Page ACTIVE (visible) : bloc par défaut */
+    .page.active {
+        display: block;
+    }
+
+    /* Couvertures : une seule image centrée */
     .page.cover img {
-        max-width: 70%;
+        max-width: 90%;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
 
-    /* Pages avec image + texte côte à côte */
-    .page.two-column {
+    /* Pages double (image + texte) */
+    .page.double.active {
+        display: flex;
         justify-content: center;
         gap: 20px;
         align-items: flex-start;
     }
 
-    .page.two-column img {
+    .page.double img {
         max-width: 45%;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-
-    /* Affichage de la page active */
-    .page.active {
-        display: block;
-    }
-    .page.two-column.active {
-        display: flex;
     }
 
     .nav-buttons {
@@ -95,31 +94,31 @@
     </div>
 
     <!-- PAGE 2 -->
-    <div class="page two-column">
+    <div class="page double">
         <img src="IMAGES/1.png" alt="">
         <img src="TEXTES/texte-01.png" alt="">
     </div>
 
     <!-- PAGE 3 -->
-    <div class="page two-column">
+    <div class="page double">
         <img src="IMAGES/2.png" alt="">
         <img src="TEXTES/texte-02.png" alt="">
     </div>
 
     <!-- PAGE 4 -->
-    <div class="page two-column">
+    <div class="page double">
         <img src="IMAGES/3.png" alt="">
         <img src="TEXTES/texte-03.png" alt="">
     </div>
 
     <!-- PAGE 5 -->
-    <div class="page two-column">
+    <div class="page double">
         <img src="IMAGES/4.png" alt="">
         <img src="TEXTES/texte-04.png" alt="">
     </div>
 
     <!-- PAGE 6 -->
-    <div class="page two-column">
+    <div class="page double">
         <img src="IMAGES/5.png" alt="">
         <img src="TEXTES/texte-05.png" alt="">
     </div>
@@ -143,15 +142,17 @@
     const pages = document.querySelectorAll('.page');
     const pageNumber = document.getElementById('pageNumber');
     const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
 
     function showPage(n) {
+        // cacher toutes les pages
         pages.forEach(p => p.classList.remove('active'));
+        // afficher la page voulue
         pages[n].classList.add('active');
 
+        // numéro
         pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
 
-        // cacher le bouton "Page précédente" sur la couverture
+        // cacher la flèche gauche sur la couverture
         if (n === 0) {
             prevBtn.style.visibility = "hidden";
         } else {
@@ -161,7 +162,7 @@
 
     function nextPage() {
         if (currentPage === pages.length - 1) {
-            // dernière page → retour à la couverture
+            // dernière page → retour couverture
             currentPage = 0;
         } else {
             currentPage++;
@@ -176,7 +177,7 @@
         }
     }
 
-    // afficher la première page au chargement
+    // affichage initial
     showPage(0);
 </script>
 
