@@ -15,7 +15,7 @@
 
     .viewer {
         max-width: 900px;
-        margin: 0 auto;              /* collé en haut */
+        margin: 0 auto;              /* centré */
         background: white;
         padding: 20px;
         border-radius: 20px;
@@ -29,7 +29,7 @@
         text-align: center;
     }
 
-    /* Page ACTIVE (visible) : bloc par défaut */
+    /* Page ACTIVE (visible) */
     .page.active {
         display: block;
     }
@@ -41,7 +41,7 @@
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
 
-    /* Pages double (image + texte) */
+    /* Pages doubles (image + texte) */
     .page.double.active {
         display: flex;
         justify-content: center;
@@ -82,8 +82,9 @@
         color: #5a5a5a;
     }
 
-    /* ===== MODE MOBILE / TABLETTE ===== */
-    @media (max-width: 768px) {
+    /* ===== MODE TABLETTE / MOBILE =====
+       (toutes les largeurs <= 1200px, donc ta tablette est incluse) */
+    @media (max-width: 1200px) {
 
         body {
             background: #f2f2f2;
@@ -91,15 +92,16 @@
 
         .viewer {
             max-width: 100%;
+            width: 100%;
             margin: 0;
             padding: 10px 5px;
             border-radius: 0;
             box-shadow: none;
         }
 
-        /* Couvertures un peu plus larges sur petit écran */
+        /* Couvertures plus larges */
         .page.cover img {
-            max-width: 80%;
+            max-width: 90%;
             box-shadow: none;
         }
 
@@ -112,6 +114,7 @@
         .page.double img {
             max-width: 100%;
             box-shadow: none;
+            margin-bottom: 15px;
         }
 
         .nav-buttons {
