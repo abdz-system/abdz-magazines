@@ -28,11 +28,32 @@
         text-align: center;
     }
 
-    .page img {
-        max-width: 90%;
+    /* Couvertures (début et fin) : une seule image centrée */
+    .page.cover img {
+        max-width: 70%;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        margin: 0 10px;
+    }
+
+    /* Pages avec image + texte côte à côte */
+    .page.two-column {
+        justify-content: center;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .page.two-column img {
+        max-width: 45%;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Affichage de la page active */
+    .page.active {
+        display: block;
+    }
+    .page.two-column.active {
+        display: flex;
     }
 
     .nav-buttons {
@@ -69,48 +90,48 @@
 <div class="viewer">
 
     <!-- PAGE 1 : COUVERTURE -->
-    <div class="page">
+    <div class="page cover">
         <img src="IMAGES/couverture.png" alt="Couverture">
     </div>
 
     <!-- PAGE 2 -->
-    <div class="page">
+    <div class="page two-column">
         <img src="IMAGES/1.png" alt="">
         <img src="TEXTES/texte-01.png" alt="">
     </div>
 
     <!-- PAGE 3 -->
-    <div class="page">
+    <div class="page two-column">
         <img src="IMAGES/2.png" alt="">
         <img src="TEXTES/texte-02.png" alt="">
     </div>
 
     <!-- PAGE 4 -->
-    <div class="page">
+    <div class="page two-column">
         <img src="IMAGES/3.png" alt="">
         <img src="TEXTES/texte-03.png" alt="">
     </div>
 
     <!-- PAGE 5 -->
-    <div class="page">
+    <div class="page two-column">
         <img src="IMAGES/4.png" alt="">
         <img src="TEXTES/texte-04.png" alt="">
     </div>
 
     <!-- PAGE 6 -->
-    <div class="page">
+    <div class="page two-column">
         <img src="IMAGES/5.png" alt="">
         <img src="TEXTES/texte-05.png" alt="">
     </div>
 
     <!-- PAGE 7 : DERNIÈRE COUVERTURE -->
-    <div class="page">
+    <div class="page cover">
         <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
     </div>
 
     <div class="nav-buttons">
-        <button onclick="prevPage()">← Page précédente</button>
-        <button onclick="nextPage()">Page suivante →</button>
+        <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
+        <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
     </div>
 
     <div class="page-number" id="pageNumber"></div>
@@ -121,25 +142,41 @@
     let currentPage = 0;
     const pages = document.querySelectorAll('.page');
     const pageNumber = document.getElementById('pageNumber');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
     function showPage(n) {
-        pages.forEach(p => p.style.display = "none");
-        pages[n].style.display = "block";
+        pages.forEach(p => p.classList.remove('active'));
+        pages[n].classList.add('active');
+
         pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
+
+        // cacher le bouton "Page précédente" sur la couverture
+        if (n === 0) {
+            prevBtn.style.visibility = "hidden";
+        } else {
+            prevBtn.style.visibility = "visible";
+        }
     }
 
-    // 👉 ICI on a modifié pour que ça boucle
     function nextPage() {
-        currentPage = (currentPage + 1) % pages.length; // après la 7 → revient à 0
+        if (currentPage === pages.length - 1) {
+            // dernière page → retour à la couverture
+            currentPage = 0;
+        } else {
+            currentPage++;
+        }
         showPage(currentPage);
     }
 
     function prevPage() {
-        currentPage = (currentPage - 1 + pages.length) % pages.length; // avant la 0 → va à la 7
-        showPage(currentPage);
+        if (currentPage > 0) {
+            currentPage--;
+            showPage(currentPage);
+        }
     }
 
-    // On affiche la couverture au chargement
+    // afficher la première page au chargement
     showPage(0);
 </script>
 
