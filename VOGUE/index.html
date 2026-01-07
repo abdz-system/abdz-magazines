@@ -116,7 +116,6 @@
 
 </div>
 
-
 <script>
     let currentPage = 0;
     const pages = document.querySelectorAll('.page');
@@ -125,23 +124,21 @@
     function showPage(n) {
         pages.forEach(p => p.style.display = "none");
         pages[n].style.display = "block";
-        pageNumber.textContent = "Page " + (n+1) + " / " + pages.length;
+        pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
     }
 
+    // ➜ ICI la modif : on boucle au lieu de bloquer
     function nextPage() {
-        if (currentPage < pages.length - 1) {
-            currentPage++;
-            showPage(currentPage);
-        }
+        currentPage = (currentPage + 1) % pages.length;      // après la 7 → retourne à 0
+        showPage(currentPage);
     }
 
     function prevPage() {
-        if (currentPage > 0) {
-            currentPage--;
-            showPage(currentPage);
-        }
+        currentPage = (currentPage - 1 + pages.length) % pages.length; // avant la 1 → va à la 7
+        showPage(currentPage);
     }
 
+    // On démarre sur la couverture
     showPage(0);
 </script>
 
