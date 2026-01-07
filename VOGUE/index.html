@@ -1,86 +1,240 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>VOGUE — ABDZ</title>
-<style>
-body {
-    margin: 0;
-    background: #ffffff;
-    font-family: Arial, sans-serif;
-}
+  <meta charset="UTF-8">
+  <title>VOGUE — ABDZ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-/* Section avec image gauche + texte droite */
-.section {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 40px;
-    margin: 80px 0;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-.section img {
-    width: 480px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-}
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f4f4;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 32px 12px 48px;
+    }
 
-/* Couvertures seule (début + fin) */
-.cover-section {
-    text-align: center;
-    margin: 80px 0;
-}
+    .viewer {
+      width: 100%;
+      max-width: 1200px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow:
+        0 14px 35px rgba(0, 0, 0, 0.12),
+        0 3px 10px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 24px;
+    }
 
-.cover-section img {
-    width: 600px;
-    max-width: 90vw;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.20);
-}
-</style>
+    .page {
+      display: none;           /* par défaut : caché, géré en JS */
+      justify-content: center;
+      align-items: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    .page img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      background: #fafafa;
+    }
+
+    .page.two-columns img {
+      width: 100%;
+      max-width: 520px; /* limite pour chaque visuel quand il y en a deux */
+    }
+
+    .page.single img {
+      width: 100%;
+      max-width: 520px;
+      margin-inline: auto;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    button.nav-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      background: #111;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    button.nav-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+      background: #000;
+    }
+
+    button.nav-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .page-indicator {
+      font-size: 14px;
+      color: #555;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 12px 8px 32px;
+      }
+
+      .viewer {
+        padding: 16px;
+      }
+
+      .page.two-columns {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .page.two-columns img {
+        max-width: 100%;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- 📘 COUVERTURE D'OUVERTURE -->
-<div class="cover-section">
-    <img src="IMAGES/cover.png" alt="Couverture VOGUE">
-</div>
+  <div class="viewer">
+    <!-- PAGE 1 : image 1 + texte 1 -->
+    <div class="page two-columns active">
+      <img src="IMAGES/1.png" alt="VOGUE visuel 1">
+      <img src="TEXTES/texte-01.png" alt="Texte 1">
+    </div>
 
-<!-- PAGE 1 -->
-<div class="section">
-    <img src="IMAGES/1.png" alt="VOGUE visuel 1">
-    <img src="TEXTES/texte-01.png" alt="Texte 1">
-</div>
+    <!-- PAGE 2 : image 2 + texte 2 -->
+    <div class="page two-columns">
+      <img src="IMAGES/2.png" alt="VOGUE visuel 2">
+      <img src="TEXTES/texte-02.png" alt="Texte 2">
+    </div>
 
-<!-- PAGE 2 -->
-<div class="section">
-    <img src="IMAGES/2.png" alt="VOGUE visuel 2">
-    <img src="TEXTES/texte-02.png" alt="Texte 2">
-</div>
+    <!-- PAGE 3 : image 3 + texte 3 -->
+    <div class="page two-columns">
+      <img src="IMAGES/3.png" alt="VOGUE visuel 3">
+      <img src="TEXTES/texte-03.png" alt="Texte 3">
+    </div>
 
-<!-- PAGE 3 -->
-<div class="section">
-    <img src="IMAGES/3.png" alt="VOGUE visuel 3">
-    <img src="TEXTES/texte-03.png" alt="Texte 3">
-</div>
+    <!-- PAGE 4 : image 4 + texte 4 -->
+    <div class="page two-columns">
+      <img src="IMAGES/4.png" alt="VOGUE visuel 4">
+      <img src="TEXTES/texte-04.png" alt="Texte 4">
+    </div>
 
-<!-- PAGE 4 -->
-<div class="section">
-    <img src="IMAGES/4.png" alt="VOGUE visuel 4">
-    <img src="TEXTES/texte-04.png" alt="Texte 4">
-</div>
+    <!-- PAGE 5 : image 5 + texte 5 -->
+    <div class="page two-columns">
+      <img src="IMAGES/5.png" alt="VOGUE visuel 5">
+      <img src="TEXTES/texte-05.png" alt="Texte 5">
+    </div>
 
-<!-- PAGE 5 -->
-<div class="section">
-    <img src="IMAGES/5.png" alt="VOGUE visuel 5">
-    <img src="TEXTES/texte-05.png" alt="Texte 5">
-</div>
+    <!-- PAGE 6 : DERNIÈRE COUVERTURE (seule) -->
+    <div class="page single">
+      <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture VOGUE ABDZ">
+    </div>
 
-<!-- ⭐ DERNIÈRE COUVERTURE PHARE -->
-<div class="cover-section">
-    <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture VOGUE">
-</div>
+    <!-- Contrôles -->
+    <div class="controls">
+      <div class="buttons">
+        <button class="nav-btn" id="prevBtn">
+          ← Page précédente
+        </button>
+        <button class="nav-btn" id="nextBtn">
+          Page suivante →
+        </button>
+      </div>
+      <div class="page-indicator" id="pageIndicator">
+        Page 1 / 6
+      </div>
+    </div>
+  </div>
 
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const indicator = document.getElementById('pageIndicator');
+
+    let currentPage = 0; // index 0 → Page 1
+
+    function updateView() {
+      pages.forEach((page, index) => {
+        page.classList.toggle('active', index === currentPage);
+      });
+
+      const total = pages.length;
+      indicator.textContent = `Page ${currentPage + 1} / ${total}`;
+
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = currentPage === total - 1;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        updateView();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < pages.length - 1) {
+        currentPage++;
+        updateView();
+      }
+    });
+
+    // Navigation clavier (facultatif : ← →)
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        prevBtn.click();
+      } else if (event.key === 'ArrowRight') {
+        nextBtn.click();
+      }
+    });
+
+    updateView();
+  </script>
 </body>
 </html>
