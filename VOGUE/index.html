@@ -15,7 +15,7 @@
 
     .viewer {
         max-width: 900px;
-        margin: 0 auto;              /* centré */
+        margin: 0 auto;
         background: white;
         padding: 20px;
         border-radius: 20px;
@@ -23,25 +23,21 @@
         position: relative;
     }
 
-    /* Base : toutes les pages sont cachées par défaut */
     .page {
         display: none;
         text-align: center;
     }
 
-    /* Page ACTIVE (visible) */
     .page.active {
         display: block;
     }
 
-    /* Couvertures : une seule image centrée */
     .page.cover img {
         max-width: 50%;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
 
-    /* Pages doubles (image + texte) */
     .page.double.active {
         display: flex;
         justify-content: center;
@@ -75,7 +71,12 @@
     button:hover {
         background: #b30000;
     }
-   
+
+    .page-number {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #5a5a5a;
+    }
 </style>
 
 </head>
@@ -83,45 +84,45 @@
 
 <div class="viewer">
 
-    <!-- PAGE 1 : COUVERTURE -->
+    <!-- PAGE 1 -->
     <div class="page cover">
         <img src="IMAGES/couverture.png" alt="Couverture">
     </div>
 
     <!-- PAGE 2 -->
     <div class="page double">
-        <img src="IMAGES/1.png" alt="">
-        <img src="TEXTES/texte-01.png" alt="">
+        <img src="IMAGES/1.png">
+        <img src="TEXTES/texte-01.png">
     </div>
 
     <!-- PAGE 3 -->
     <div class="page double">
-        <img src="IMAGES/2.png" alt="">
-        <img src="TEXTES/texte-02.png" alt="">
+        <img src="IMAGES/2.png">
+        <img src="TEXTES/texte-02.png">
     </div>
 
     <!-- PAGE 4 -->
     <div class="page double">
-        <img src="IMAGES/3.png" alt="">
-        <img src="TEXTES/texte-03.png" alt="">
+        <img src="IMAGES/3.png">
+        <img src="TEXTES/texte-03.png">
     </div>
 
     <!-- PAGE 5 -->
     <div class="page double">
-        <img src="IMAGES/4.png" alt="">
-        <img src="TEXTES/texte-04.png" alt="">
+        <img src="IMAGES/4.png">
+        <img src="TEXTES/texte-04.png">
     </div>
 
     <!-- PAGE 6 -->
     <div class="page double">
-        <img src="IMAGES/5.png" alt="">
-        <img src="TEXTES/texte-05.png" alt="">
+        <img src="IMAGES/5.png">
+        <img src="TEXTES/texte-05.png">
     </div>
 
-      <!-- PAGE 7 : DERNIÈRE DOUBLE PAGE -->
+    <!-- PAGE 7 (gauche de la double finale) -->
     <div class="page double">
-        <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
-        <img src="TEXTES/texte-06.png" alt="">
+        <img src="IMAGES/derniere-couverture.png">
+        <img src="TEXTES/texte-07.png">
     </div>
 
     <div class="nav-buttons">
@@ -140,40 +141,24 @@
     const prevBtn = document.getElementById('prevBtn');
 
     function showPage(n) {
-        // cacher toutes les pages
         pages.forEach(p => p.classList.remove('active'));
-        // afficher la page voulue
         pages[n].classList.add('active');
 
-        // numéro
         pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
 
-        // cacher la flèche gauche sur la couverture
-        if (n === 0) {
-            prevBtn.style.visibility = "hidden";
-        } else {
-            prevBtn.style.visibility = "visible";
-        }
+        prevBtn.style.visibility = (n === 0) ? "hidden" : "visible";
     }
 
     function nextPage() {
-        if (currentPage === pages.length - 1) {
-            // dernière page → retour couverture
-            currentPage = 0;
-        } else {
-            currentPage++;
-        }
+        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
         showPage(currentPage);
     }
 
     function prevPage() {
-        if (currentPage > 0) {
-            currentPage--;
-            showPage(currentPage);
-        }
+        if (currentPage > 0) currentPage--;
+        showPage(currentPage);
     }
 
-    // affichage initial
     showPage(0);
 </script>
 
