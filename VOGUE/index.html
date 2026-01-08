@@ -36,7 +36,7 @@
 
     /* Couvertures : une seule image centrée */
     .page.cover img {
-        max-width: 80%;
+        max-width: 50%;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
@@ -50,7 +50,7 @@
     }
 
     .page.double img {
-        max-width: 48%;
+        max-width: 42%;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
@@ -75,55 +75,7 @@
     button:hover {
         background: #b30000;
     }
-
-    .page-number {
-        margin-top: 10px;
-        font-size: 14px;
-        color: #5a5a5a;
-    }
-
    
-        body {
-            background: #f2f2f2;
-        }
-
-        .viewer {
-            max-width: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 10px 5px;
-            border-radius: 0;
-            box-shadow: none;
-        }
-
-        /* Couvertures plus larges */
-        .page.cover img {
-            max-width: 90%;
-            box-shadow: none;
-        }
-
-        /* Les doubles pages passent en colonne (une au-dessus de l’autre) */
-        .page.double.active {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .page.double img {
-            max-width: 100%;
-            box-shadow: none;
-            margin-bottom: 15px;
-        }
-
-        .nav-buttons {
-            margin-top: 15px;
-        }
-
-        button {
-            width: 48%;
-            padding: 10px;
-            font-size: 14px;
-        }
-    }
 </style>
 
 </head>
