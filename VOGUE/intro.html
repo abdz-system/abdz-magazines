@@ -26,20 +26,20 @@
 
     h1 {
         font-size: 30px;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
         letter-spacing: 1px;
     }
 
     p.sous-titre {
-        font-size: 20px;
+        font-size: 18px;           /* un peu plus petit */
         line-height: 1.4;
         opacity: 0.95;
-        margin-bottom: 25px;
+        margin-bottom: 18px;       /* moins d’espace pour remonter le bloc */
         font-weight: 300;
     }
 
     .video-wrapper {
-        margin: 0 auto 25px auto;
+        margin: 0 auto 18px auto;  /* bouton plus proche de la vidéo */
         max-width: 800px;
         border-radius: 16px;
         overflow: hidden;
@@ -50,11 +50,12 @@
         width: 100%;
         display: block;
         background: #000;
+        max-height: 70vh;          /* évite que la vidéo pousse le bouton trop bas sur tel */
     }
 
     a.cta {
         display: inline-block;
-        margin-top: 10px;
+        margin-top: 6px;
         padding: 14px 28px;
         background: #b48b43;
         color: white;
@@ -62,9 +63,10 @@
         border-radius: 999px;
         text-decoration: none;
         transition: 0.3s;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        box-shadow: 0 8px 22px rgba(0,0,0,0.4); /* effet bouton plus marqué */
         letter-spacing: 0.5px;
-        font-weight: 400;
+        font-weight: 500;
+        text-transform: uppercase;
     }
 
     a.cta:hover {
@@ -77,10 +79,10 @@
 <body>
 <div class="container">
 
-    <h1>ABDZ — PORTE D’OUVERTURE</h1>
+    <h1>ABDZ : ENTREZ DANS SA SPHÈRE</h1>
 
     <p class="sous-titre">
-        Prenez quelques secondes pour ouvrir la sphère VOGUE.
+        Cliquez-moi pour m’ouvrir.
     </p>
 
     <!-- 🎬 VIDÉO -->
