@@ -10,11 +10,11 @@
         font-family: Arial, sans-serif;
         background: #f2f2f2;
         margin: 0;
-        padding: 0;
+        padding: 10px;
     }
 
     .viewer {
-        max-width: 900px;
+        max-width: 1000px;
         margin: 0 auto;
         background: white;
         padding: 20px;
@@ -32,29 +32,20 @@
         display: block;
     }
 
-    .page.cover img {
-        max-width: 50%;
+    /* Toutes les images d'une page occupent la largeur */
+    .page img {
+        width: 100%;
+        height: auto;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-
-    .page.double.active {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        align-items: flex-start;
-    }
-
-    .page.double img {
-        max-width: 42%;
-        border-radius: 12px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        margin-bottom: 16px;
     }
 
     .nav-buttons {
-        margin-top: 20px;
+        margin-top: 10px;
         display: flex;
         justify-content: space-between;
+        gap: 10px;
     }
 
     button {
@@ -66,6 +57,7 @@
         cursor: pointer;
         font-size: 15px;
         transition: 0.2s;
+        flex: 1;
     }
 
     button:hover {
@@ -76,6 +68,17 @@
         margin-top: 10px;
         font-size: 14px;
         color: #5a5a5a;
+        text-align: center;
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 5px;
+        }
+        .viewer {
+            padding: 15px;
+            border-radius: 12px;
+        }
     }
 </style>
 
@@ -84,45 +87,45 @@
 
 <div class="viewer">
 
-    <!-- PAGE 1 -->
-    <div class="page cover">
+    <!-- PAGE 1 : Couverture -->
+    <div class="page active">
         <img src="IMAGES/couverture.png" alt="Couverture">
     </div>
 
-    <!-- PAGE 2 -->
-    <div class="page double">
-        <img src="IMAGES/1.png">
-        <img src="TEXTES/texte-01.png">
+    <!-- PAGE 2 : image + texte, en pleine largeur l'un sous l'autre -->
+    <div class="page">
+        <img src="IMAGES/1.png" alt="Page 1 visuel">
+        <img src="TEXTES/texte-01.png" alt="Texte 1">
     </div>
 
     <!-- PAGE 3 -->
-    <div class="page double">
-        <img src="IMAGES/2.png">
-        <img src="TEXTES/texte-02.png">
+    <div class="page">
+        <img src="IMAGES/2.png" alt="Page 2 visuel">
+        <img src="TEXTES/texte-02.png" alt="Texte 2">
     </div>
 
     <!-- PAGE 4 -->
-    <div class="page double">
-        <img src="IMAGES/3.png">
-        <img src="TEXTES/texte-03.png">
+    <div class="page">
+        <img src="IMAGES/3.png" alt="Page 3 visuel">
+        <img src="TEXTES/texte-03.png" alt="Texte 3">
     </div>
 
     <!-- PAGE 5 -->
-    <div class="page double">
-        <img src="IMAGES/4.png">
-        <img src="TEXTES/texte-04.png">
+    <div class="page">
+        <img src="IMAGES/4.png" alt="Page 4 visuel">
+        <img src="TEXTES/texte-04.png" alt="Texte 4">
     </div>
 
     <!-- PAGE 6 -->
-    <div class="page double">
-        <img src="IMAGES/5.png">
-        <img src="TEXTES/texte-05.png">
+    <div class="page">
+        <img src="IMAGES/5.png" alt="Page 5 visuel">
+        <img src="TEXTES/texte-05.png" alt="Texte 5">
     </div>
 
-    <!-- PAGE 7 (gauche de la double finale) -->
-    <div class="page double">
-        <img src="IMAGES/derniere-couverture.png">
-        <img src="TEXTES/texte-07.png">
+    <!-- PAGE 7 : dernière couverture + texte -->
+    <div class="page">
+        <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
+        <img src="TEXTES/texte-07.png" alt="Texte 7">
     </div>
 
     <div class="nav-buttons">
@@ -155,10 +158,15 @@
     }
 
     function prevPage() {
-        if (currentPage > 0) currentPage--;
+        if (currentPage > 0) {
+            currentPage--;
+        } else {
+            currentPage = pages.length - 1;
+        }
         showPage(currentPage);
     }
 
+    // Affiche la première page au chargement
     showPage(0);
 </script>
 
