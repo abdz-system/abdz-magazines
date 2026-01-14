@@ -23,7 +23,6 @@
         text-align: center;
     }
 
-    /* wrapper pour toutes les pages */
     .pages {
         display: block;
     }
@@ -86,16 +85,18 @@
         }
     }
 
-    /* 🖥️ Mise en page "magazine" sur ORDI uniquement */
+    /* 🖥 Mise en page magazine sur grand écran */
     @media (min-width: 1024px) {
         .pages.double-layout {
             display: flex;
             justify-content: center;
             gap: 24px;
         }
+
         .pages.double-layout .page.active {
             flex: 0 0 45%;
         }
+
         .pages.double-layout .page.active img {
             max-height: 80vh;
         }
@@ -109,16 +110,16 @@
 
     <div class="pages">
         <!-- 1. COVER -->
-        <div class="page active">
+        <div class="page">
             <img src="IMAGES/couverture.png" alt="Couverture">
         </div>
 
-        <!-- 2. TEXTE 01 -->
+        <!-- 2. TEXTE 01 (doit être à gauche sur ordi) -->
         <div class="page">
             <img src="TEXTES/texte-01.png" alt="Texte 1">
         </div>
 
-        <!-- 3. IMAGE 1 -->
+        <!-- 3. IMAGE 1 (à droite sur ordi) -->
         <div class="page">
             <img src="IMAGES/1.png" alt="Image 1">
         </div>
@@ -184,7 +185,7 @@
 </div>
 
 <script>
-    let currentPage = 0; // index dans le tableau "pages"
+    let currentPage = 0; // index de la première page visible
     const pages = document.querySelectorAll('.page');
     const pagesContainer = document.querySelector('.pages');
     const pageNumber = document.getElementById('pageNumber');
@@ -194,49 +195,33 @@
         return window.innerWidth >= 1024;
     }
 
-    function showPage(n) {
+    function render() {
         const desktop = isDesktop();
 
-        // on enlève toutes les pages actives
+        // cacher toutes les pages
         pages.forEach(p => p.classList.remove('active'));
         pagesContainer.classList.remove('double-layout');
 
-        if (desktop && n > 0) {
-            // 🔹 sur ordi après la cover : on affiche les pages par DUO
-            let first = n;
-
-            // s'assurer qu'on commence toujours sur le texte (page paire : 2,4,6,...)
-            if (first % 2 === 1) {
-                first = first - 1;
-            }
-
-            let second = first + 1;
-            if (second >= pages.length) {
-                second = first; // sécurité si nombre impair
-            }
+        if (desktop && currentPage > 0) {
+            // 🖥 sur ordi, après la cover : on montre un DUO (texte + image)
+            const first = currentPage;
+            const second = Math.min(currentPage + 1, pages.length - 1);
 
             pages[first].classList.add('active');
-            pages[second].classList.add('active');
-            pagesContainer.classList.add('double-layout');
-
-            currentPage = first; // on garde l’index du texte
-
-            if (first !== second) {
+            if (second !== first) {
+                pages[second].classList.add('active');
+                pagesContainer.classList.add('double-layout');
                 pageNumber.textContent = "Pages " + (first + 1) + "–" + (second + 1) + " / " + pages.length;
             } else {
                 pageNumber.textContent = "Page " + (first + 1) + " / " + pages.length;
             }
-
-            prevBtn.style.visibility = (first === 0) ? "hidden" : "visible";
-
         } else {
-            // 🔹 sur mobile/tablette OU cover : une seule page à la fois
-            pages[n].classList.add('active');
-            currentPage = n;
-
-            pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
-            prevBtn.style.visibility = (n === 0) ? "hidden" : "visible";
+            // 📱 mobile / tablette ou cover : une seule page à la fois
+            pages[currentPage].classList.add('active');
+            pageNumber.textContent = "Page " + (currentPage + 1) + " / " + pages.length;
         }
+
+        prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
     }
 
     function nextPage() {
@@ -244,18 +229,20 @@
 
         if (desktop) {
             if (currentPage === 0) {
-                currentPage = 1; // de la cover → premier duo (2–3)
+                // de la cover → premier duo (texte 1 + image 1)
+                currentPage = 1;
             } else {
-                currentPage += 2; // on passe au duo suivant (4–5, 6–7, ...)
-            }
-            if (currentPage >= pages.length) {
-                currentPage = 0; // retour à la cover
+                // duo suivant : +2
+                currentPage += 2;
+                if (currentPage >= pages.length) {
+                    currentPage = 0; // retour à la cover
+                }
             }
         } else {
-            // mobile/tablette : on garde le comportement 1 par 1
+            // mobile / tablette : page par page
             currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
         }
-        showPage(currentPage);
+        render();
     }
 
     function prevPage() {
@@ -264,31 +251,28 @@
         if (desktop) {
             if (currentPage === 0) {
                 // de la cover → dernier duo
-                currentPage = (pages.length - 1);
-                if (currentPage % 2 === 0) currentPage -= 1; // s'assurer qu'on est sur un texte
-            } else if (currentPage <= 2) {
-                currentPage = 0; // retour à la cover
+                currentPage = (pages.length - 2); // on démarre sur l'avant-dernière (texte 7)
+            } else if (currentPage === 1) {
+                // du premier duo → cover
+                currentPage = 0;
             } else {
                 currentPage -= 2; // duo précédent
             }
         } else {
-            // mobile/tablette : page par page
+            // mobile / tablette : page par page
             if (currentPage > 0) {
                 currentPage--;
             } else {
                 currentPage = pages.length - 1;
             }
         }
-        showPage(currentPage);
+        render();
     }
 
-    // Recalculer la mise en page quand on change la taille de la fenêtre
-    window.addEventListener('resize', () => {
-        showPage(currentPage);
-    });
+    window.addEventListener('resize', render);
 
-    // affiche la première page au chargement
-    showPage(0);
+    // afficher la première page au chargement
+    render();
 </script>
 
 </body>
