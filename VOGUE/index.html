@@ -14,13 +14,18 @@
     }
 
     .viewer {
-        max-width: 900px;
+        max-width: 1100px;
         margin: 0 auto;
         background: white;
         padding: 20px;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         text-align: center;
+    }
+
+    /* wrapper pour toutes les pages */
+    .pages {
+        display: block;
     }
 
     .page {
@@ -80,6 +85,21 @@
             border-radius: 12px;
         }
     }
+
+    /* 🖥️ Mise en page "magazine" sur ORDI uniquement */
+    @media (min-width: 1024px) {
+        .pages.double-layout {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+        }
+        .pages.double-layout .page.active {
+            flex: 0 0 45%;
+        }
+        .pages.double-layout .page.active img {
+            max-height: 80vh;
+        }
+    }
 </style>
 
 </head>
@@ -87,69 +107,71 @@
 
 <div class="viewer">
 
-    <!-- 1. COVER -->
-    <div class="page active">
-        <img src="IMAGES/couverture.png" alt="Couverture">
-    </div>
+    <div class="pages">
+        <!-- 1. COVER -->
+        <div class="page active">
+            <img src="IMAGES/couverture.png" alt="Couverture">
+        </div>
 
-    <!-- 2. TEXTE 01 -->
-    <div class="page">
-        <img src="TEXTES/texte-01.png" alt="Texte 1">
-    </div>
+        <!-- 2. TEXTE 01 -->
+        <div class="page">
+            <img src="TEXTES/texte-01.png" alt="Texte 1">
+        </div>
 
-    <!-- 3. IMAGE 1 -->
-    <div class="page">
-        <img src="IMAGES/1.png" alt="Image 1">
-    </div>
+        <!-- 3. IMAGE 1 -->
+        <div class="page">
+            <img src="IMAGES/1.png" alt="Image 1">
+        </div>
 
-    <!-- 4. TEXTE 02 -->
-    <div class="page">
-        <img src="TEXTES/texte-02.png" alt="Texte 2">
-    </div>
+        <!-- 4. TEXTE 02 -->
+        <div class="page">
+            <img src="TEXTES/texte-02.png" alt="Texte 2">
+        </div>
 
-    <!-- 5. IMAGE 2 -->
-    <div class="page">
-        <img src="IMAGES/2.png" alt="Image 2">
-    </div>
+        <!-- 5. IMAGE 2 -->
+        <div class="page">
+            <img src="IMAGES/2.png" alt="Image 2">
+        </div>
 
-    <!-- 6. TEXTE 03 -->
-    <div class="page">
-        <img src="TEXTES/texte-03.png" alt="Texte 3">
-    </div>
+        <!-- 6. TEXTE 03 -->
+        <div class="page">
+            <img src="TEXTES/texte-03.png" alt="Texte 3">
+        </div>
 
-    <!-- 7. IMAGE 3 -->
-    <div class="page">
-        <img src="IMAGES/3.png" alt="Image 3">
-    </div>
+        <!-- 7. IMAGE 3 -->
+        <div class="page">
+            <img src="IMAGES/3.png" alt="Image 3">
+        </div>
 
-    <!-- 8. TEXTE 04 -->
-    <div class="page">
-        <img src="TEXTES/texte-04.png" alt="Texte 4">
-    </div>
+        <!-- 8. TEXTE 04 -->
+        <div class="page">
+            <img src="TEXTES/texte-04.png" alt="Texte 4">
+        </div>
 
-    <!-- 9. IMAGE 4 -->
-    <div class="page">
-        <img src="IMAGES/4.png" alt="Image 4">
-    </div>
+        <!-- 9. IMAGE 4 -->
+        <div class="page">
+            <img src="IMAGES/4.png" alt="Image 4">
+        </div>
 
-    <!-- 10. TEXTE 05 -->
-    <div class="page">
-        <img src="TEXTES/texte-05.png" alt="Texte 5">
-    </div>
+        <!-- 10. TEXTE 05 -->
+        <div class="page">
+            <img src="TEXTES/texte-05.png" alt="Texte 5">
+        </div>
 
-    <!-- 11. IMAGE 5 -->
-    <div class="page">
-        <img src="IMAGES/5.png" alt="Image 5">
-    </div>
+        <!-- 11. IMAGE 5 -->
+        <div class="page">
+            <img src="IMAGES/5.png" alt="Image 5">
+        </div>
 
-    <!-- 12. TEXTE 07 -->
-    <div class="page">
-        <img src="TEXTES/texte-07.png" alt="Texte 7">
-    </div>
+        <!-- 12. TEXTE 07 -->
+        <div class="page">
+            <img src="TEXTES/texte-07.png" alt="Texte 7">
+        </div>
 
-    <!-- 13. DERNIÈRE IMAGE -->
-    <div class="page">
-        <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
+        <!-- 13. DERNIÈRE IMAGE -->
+        <div class="page">
+            <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
+        </div>
     </div>
 
     <div class="nav-buttons">
@@ -162,33 +184,110 @@
 </div>
 
 <script>
-    let currentPage = 0;
+    let currentPage = 0; // index dans le tableau "pages"
     const pages = document.querySelectorAll('.page');
+    const pagesContainer = document.querySelector('.pages');
     const pageNumber = document.getElementById('pageNumber');
     const prevBtn = document.getElementById('prevBtn');
 
-    function showPage(n) {
-        pages.forEach(p => p.classList.remove('active'));
-        pages[n].classList.add('active');
+    function isDesktop() {
+        return window.innerWidth >= 1024;
+    }
 
-        pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
-        prevBtn.style.visibility = (n === 0) ? "hidden" : "visible";
+    function showPage(n) {
+        const desktop = isDesktop();
+
+        // on enlève toutes les pages actives
+        pages.forEach(p => p.classList.remove('active'));
+        pagesContainer.classList.remove('double-layout');
+
+        if (desktop && n > 0) {
+            // 🔹 sur ordi après la cover : on affiche les pages par DUO
+            let first = n;
+
+            // s'assurer qu'on commence toujours sur le texte (page paire : 2,4,6,...)
+            if (first % 2 === 1) {
+                first = first - 1;
+            }
+
+            let second = first + 1;
+            if (second >= pages.length) {
+                second = first; // sécurité si nombre impair
+            }
+
+            pages[first].classList.add('active');
+            pages[second].classList.add('active');
+            pagesContainer.classList.add('double-layout');
+
+            currentPage = first; // on garde l’index du texte
+
+            if (first !== second) {
+                pageNumber.textContent = "Pages " + (first + 1) + "–" + (second + 1) + " / " + pages.length;
+            } else {
+                pageNumber.textContent = "Page " + (first + 1) + " / " + pages.length;
+            }
+
+            prevBtn.style.visibility = (first === 0) ? "hidden" : "visible";
+
+        } else {
+            // 🔹 sur mobile/tablette OU cover : une seule page à la fois
+            pages[n].classList.add('active');
+            currentPage = n;
+
+            pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
+            prevBtn.style.visibility = (n === 0) ? "hidden" : "visible";
+        }
     }
 
     function nextPage() {
-        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
-        showPage(currentPage);
-    }
+        const desktop = isDesktop();
 
-    function prevPage() {
-        if (currentPage > 0) {
-            currentPage--;
+        if (desktop) {
+            if (currentPage === 0) {
+                currentPage = 1; // de la cover → premier duo (2–3)
+            } else {
+                currentPage += 2; // on passe au duo suivant (4–5, 6–7, ...)
+            }
+            if (currentPage >= pages.length) {
+                currentPage = 0; // retour à la cover
+            }
         } else {
-            currentPage = pages.length - 1;
+            // mobile/tablette : on garde le comportement 1 par 1
+            currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
         }
         showPage(currentPage);
     }
 
+    function prevPage() {
+        const desktop = isDesktop();
+
+        if (desktop) {
+            if (currentPage === 0) {
+                // de la cover → dernier duo
+                currentPage = (pages.length - 1);
+                if (currentPage % 2 === 0) currentPage -= 1; // s'assurer qu'on est sur un texte
+            } else if (currentPage <= 2) {
+                currentPage = 0; // retour à la cover
+            } else {
+                currentPage -= 2; // duo précédent
+            }
+        } else {
+            // mobile/tablette : page par page
+            if (currentPage > 0) {
+                currentPage--;
+            } else {
+                currentPage = pages.length - 1;
+            }
+        }
+        showPage(currentPage);
+    }
+
+    // Recalculer la mise en page quand on change la taille de la fenêtre
+    window.addEventListener('resize', () => {
+        showPage(currentPage);
+    });
+
+    // affiche la première page au chargement
     showPage(0);
 </script>
 
