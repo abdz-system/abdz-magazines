@@ -10,7 +10,7 @@
         font-family: Arial, sans-serif;
         background: #f2f2f2;
         margin: 0;
-        padding: 0;
+        padding: 10px;
     }
 
     .viewer {
@@ -20,41 +20,32 @@
         padding: 20px;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        position: relative;
+        text-align: center;
     }
 
     .page {
         display: none;
-        text-align: center;
     }
 
     .page.active {
         display: block;
     }
 
-    .page.cover img {
-        max-width: 50%;
+    .page img {
+        max-width: 100%;
+        max-height: 85vh;      /* l’image tient dans l’écran */
+        width: auto;
+        height: auto;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-
-    .page.double.active {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        align-items: flex-start;
-    }
-
-    .page.double img {
-        max-width: 42%;
-        border-radius: 12px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        object-fit: contain;
     }
 
     .nav-buttons {
-        margin-top: 20px;
+        margin-top: 18px;
         display: flex;
         justify-content: space-between;
+        gap: 10px;
     }
 
     button {
@@ -66,6 +57,7 @@
         cursor: pointer;
         font-size: 15px;
         transition: 0.2s;
+        flex: 1;
     }
 
     button:hover {
@@ -73,35 +65,19 @@
     }
 
     .page-number {
-        margin-top: 10px;
+        margin-top: 8px;
         font-size: 14px;
         color: #5a5a5a;
+        text-align: center;
     }
 
-    /* 📱 MODE MOBILE / TABLETTE : on empile les 2 colonnes en pleine largeur */
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
         body {
-            padding: 0;
+            padding: 5px;
         }
-
         .viewer {
-            max-width: 100%;
-            margin: 0;
-            border-radius: 0;
-            padding: 10px;
-        }
-
-        .page.cover img {
-            max-width: 100%;
-        }
-
-        .page.double.active {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .page.double img {
-            max-width: 100%;
+            padding: 12px;
+            border-radius: 12px;
         }
     }
 </style>
@@ -111,45 +87,69 @@
 
 <div class="viewer">
 
-    <!-- PAGE 1 -->
-    <div class="page cover">
+    <!-- 1. COVER -->
+    <div class="page active">
         <img src="IMAGES/couverture.png" alt="Couverture">
     </div>
 
-    <!-- PAGE 2 -->
-    <div class="page double">
-        <img src="IMAGES/1.png" alt="">
-        <img src="TEXTES/texte-01.png" alt="">
+    <!-- 2. IMAGES/1.png -->
+    <div class="page">
+        <img src="IMAGES/1.png" alt="Page 2">
     </div>
 
-    <!-- PAGE 3 -->
-    <div class="page double">
-        <img src="IMAGES/2.png" alt="">
-        <img src="TEXTES/texte-02.png" alt="">
+    <!-- 3. TEXTES/texte-01.png -->
+    <div class="page">
+        <img src="TEXTES/texte-01.png" alt="Page 3">
     </div>
 
-    <!-- PAGE 4 -->
-    <div class="page double">
-        <img src="IMAGES/3.png" alt="">
-        <img src="TEXTES/texte-03.png" alt="">
+    <!-- 4. IMAGES/2.png -->
+    <div class="page">
+        <img src="IMAGES/2.png" alt="Page 4">
     </div>
 
-    <!-- PAGE 5 -->
-    <div class="page double">
-        <img src="IMAGES/4.png" alt="">
-        <img src="TEXTES/texte-04.png" alt="">
+    <!-- 5. TEXTES/texte-02.png -->
+    <div class="page">
+        <img src="TEXTES/texte-02.png" alt="Page 5">
     </div>
 
-    <!-- PAGE 6 -->
-    <div class="page double">
-        <img src="IMAGES/5.png" alt="">
-        <img src="TEXTES/texte-05.png" alt="">
+    <!-- 6. IMAGES/3.png -->
+    <div class="page">
+        <img src="IMAGES/3.png" alt="Page 6">
     </div>
 
-    <!-- PAGE 7 (gauche de la double finale) -->
-    <div class="page double">
-        <img src="IMAGES/derniere-couverture.png" alt="">
-        <img src="TEXTES/texte-07.png" alt="">
+    <!-- 7. TEXTES/texte-03.png -->
+    <div class="page">
+        <img src="TEXTES/texte-03.png" alt="Page 7">
+    </div>
+
+    <!-- 8. IMAGES/4.png -->
+    <div class="page">
+        <img src="IMAGES/4.png" alt="Page 8">
+    </div>
+
+    <!-- 9. TEXTES/texte-04.png -->
+    <div class="page">
+        <img src="TEXTES/texte-04.png" alt="Page 9">
+    </div>
+
+    <!-- 10. IMAGES/5.png -->
+    <div class="page">
+        <img src="IMAGES/5.png" alt="Page 10">
+    </div>
+
+    <!-- 11. TEXTES/texte-05.png -->
+    <div class="page">
+        <img src="TEXTES/texte-05.png" alt="Page 11">
+    </div>
+
+    <!-- 12. IMAGES/derniere-couverture.png -->
+    <div class="page">
+        <img src="IMAGES/derniere-couverture.png" alt="Page 12">
+    </div>
+
+    <!-- 13. TEXTES/texte-07.png -->
+    <div class="page">
+        <img src="TEXTES/texte-07.png" alt="Page 13">
     </div>
 
     <div class="nav-buttons">
@@ -172,7 +172,6 @@
         pages[n].classList.add('active');
 
         pageNumber.textContent = "Page " + (n + 1) + " / " + pages.length;
-
         prevBtn.style.visibility = (n === 0) ? "hidden" : "visible";
     }
 
@@ -182,10 +181,15 @@
     }
 
     function prevPage() {
-        if (currentPage > 0) currentPage--;
+        if (currentPage > 0) {
+            currentPage--;
+        } else {
+            currentPage = pages.length - 1;
+        }
         showPage(currentPage);
     }
 
+    // affiche la première page
     showPage(0);
 </script>
 
