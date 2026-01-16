@@ -6,267 +6,249 @@
 <title>VOGUE — ABDZ</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f2f2f2;
-        margin: 0;
-        padding: 10px;
+  body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 10px;
+  }
+
+  .viewer {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    text-align: center;
+  }
+
+  .pages { display: block; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page img {
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    object-fit: contain;
+  }
+
+  .nav-buttons {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  button {
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+    flex: 1;
+  }
+  button:hover { background: #b30000; }
+
+  .page-number {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #5a5a5a;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 5px; }
+    .viewer { padding: 12px; border-radius: 12px; }
+  }
+
+  /* 🖥 Double page UNIQUEMENT sur ordi */
+  @media (min-width: 1024px) {
+    .pages.double-layout {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
     }
-
-    .viewer {
-        max-width: 1100px;
-        margin: 0 auto;
-        background: white;
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        text-align: center;
+    .pages.double-layout .page.active {
+      flex: 0 0 45%;
     }
-
-    .pages {
-        display: block;
+    .pages.double-layout .page.active img {
+      max-height: 80vh;
     }
-
-    .page {
-        display: none;
-    }
-
-    .page.active {
-        display: block;
-    }
-
-    .page img {
-        max-width: 100%;
-        max-height: 85vh;
-        width: auto;
-        height: auto;
-        border-radius: 12px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        object-fit: contain;
-    }
-
-    .nav-buttons {
-        margin-top: 18px;
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    button {
-        background: black;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 15px;
-        transition: 0.2s;
-        flex: 1;
-    }
-
-    button:hover {
-        background: #b30000;
-    }
-
-    .page-number {
-        margin-top: 8px;
-        font-size: 14px;
-        color: #5a5a5a;
-        text-align: center;
-    }
-
-    @media (max-width: 600px) {
-        body {
-            padding: 5px;
-        }
-        .viewer {
-            padding: 12px;
-            border-radius: 12px;
-        }
-    }
-
-    /* 🖥 Mise en page magazine sur grand écran */
-    @media (min-width: 1024px) {
-        .pages.double-layout {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-        }
-
-        .pages.double-layout .page.active {
-            flex: 0 0 45%;
-        }
-
-        .pages.double-layout .page.active img {
-            max-height: 80vh;
-        }
-    }
+  }
 </style>
-
 </head>
-<body>
 
+<body>
 <div class="viewer">
 
-    <div class="pages">
-        <!-- 1. COVER -->
-        <div class="page">
-            <img src="IMAGES/couverture.png" alt="Couverture">
-        </div>
+  <div class="pages">
 
-        <!-- 2. TEXTE 01 -->
-        <div class="page">
-            <img src="TEXTES/texte-01.png" alt="Texte 1">
-        </div>
-
-        <!-- 3. IMAGE 1 -->
-        <div class="page">
-            <img src="IMAGES/1.png" alt="Image 1">
-        </div>
-
-        <!-- 4. TEXTE 02 -->
-        <div class="page">
-            <img src="TEXTES/texte-02.png" alt="Texte 2">
-        </div>
-
-        <!-- 5. IMAGE 2 -->
-        <div class="page">
-            <img src="IMAGES/2.png" alt="Image 2">
-        </div>
-
-        <!-- 6. TEXTE 03 -->
-        <div class="page">
-            <img src="TEXTES/texte-03.png" alt="Texte 3">
-        </div>
-
-        <!-- 7. IMAGE 3 -->
-        <div class="page">
-            <img src="IMAGES/3.png" alt="Image 3">
-        </div>
-
-        <!-- 8. TEXTE 04 -->
-        <div class="page">
-            <img src="TEXTES/texte-04.png" alt="Texte 4">
-        </div>
-
-        <!-- 9. IMAGE 4 -->
-        <div class="page">
-            <img src="IMAGES/4.png" alt="Image 4">
-        </div>
-
-        <!-- 10. TEXTE 05 -->
-        <div class="page">
-            <img src="TEXTES/texte-05.png" alt="Texte 5">
-        </div>
-
-        <!-- 11. IMAGE 5 -->
-        <div class="page">
-            <img src="IMAGES/5.png" alt="Image 5">
-        </div>
-
-        <!-- 12. TEXTE 07 -->
-        <div class="page">
-            <img src="TEXTES/texte-07.png" alt="Texte 7">
-        </div>
-
-        <!-- 13. DERNIÈRE IMAGE -->
-        <div class="page">
-            <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
-        </div>
+    <!-- 1. COVER -->
+    <div class="page">
+      <img src="IMAGES/couverture.png" alt="Couverture">
     </div>
 
-    <div class="nav-buttons">
-        <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
-        <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
+    <!-- 2. IMAGE 1 -->
+    <div class="page">
+      <img src="IMAGES/1.png" alt="Image 1">
     </div>
 
-    <div class="page-number" id="pageNumber"></div>
+    <!-- 3. TEXTE 01 -->
+    <div class="page">
+      <img src="TEXTES/texte-01.png" alt="Texte 01">
+    </div>
+
+    <!-- 4. IMAGE 2 -->
+    <div class="page">
+      <img src="IMAGES/2.png" alt="Image 2">
+    </div>
+
+    <!-- 5. TEXTE 02 -->
+    <div class="page">
+      <img src="TEXTES/texte-02.png" alt="Texte 02">
+    </div>
+
+    <!-- 6. IMAGE 3 -->
+    <div class="page">
+      <img src="IMAGES/3.png" alt="Image 3">
+    </div>
+
+    <!-- 7. TEXTE 03 -->
+    <div class="page">
+      <img src="TEXTES/texte-03.png" alt="Texte 03">
+    </div>
+
+    <!-- 8. IMAGE 4 -->
+    <div class="page">
+      <img src="IMAGES/4.png" alt="Image 4">
+    </div>
+
+    <!-- 9. TEXTE 04 -->
+    <div class="page">
+      <img src="TEXTES/texte-04.png" alt="Texte 04">
+    </div>
+
+    <!-- 10. IMAGE 5 -->
+    <div class="page">
+      <img src="IMAGES/5.png" alt="Image 5">
+    </div>
+
+    <!-- 11. TEXTE 05 -->
+    <div class="page">
+      <img src="TEXTES/texte-05.png" alt="Texte 05">
+    </div>
+
+    <!-- 12. DERNIÈRE IMAGE -->
+    <div class="page">
+      <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
+    </div>
+
+    <!-- 13. TEXTE 07 -->
+    <div class="page">
+      <img src="TEXTES/texte-07.png" alt="Texte 07">
+    </div>
+
+  </div>
+
+  <div class="nav-buttons">
+    <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
+    <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
+  </div>
+
+  <div class="page-number" id="pageNumber"></div>
 
 </div>
 
 <script>
-    let currentPage = 0; // index de la première page visible (sur desktop: index du TEXTE)
-    const pages = document.querySelectorAll('.page');
-    const pagesContainer = document.querySelector('.pages');
-    const pageNumber = document.getElementById('pageNumber');
-    const prevBtn = document.getElementById('prevBtn');
+  let currentPage = 0; // index de la page "principale" visible
+  const pages = document.querySelectorAll('.page');
+  const pagesContainer = document.querySelector('.pages');
+  const pageNumber = document.getElementById('pageNumber');
+  const prevBtn = document.getElementById('prevBtn');
 
-    function isDesktop() {
-        return window.innerWidth >= 1024;
+  function isDesktop() {
+    return window.innerWidth >= 1024;
+  }
+
+  function render() {
+    const desktop = isDesktop();
+
+    pages.forEach(p => p.classList.remove('active'));
+    pagesContainer.classList.remove('double-layout');
+
+    if (desktop && currentPage > 0) {
+      // Sur ordi : on affiche par DUO (image + texte) côte à côte
+      // => currentPage doit toujours tomber sur une IMAGE (index pair dans notre séquence après cover)
+      let first = currentPage;
+      if (first % 2 === 0) first = first - 1; // sécurité: ramener sur une image (2,4,6... en "page humaine" mais index 1,3,5...)
+
+      const second = Math.min(first + 1, pages.length - 1);
+
+      pages[first].classList.add('active');   // gauche (IMAGE)
+      pages[second].classList.add('active');  // droite (TEXTE)
+      pagesContainer.classList.add('double-layout');
+
+      currentPage = first; // on stabilise
+
+      pageNumber.textContent = "Pages " + (first + 1) + "–" + (second + 1) + " / " + pages.length;
+      prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
+      return;
     }
 
-    function render() {
-        const desktop = isDesktop();
+    // Mobile / tablette (et cover) : 1 page à la fois, séquence universelle
+    pages[currentPage].classList.add('active');
+    pageNumber.textContent = "Page " + (currentPage + 1) + " / " + pages.length;
+    prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
+  }
 
-        // cacher toutes les pages
-        pages.forEach(p => p.classList.remove('active'));
-        pagesContainer.classList.remove('double-layout');
+  function nextPage() {
+    const desktop = isDesktop();
 
-        if (desktop && currentPage > 0) {
-            // 🖥 sur ordi : DUO mais affiché IMAGE à gauche / TEXTE à droite
-            const texteIndex = currentPage;
-            const imageIndex = Math.min(currentPage + 1, pages.length - 1);
-
-            // ordre d'affichage = gauche puis droite
-            pages[imageIndex].classList.add('active'); // gauche (IMAGE)
-            if (imageIndex !== texteIndex) {
-                pages[texteIndex].classList.add('active'); // droite (TEXTE)
-                pagesContainer.classList.add('double-layout');
-
-                pageNumber.textContent =
-                    "Pages " + (texteIndex + 1) + "–" + (imageIndex + 1) + " / " + pages.length;
-            } else {
-                pageNumber.textContent = "Page " + (texteIndex + 1) + " / " + pages.length;
-            }
-        } else {
-            // 📱 mobile / tablette ou cover : une seule page à la fois (inchangé)
-            pages[currentPage].classList.add('active');
-            pageNumber.textContent = "Page " + (currentPage + 1) + " / " + pages.length;
-        }
-
-        prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
+    if (desktop) {
+      if (currentPage === 0) {
+        currentPage = 1; // cover -> IMAGE 1
+      } else {
+        currentPage += 2; // duo suivant (image+texte)
+        if (currentPage >= pages.length) currentPage = 0;
+      }
+    } else {
+      currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
     }
 
-    function nextPage() {
-        const desktop = isDesktop();
-
-        if (desktop) {
-            if (currentPage === 0) {
-                // cover → premier duo (texte 1 + image 1)
-                currentPage = 1;
-            } else {
-                currentPage += 2; // duo suivant
-                if (currentPage >= pages.length) {
-                    currentPage = 0; // retour cover
-                }
-            }
-        } else {
-            currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
-        }
-        render();
-    }
-
-    function prevPage() {
-        const desktop = isDesktop();
-
-        if (desktop) {
-            if (currentPage === 0) {
-                // cover → dernier duo (texte-07 + derniere-couverture)
-                currentPage = (pages.length - 2);
-            } else if (currentPage === 1) {
-                currentPage = 0;
-            } else {
-                currentPage -= 2;
-            }
-        } else {
-            if (currentPage > 0) currentPage--;
-            else currentPage = pages.length - 1;
-        }
-        render();
-    }
-
-    window.addEventListener('resize', render);
     render();
+  }
+
+  function prevPage() {
+    const desktop = isDesktop();
+
+    if (desktop) {
+      if (currentPage === 0) {
+        // cover -> dernier duo (on veut retomber sur une IMAGE)
+        currentPage = pages.length - 2; // avant-dernière index
+        if (currentPage % 2 === 0) currentPage -= 1;
+      } else if (currentPage === 1) {
+        currentPage = 0;
+      } else {
+        currentPage -= 2;
+      }
+    } else {
+      currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
+    }
+
+    render();
+  }
+
+  window.addEventListener('resize', render);
+  render();
 </script>
 
 </body>
