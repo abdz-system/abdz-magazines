@@ -71,12 +71,13 @@
   }
 
   /* 🖥 Double page UNIQUEMENT sur ordi */
-  @media (min-width: 1024px) {
-    .pages.double-layout {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-    }
+@media (min-width: 1024px) {
+  .pages.double-layout {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-direction: row-reverse; /* inversion gauche/droite */
+  }
     .pages.double-layout .page.active {
       flex: 0 0 45%;
     }
