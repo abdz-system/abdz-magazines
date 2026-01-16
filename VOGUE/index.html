@@ -69,8 +69,7 @@
     body { padding: 5px; }
     .viewer { padding: 12px; border-radius: 12px; }
   }
-
-  /* 🖥 Double page UNIQUEMENT sur ordi */
+/* 🖥 Double page UNIQUEMENT sur ordi */
 @media (min-width: 1024px) {
   .pages.double-layout {
     display: flex;
@@ -78,14 +77,16 @@
     gap: 24px;
     flex-direction: row-reverse; /* inversion gauche/droite */
   }
-}
-    .pages.double-layout .page.active {
-      flex: 0 0 45%;
-    }
-    .pages.double-layout .page.active img {
-      max-height: 80vh;
-    }
+
+  .pages.double-layout .page.active {
+    flex: 0 0 45%;
   }
+
+  .pages.double-layout .page.active img {
+    max-height: 80vh;
+  }
+}
+
 </style>
 </head>
 
