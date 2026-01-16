@@ -114,12 +114,12 @@
             <img src="IMAGES/couverture.png" alt="Couverture">
         </div>
 
-        <!-- 2. TEXTE 01 (doit être à gauche sur ordi) -->
+        <!-- 2. TEXTE 01 -->
         <div class="page">
             <img src="TEXTES/texte-01.png" alt="Texte 1">
         </div>
 
-        <!-- 3. IMAGE 1 (à droite sur ordi) -->
+        <!-- 3. IMAGE 1 -->
         <div class="page">
             <img src="IMAGES/1.png" alt="Image 1">
         </div>
@@ -185,7 +185,7 @@
 </div>
 
 <script>
-    let currentPage = 0; // index de la première page visible
+    let currentPage = 0; // index de la première page visible (sur desktop: index du TEXTE)
     const pages = document.querySelectorAll('.page');
     const pagesContainer = document.querySelector('.pages');
     const pageNumber = document.getElementById('pageNumber');
@@ -203,20 +203,23 @@
         pagesContainer.classList.remove('double-layout');
 
         if (desktop && currentPage > 0) {
-            // 🖥 sur ordi, après la cover : on montre un DUO (texte + image)
-            const first = currentPage;
-            const second = Math.min(currentPage + 1, pages.length - 1);
+            // 🖥 sur ordi : DUO mais affiché IMAGE à gauche / TEXTE à droite
+            const texteIndex = currentPage;
+            const imageIndex = Math.min(currentPage + 1, pages.length - 1);
 
-            pages[first].classList.add('active');
-            if (second !== first) {
-                pages[second].classList.add('active');
+            // ordre d'affichage = gauche puis droite
+            pages[imageIndex].classList.add('active'); // gauche (IMAGE)
+            if (imageIndex !== texteIndex) {
+                pages[texteIndex].classList.add('active'); // droite (TEXTE)
                 pagesContainer.classList.add('double-layout');
-                pageNumber.textContent = "Pages " + (first + 1) + "–" + (second + 1) + " / " + pages.length;
+
+                pageNumber.textContent =
+                    "Pages " + (texteIndex + 1) + "–" + (imageIndex + 1) + " / " + pages.length;
             } else {
-                pageNumber.textContent = "Page " + (first + 1) + " / " + pages.length;
+                pageNumber.textContent = "Page " + (texteIndex + 1) + " / " + pages.length;
             }
         } else {
-            // 📱 mobile / tablette ou cover : une seule page à la fois
+            // 📱 mobile / tablette ou cover : une seule page à la fois (inchangé)
             pages[currentPage].classList.add('active');
             pageNumber.textContent = "Page " + (currentPage + 1) + " / " + pages.length;
         }
@@ -229,17 +232,15 @@
 
         if (desktop) {
             if (currentPage === 0) {
-                // de la cover → premier duo (texte 1 + image 1)
+                // cover → premier duo (texte 1 + image 1)
                 currentPage = 1;
             } else {
-                // duo suivant : +2
-                currentPage += 2;
+                currentPage += 2; // duo suivant
                 if (currentPage >= pages.length) {
-                    currentPage = 0; // retour à la cover
+                    currentPage = 0; // retour cover
                 }
             }
         } else {
-            // mobile / tablette : page par page
             currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
         }
         render();
@@ -250,28 +251,21 @@
 
         if (desktop) {
             if (currentPage === 0) {
-                // de la cover → dernier duo
-                currentPage = (pages.length - 2); // on démarre sur l'avant-dernière (texte 7)
+                // cover → dernier duo (texte-07 + derniere-couverture)
+                currentPage = (pages.length - 2);
             } else if (currentPage === 1) {
-                // du premier duo → cover
                 currentPage = 0;
             } else {
-                currentPage -= 2; // duo précédent
+                currentPage -= 2;
             }
         } else {
-            // mobile / tablette : page par page
-            if (currentPage > 0) {
-                currentPage--;
-            } else {
-                currentPage = pages.length - 1;
-            }
+            if (currentPage > 0) currentPage--;
+            else currentPage = pages.length - 1;
         }
         render();
     }
 
     window.addEventListener('resize', render);
-
-    // afficher la première page au chargement
     render();
 </script>
 
