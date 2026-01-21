@@ -1,266 +1,211 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>VOGUE — ABDZ</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOGUE — ABDZ</title>
 
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f2;
-    margin: 0;
-    padding: 10px;
-  }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 10px;
+    }
 
-  .viewer {
-    max-width: 1100px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    text-align: center;
-  }
+    .viewer {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+    }
 
-  .pages { display: block; }
+    .pages { display: block; }
 
-  .page { display: none; }
-  .page.active { display: block; }
+    .page { display: none; }
+    .page.active { display: block; }
 
-  .page img {
-    max-width: 100%;
-    max-height: 85vh;
-    width: auto;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    object-fit: contain;
-  }
-  /* 🔥 COVER & DERNIÈRE COUVERTURE PLUS GRANDES */
-.page:first-child img,
-.page:last-child img {
-  max-height: 92vh;
-}
+    .page img {
+      max-width: 100%;
+      max-height: 85vh;
+      width: auto;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      object-fit: contain;
+    }
 
+    /* 🔥 Cover + dernière couverture plus grandes */
+    .page:first-child img,
+    .page:last-child img {
+      max-height: 92vh;
+    }
 
-  .nav-buttons {
-    margin-top: 18px;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  button {
-    background: black;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: 0.2s;
-    flex: 1;
-  }
-  button:hover { background: #b30000; }
-
-  .page-number {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #5a5a5a;
-    text-align: center;
-  }
-
-  @media (max-width: 600px) {
-    body { padding: 5px; }
-    .viewer { padding: 12px; border-radius: 12px; }
-  }
-
-  /* 🖥 Double page uniquement sur ordi */
-  @media (min-width: 1024px) {
-    .pages.double-layout {
+    .nav-buttons {
+      margin-top: 18px;
       display: flex;
-      justify-content: center;
-      gap: 24px;
-      /* pas de row-reverse : gauche = première page, droite = seconde */
+      justify-content: space-between;
+      gap: 10px;
     }
 
-    .pages.double-layout .page.active {
-      flex: 0 0 45%;
+    button {
+      background: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
+      flex: 1;
+    }
+    button:hover { background: #b30000; }
+
+    .page-number {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #5a5a5a;
+      text-align: center;
     }
 
-    .pages.double-layout .page.active img {
-      max-height: 80vh;
+    @media (max-width: 600px) {
+      body { padding: 5px; }
+      .viewer { padding: 12px; border-radius: 12px; }
     }
-  }
-</style>
+
+    /* 🖥 Double page uniquement sur ordi */
+    @media (min-width: 1024px) {
+      .pages.double-layout {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+      }
+
+      .pages.double-layout .page.active {
+        flex: 0 0 45%;
+      }
+
+      .pages.double-layout .page.active img {
+        max-height: 80vh;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="viewer">
+  <div class="viewer">
+    <div class="pages" id="pagesContainer"></div>
 
-  <div class="pages">
-
-    <!-- 1. COVER -->
-    <div class="page">
-      <img src="IMAGES/couverture.png" alt="Couverture">
+    <div class="nav-buttons">
+      <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
+      <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
     </div>
 
-    <!-- 2. IMAGE 1 -->
-    <div class="page">
-      <img src="IMAGES/1.png" alt="Image 1">
-    </div>
-
-    <!-- 3. TEXTE 01 -->
-    <div class="page">
-      <img src="TEXTES/texte-01.png" alt="Texte 01">
-    </div>
-
-    <!-- 4. IMAGE 2 -->
-    <div class="page">
-      <img src="IMAGES/2.png" alt="Image 2">
-    </div>
-
-    <!-- 5. TEXTE 02 -->
-    <div class="page">
-      <img src="TEXTES/texte-02.png" alt="Texte 02">
-    </div>
-
-    <!-- 6. IMAGE 3 -->
-    <div class="page">
-      <img src="IMAGES/3.png" alt="Image 3">
-    </div>
-
-    <!-- 7. TEXTE 03 -->
-    <div class="page">
-      <img src="TEXTES/texte-03.png" alt="Texte 03">
-    </div>
-
-    <!-- 8. IMAGE 4 -->
-    <div class="page">
-      <img src="IMAGES/4.png" alt="Image 4">
-    </div>
-
-    <!-- 9. TEXTE 04 -->
-    <div class="page">
-      <img src="TEXTES/texte-04.png" alt="Texte 04">
-    </div>
-
-    <!-- 10. IMAGE 5 -->
-    <div class="page">
-      <img src="IMAGES/5.png" alt="Image 5">
-    </div>
-
-    <!-- 11. TEXTE 05 -->
-    <div class="page">
-      <img src="TEXTES/texte-05.png" alt="Texte 05">
-    </div>
-
-    <!-- 12. TEXTE 07 -->
-    <div class="page">
-      <img src="TEXTES/texte-07.png" alt="Texte 07">
-    </div>
-
-    <!-- 13. COORDONNEES (IMAGE 6) -->
-    <div class="page">
-      <img src="IMAGES/6.png" alt="Coordonnées">
-    </div>
-
-    <!-- 14. DERNIERE COUVERTURE (FINALE) -->
-    <div class="page">
-      <img src="IMAGES/derniere-couverture.png" alt="Dernière couverture">
-    </div>
-
+    <div class="page-number" id="pageNumber"></div>
   </div>
 
-  <div class="nav-buttons">
-    <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
-    <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
-  </div>
+  <script>
+    // ✅ Liste des fichiers dans l'ordre (34 pages : cover + 1..32 + dernière cover)
+    const fileList = [
+      "couverture.png",
+      ...Array.from({ length: 32 }, (_, i) => `${i + 1}.png`),
+      "derniere-couverture.png"
+    ];
 
-  <div class="page-number" id="pageNumber"></div>
+    // Génération automatique des pages
+    const pagesContainer = document.getElementById("pagesContainer");
+    fileList.forEach((fileName) => {
+      const page = document.createElement("div");
+      page.className = "page";
 
-</div>
+      const img = document.createElement("img");
+      img.src = `IMAGES/${fileName}`;
+      img.alt = fileName;
 
-<script>
-  let currentPage = 0;
-  const pages = document.querySelectorAll('.page');
-  const pagesContainer = document.querySelector('.pages');
-  const pageNumber = document.getElementById('pageNumber');
-  const prevBtn = document.getElementById('prevBtn');
+      page.appendChild(img);
+      pagesContainer.appendChild(page);
+    });
 
-  function isDesktop() {
-    return window.innerWidth >= 1024;
-  }
+    let currentPage = 0; // index de la page principale visible (0 = cover)
+    const pages = document.querySelectorAll(".page");
+    const pageNumber = document.getElementById("pageNumber");
+    const prevBtn = document.getElementById("prevBtn");
 
-  function render() {
-    const desktop = isDesktop();
-
-    pages.forEach(p => p.classList.remove('active'));
-    pagesContainer.classList.remove('double-layout');
-
-    if (desktop && currentPage > 0) {
-      // 🖥 Ordi : on affiche 2 pages consécutives (page N à gauche, N+1 à droite)
-      const first = currentPage;
-      const second = Math.min(currentPage + 1, pages.length - 1);
-
-      pages[first].classList.add('active');   // gauche
-      if (second !== first) pages[second].classList.add('active'); // droite
-      pagesContainer.classList.add('double-layout');
-
-      if (second !== first) {
-        pageNumber.textContent = "Pages " + (first + 1) + "–" + (second + 1) + " / " + pages.length;
-      } else {
-        pageNumber.textContent = "Page " + (first + 1) + " / " + pages.length;
-      }
-    } else {
-      // 📱 Tel / tablette + cover : 1 page à la fois
-      pages[currentPage].classList.add('active');
-      pageNumber.textContent = "Page " + (currentPage + 1) + " / " + pages.length;
+    function isDesktop() {
+      return window.innerWidth >= 1024;
     }
 
-    prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
-  }
+    function render() {
+      const desktop = isDesktop();
 
-  function nextPage() {
-    const desktop = isDesktop();
+      pages.forEach(p => p.classList.remove("active"));
+      pagesContainer.classList.remove("double-layout");
 
-    if (desktop) {
-      if (currentPage === 0) {
-        currentPage = 1; // cover -> page 2 (image 1)
+      if (desktop && currentPage > 0) {
+        // 🖥 Ordi : afficher 2 pages consécutives (N à gauche, N+1 à droite)
+        const first = currentPage;
+        const second = Math.min(currentPage + 1, pages.length - 1);
+
+        pages[first].classList.add("active");
+        if (second !== first) pages[second].classList.add("active");
+
+        pagesContainer.classList.add("double-layout");
+
+        if (second !== first) {
+          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
+        } else {
+          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
+        }
       } else {
-        currentPage += 2; // duo suivant
-        if (currentPage >= pages.length) currentPage = 0; // retour cover
+        // 📱 Mobile / tablette (et cover) : 1 page à la fois
+        pages[currentPage].classList.add("active");
+        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
       }
-    } else {
-      currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
+
+      prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
     }
 
+    function nextPage() {
+      const desktop = isDesktop();
+
+      if (desktop) {
+        if (currentPage === 0) {
+          currentPage = 1; // cover -> page 2
+        } else {
+          currentPage += 2; // duo suivant
+          if (currentPage >= pages.length) currentPage = 0; // retour cover
+        }
+      } else {
+        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
+      }
+
+      render();
+    }
+
+    function prevPage() {
+      const desktop = isDesktop();
+
+      if (desktop) {
+        if (currentPage === 0) {
+          // cover -> dernier duo (avant-dernière page en index, car duo = 2 pages)
+          currentPage = pages.length - 2; // ex: 34 pages => index 32
+        } else if (currentPage === 1) {
+          currentPage = 0; // premier duo -> cover
+        } else {
+          currentPage -= 2;
+        }
+      } else {
+        currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
+      }
+
+      render();
+    }
+
+    window.addEventListener("resize", render);
     render();
-  }
-
-  function prevPage() {
-    const desktop = isDesktop();
-
-    if (desktop) {
-      if (currentPage === 0) {
-        // cover -> dernier duo (coordonnées + dernière couverture)
-        currentPage = pages.length - 2;
-      } else if (currentPage === 1) {
-        currentPage = 0; // du 1er duo -> cover
-      } else {
-        currentPage -= 2; // duo précédent
-      }
-    } else {
-      currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
-    }
-
-    render();
-  }
-
-  window.addEventListener('resize', render);
-  render();
-</script>
-
+  </script>
 </body>
 </html>
