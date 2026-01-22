@@ -27,19 +27,18 @@
 
     .page { display: none; }
     .page.active { display: block; }
-.page img {
-  max-width: 100%;
-  max-height: 85vh;
-  width: 100%;
-  height: auto;
 
-         
+    .page img {
+      max-width: 100%;
+      max-height: 85vh;
+      width: 100%;
+      height: auto;
       border-radius: 12px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       object-fit: contain;
     }
 
-    /* 🔥 Cover + dernière couverture plus grandes */
+    /* Cover + dernière un peu plus grandes */
     .page:first-child img,
     .page:last-child img {
       max-height: 92vh;
@@ -78,135 +77,4 @@
     }
 
     /* 🖥 Double page uniquement sur ordi */
-    @media (min-width: 1024px) {
-      .pages.double-layout {
-        display: flex;
-        justify-content: center;
-        gap: 24px;
-      }
-
-      .pages.double-layout .page.active {
-        flex: 0 0 45%;
-      }
-
-      .pages.double-layout .page.active img {
-        max-height: 80vh;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="viewer">
-    <div class="pages" id="pagesContainer"></div>
-
-    <div class="nav-buttons">
-      <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
-      <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
-    </div>
-
-    <div class="page-number" id="pageNumber"></div>
-  </div>
-
-  <script>
-    // ✅ Liste des fichiers dans l'ordre (34 pages : cover + 1..32 + dernière cover)
-    const fileList = [
-      "couverture.png",
-      ...Array.from({ length: 32 }, (_, i) => `${i + 1}.png`),
-      "derniere-couverture.png"
-    ];
-
-    // Génération automatique des pages
-    const pagesContainer = document.getElementById("pagesContainer");
-    fileList.forEach((fileName) => {
-      const page = document.createElement("div");
-      page.className = "page";
-
-      const img = document.createElement("img");
-      img.src = `IMAGES/${fileName}`;
-      img.alt = fileName;
-
-      page.appendChild(img);
-      pagesContainer.appendChild(page);
-    });
-
-    let currentPage = 0; // index de la page principale visible (0 = cover)
-    const pages = document.querySelectorAll(".page");
-    const pageNumber = document.getElementById("pageNumber");
-    const prevBtn = document.getElementById("prevBtn");
-
-    function isDesktop() {
-      return window.innerWidth >= 1024;
-    }
-
-    function render() {
-      const desktop = isDesktop();
-
-      pages.forEach(p => p.classList.remove("active"));
-      pagesContainer.classList.remove("double-layout");
-
-      if (desktop && currentPage > 0) {
-        // 🖥 Ordi : afficher 2 pages consécutives (N à gauche, N+1 à droite)
-        const first = currentPage;
-        const second = Math.min(currentPage + 1, pages.length - 1);
-
-        pages[first].classList.add("active");
-        if (second !== first) pages[second].classList.add("active");
-
-        pagesContainer.classList.add("double-layout");
-
-        if (second !== first) {
-          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
-        } else {
-          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
-        }
-      } else {
-        // 📱 Mobile / tablette (et cover) : 1 page à la fois
-        pages[currentPage].classList.add("active");
-        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
-      }
-
-      prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
-    }
-
-    function nextPage() {
-      const desktop = isDesktop();
-
-      if (desktop) {
-        if (currentPage === 0) {
-          currentPage = 1; // cover -> page 2
-        } else {
-          currentPage += 2; // duo suivant
-          if (currentPage >= pages.length) currentPage = 0; // retour cover
-        }
-      } else {
-        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
-      }
-
-      render();
-    }
-
-    function prevPage() {
-      const desktop = isDesktop();
-
-      if (desktop) {
-        if (currentPage === 0) {
-          // cover -> dernier duo (avant-dernière page en index, car duo = 2 pages)
-          currentPage = pages.length - 2; // ex: 34 pages => index 32
-        } else if (currentPage === 1) {
-          currentPage = 0; // premier duo -> cover
-        } else {
-          currentPage -= 2;
-        }
-      } else {
-        currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
-      }
-
-      render();
-    }
-
-    window.addEventListener("resize", render);
-    render();
-  </script>
-</body>
-</html>
+    @media (min-width: 1024px)
