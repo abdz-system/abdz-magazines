@@ -79,13 +79,18 @@
         gap: 24px;
       }
 
+      /* Pages normales (deux pages côte à côte) */
       .pages.double-layout .page.active {
         flex: 0 0 45%;
       }
 
-      /* garde le rendu grand sur ordi */
       .pages.double-layout .page.active img {
         max-height: 92vh;
+      }
+
+      /* ✅ Pages "transition" en double-page (plein centre) */
+      .pages.double-layout .page.active.spread {
+        flex: 0 0 100%;
       }
     }
   </style>
@@ -104,13 +109,7 @@
   </div>
 
   <script>
-    // ✅ Ordre exact avec tes pages de transition
-    // - A1.png après 5.png
-    // - B2.png après 13.png
-    // - C3.png après 19.png
-    // - D4.png après 23.png
-    // - E5.png après 27.png
-    // + tu as bien 34 pages internes (1.png → 34.png) puis la dernière couverture
+    // ✅ Liste exacte (41 fichiers)
     const fileList = [
       "couverture.png",
 
@@ -118,9 +117,9 @@
       "2.png",
       "3.png",
       "4.png",
-      "5.png",
       "A1.png",
 
+      "5.png",
       "6.png",
       "7.png",
       "8.png",
@@ -128,23 +127,23 @@
       "10.png",
       "11.png",
       "12.png",
-      "13.png",
       "B2.png",
 
+      "13.png",
       "14.png",
       "15.png",
       "16.png",
       "17.png",
       "18.png",
-      "19.png",
       "C3.png",
 
+      "19.png",
       "20.png",
       "21.png",
       "22.png",
-      "23.png",
       "D4.png",
 
+      "23.png",
       "24.png",
       "25.png",
       "26.png",
@@ -162,11 +161,26 @@
       "derniere-couverture.png"
     ];
 
+    // ✅ Pages à afficher en "double-page" (plein centre sur ordi)
+    const spreadFiles = new Set([
+      "couverture.png",
+      "A1.png",
+      "B2.png",
+      "C3.png",
+      "D4.png",
+      "E5.png",
+      "derniere-couverture.png"
+    ]);
+
     const pagesContainer = document.getElementById("pagesContainer");
 
     fileList.forEach((fileName) => {
       const page = document.createElement("div");
       page.className = "page";
+
+      if (spreadFiles.has(fileName)) {
+        page.classList.add("spread");
+      }
 
       const img = document.createElement("img");
       img.src = `IMAGES/${fileName}`;
@@ -185,60 +199,126 @@
       return window.innerWidth >= 1024;
     }
 
+    function isSpreadIndex(index) {
+      const file = fileList[index];
+      return spreadFiles.has(file);
+    }
+
     function render() {
       const desktop = isDesktop();
 
       pages.forEach(p => p.classList.remove("active"));
       pagesContainer.classList.remove("double-layout");
 
-      if (desktop && currentPage > 0) {
+      // MOBILE / TABLETTE : 1 page à la fois
+      if (!desktop) {
+        pages[currentPage].classList.add("active");
+        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+        prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
+        return;
+      }
+
+      // ORDI : cover (page 0) en simple
+      if (currentPage === 0) {
+        pages[0].classList.add("active");
+        pageNumber.textContent = `Page 1 / ${pages.length}`;
+        prevBtn.style.visibility = "hidden";
+        return;
+      }
+
+      // ORDI : double layout activé
+      pagesContainer.classList.add("double-layout");
+
+      // Si c'est une page "spread" => pleine largeur, seule
+      if (isSpreadIndex(currentPage)) {
+        pages[currentPage].classList.add("active");
+        // Option : l'afficher comme une double-page (ex: Pages 6–7)
+        pageNumber.textContent = `Pages ${currentPage + 1}–${Math.min(currentPage + 2, pages.length)} / ${pages.length}`;
+      } else {
+        // Sinon : 2 pages côte à côte (sauf si la suivante est un spread)
         const first = currentPage;
         const second = Math.min(currentPage + 1, pages.length - 1);
 
         pages[first].classList.add("active");
-        if (second !== first) pages[second].classList.add("active");
 
-        pagesContainer.classList.add("double-layout");
-
-        if (second !== first) {
+        if (!isSpreadIndex(second) && second !== first) {
+          pages[second].classList.add("active");
           pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
         } else {
+          // si la suivante est un spread, on n'affiche pas la seconde
           pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
         }
-      } else {
-        pages[currentPage].classList.add("active");
-        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
       }
 
       prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
     }
 
     function nextPage() {
-      if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = 1;
-        } else {
-          currentPage += 2;
-          if (currentPage >= pages.length) currentPage = 0;
-        }
-      } else {
+      const desktop = isDesktop();
+
+      if (!desktop) {
         currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
+        render();
+        return;
       }
+
+      if (currentPage === 0) {
+        currentPage = 1;
+        render();
+        return;
+      }
+
+      // Si on est sur un spread => avancer de 1
+      if (isSpreadIndex(currentPage)) {
+        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
+        render();
+        return;
+      }
+
+      // Si la prochaine page est un spread => avancer de 1 pour tomber dessus
+      if (currentPage + 1 < pages.length && isSpreadIndex(currentPage + 1)) {
+        currentPage += 1;
+        render();
+        return;
+      }
+
+      // Sinon double-page classique => +2
+      currentPage += 2;
+      if (currentPage >= pages.length) currentPage = 0;
       render();
     }
 
     function prevPage() {
-      if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = pages.length - 2;
-        } else if (currentPage === 1) {
-          currentPage = 0;
-        } else {
-          currentPage -= 2;
-        }
-      } else {
+      const desktop = isDesktop();
+
+      if (!desktop) {
         currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
+        render();
+        return;
       }
+
+      if (currentPage === 0) {
+        currentPage = pages.length - 1;
+        render();
+        return;
+      }
+
+      if (currentPage === 1) {
+        currentPage = 0;
+        render();
+        return;
+      }
+
+      // Si on est sur un spread => reculer de 1
+      if (isSpreadIndex(currentPage)) {
+        currentPage -= 1;
+        render();
+        return;
+      }
+
+      // Sinon double-page classique => -2
+      currentPage -= 2;
+      if (currentPage < 0) currentPage = 0;
       render();
     }
 
