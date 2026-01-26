@@ -38,7 +38,6 @@
       object-fit: contain;
     }
 
-  
     .nav-buttons {
       margin-top: 18px;
       display: flex;
@@ -84,6 +83,7 @@
         flex: 0 0 45%;
       }
 
+      /* garde le rendu grand sur ordi */
       .pages.double-layout .page.active img {
         max-height: 92vh;
       }
@@ -104,9 +104,61 @@
   </div>
 
   <script>
+    // ✅ Ordre exact avec tes pages de transition
+    // - A1.png après 5.png
+    // - B2.png après 13.png
+    // - C3.png après 19.png
+    // - D4.png après 23.png
+    // - E5.png après 27.png
+    // + tu as bien 34 pages internes (1.png → 34.png) puis la dernière couverture
     const fileList = [
       "couverture.png",
-      ...Array.from({ length: 34 }, (_, i) => `${i + 1}.png`),
+
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "A1.png",
+
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+      "11.png",
+      "12.png",
+      "13.png",
+      "B2.png",
+
+      "14.png",
+      "15.png",
+      "16.png",
+      "17.png",
+      "18.png",
+      "19.png",
+      "C3.png",
+
+      "20.png",
+      "21.png",
+      "22.png",
+      "23.png",
+      "D4.png",
+
+      "24.png",
+      "25.png",
+      "26.png",
+      "27.png",
+      "E5.png",
+
+      "28.png",
+      "29.png",
+      "30.png",
+      "31.png",
+      "32.png",
+      "33.png",
+      "34.png",
+
       "derniere-couverture.png"
     ];
 
