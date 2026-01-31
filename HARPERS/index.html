@@ -6,85 +6,87 @@
   <title>HARPER'S BAZAAR — ABDZ</title>
 
   <style>
-    body{
+    body {
       font-family: Arial, sans-serif;
-      background:#f2f2f2;
-      margin:0;
-      padding:10px;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 10px;
     }
 
-    .viewer{
-      max-width:1100px;
-      margin:0 auto;
-      background:#fff;
-      padding:20px;
-      border-radius:20px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.15);
-      text-align:center;
+    .viewer {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
     }
 
-    .pages{ display:block; }
+    .pages { display: block; }
 
-    .page{ display:none; }
-    .page.active{ display:block; }
+    .page { display: none; }
+    .page.active { display: block; }
 
-    .page img, .page video{
-      max-width:100%;
-      max-height:85vh;
-      width:100%;
-      height:auto;
-      border-radius:12px;
-      box-shadow:0 10px 20px rgba(0,0,0,0.2);
-      object-fit:contain;
-      background:#000;
+    .page img, .page video {
+      max-width: 100%;
+      max-height: 85vh;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      object-fit: contain;
+      background: #000;
     }
 
-    .nav-buttons{
-      margin-top:18px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
+    .nav-buttons {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
     }
 
-    button{
-      background:#000;
-      color:#fff;
-      padding:10px 20px;
-      border:none;
-      border-radius:8px;
-      cursor:pointer;
-      font-size:15px;
-      transition:.2s;
-      flex:1;
+    button {
+      background: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
+      flex: 1;
     }
 
-    button:hover{ background:#b30000; }
+    button:hover { background: #b30000; }
 
-    .page-number{
-      margin-top:8px;
-      font-size:14px;
-      color:#5a5a5a;
-      text-align:center;
+    .page-number {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #5a5a5a;
+      text-align: center;
     }
 
-    @media (max-width:600px){
-      body{ padding:5px; }
-      .viewer{ padding:12px; border-radius:12px; }
+    @media (max-width: 600px) {
+      body { padding: 5px; }
+      .viewer { padding: 12px; border-radius: 12px; }
     }
 
     /* 🖥 Double page uniquement sur ordi */
-    @media (min-width:1024px){
-      .pages.double-layout{
-        display:flex;
-        justify-content:center;
-        gap:24px;
+    @media (min-width: 1024px) {
+      .pages.double-layout {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
       }
-      .pages.double-layout .page.active{
-        flex:0 0 45%;
+
+      .pages.double-layout .page.active {
+        flex: 0 0 45%;
       }
+
       .pages.double-layout .page.active img,
-      .pages.double-layout .page.active video{
-        max-height:92vh;
+      .pages.double-layout .page.active video {
+        max-height: 92vh;
       }
     }
   </style>
@@ -103,7 +105,7 @@
   </div>
 
   <script>
-    // 1) LISTE IMAGES
+    // ✅ 1) Liste des images (adapte si besoin : 44 pages)
     const imageList = [
       "couverture.png",
       ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
@@ -112,10 +114,11 @@
 
     const pagesContainer = document.getElementById("pagesContainer");
 
-    // Ajout pages images
+    // ✅ Ajoute pages images
     imageList.forEach((fileName) => {
       const page = document.createElement("div");
       page.className = "page";
+      page.dataset.type = "image";
 
       const img = document.createElement("img");
       img.src = `IMAGES/${fileName}`;
@@ -125,16 +128,22 @@
       pagesContainer.appendChild(page);
     });
 
-    // 2) PAGE VIDEO FINALE
+    // ✅ 2) Ajoute page vidéo finale
     const videoPage = document.createElement("div");
     videoPage.className = "page";
-    videoPage.dataset.single = "true"; // <- force affichage seul sur desktop
+    videoPage.dataset.type = "video";
 
     const video = document.createElement("video");
-    video.muted = true;         // autoplay OK sur la plupart des navigateurs si muted
+    video.src = `VIDEOS/sphere-close.mp4`;   // ✅ ton fichier dans HARPERS/VIDEOS/
     video.playsInline = true;
     video.preload = "metadata";
-    video.src = `VIDEOS/sphere-close.mp4`;
+
+    // ✅ AUTOPLAY propre (la plupart des navigateurs l'acceptent si muted)
+    video.muted = true;
+    video.autoplay = true;
+
+    // ✅ je laisse les contrôles pour qu'ils puissent relancer si besoin
+    video.controls = true;
 
     videoPage.appendChild(video);
     pagesContainer.appendChild(videoPage);
@@ -156,15 +165,15 @@
       });
     }
 
-    function maybeAutoplay() {
-      const p = pages[currentPage];
-      const v = p ? p.querySelector("video") : null;
-      if (v) {
-        v.play().catch(() => {
-          // si autoplay bloqué, on affiche les controls pour que la personne clique
-          v.controls = true;
-        });
-      }
+    function tryPlayVideoOnActivePages() {
+      document.querySelectorAll(".page.active video").forEach(v => {
+        // tentative autoplay (si bloqué, l'utilisateur peut cliquer Play)
+        v.play().catch(() => {});
+      });
+    }
+
+    function pageType(index) {
+      return pages[index]?.dataset?.type || "image";
     }
 
     function render() {
@@ -173,27 +182,24 @@
       pages.forEach(p => p.classList.remove("active"));
       pagesContainer.classList.remove("double-layout");
 
-      const currentIsSingle = pages[currentPage]?.dataset.single === "true";
-
-      // Desktop double page uniquement si :
-      // - pas la page 0
-      // - ET pas une page marquée "single"
-      if (desktop && currentPage > 0 && !currentIsSingle) {
+      // ✅ Règle anti-bug : si une vidéo est concernée, on force 1 seule page (même sur ordi)
+      if (desktop && currentPage > 0) {
         const first = currentPage;
         const second = Math.min(currentPage + 1, pages.length - 1);
 
-        pages[first].classList.add("active");
+        const firstType = pageType(first);
+        const secondType = pageType(second);
 
-        // Si la seconde est "single", on ne l'affiche pas en duo
-        const secondIsSingle = pages[second]?.dataset.single === "true";
-        if (second !== first && !secondIsSingle) pages[second].classList.add("active");
+        const mustSingle = (firstType === "video" || secondType === "video");
 
-        pagesContainer.classList.add("double-layout");
-
-        if (second !== first && !secondIsSingle) {
-          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
-        } else {
+        if (mustSingle) {
+          pages[first].classList.add("active");
           pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
+        } else {
+          pages[first].classList.add("active");
+          if (second !== first) pages[second].classList.add("active");
+          pagesContainer.classList.add("double-layout");
+          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
         }
       } else {
         pages[currentPage].classList.add("active");
@@ -201,7 +207,9 @@
       }
 
       prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
-      maybeAutoplay();
+
+      // ✅ si on arrive sur la page vidéo, on lance autoplay
+      tryPlayVideoOnActivePages();
     }
 
     function nextPage() {
@@ -211,9 +219,7 @@
         if (currentPage === 0) {
           currentPage = 1;
         } else {
-          // si page actuelle est "single", on avance de 1 sinon de 2
-          const single = pages[currentPage]?.dataset.single === "true";
-          currentPage += single ? 1 : 2;
+          currentPage += 2;
           if (currentPage >= pages.length) currentPage = 0;
         }
       } else {
@@ -231,9 +237,7 @@
         } else if (currentPage === 1) {
           currentPage = 0;
         } else {
-          const single = pages[currentPage]?.dataset.single === "true";
-          currentPage -= single ? 1 : 2;
-          if (currentPage < 0) currentPage = 0;
+          currentPage -= 2;
         }
       } else {
         currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
