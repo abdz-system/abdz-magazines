@@ -220,7 +220,7 @@
           currentPage = 1;
         } else {
           currentPage += 2;
-          if (currentPage >= pages.length) currentPage = 0;
+          if (currentPage >= pages.length) currentPage = pages.length - 1;
         }
       } else {
         currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
