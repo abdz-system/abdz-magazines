@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,7 +28,7 @@
     .page { display: none; }
     .page.active { display: block; }
 
-    .page img {
+    .page img, .page video {
       max-width: 100%;
       max-height: 85vh;
       width: 100%;
@@ -37,9 +36,9 @@
       border-radius: 12px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       object-fit: contain;
+      background: #000;
     }
 
-  
     .nav-buttons {
       margin-top: 18px;
       display: flex;
@@ -85,7 +84,8 @@
         flex: 0 0 45%;
       }
 
-      .pages.double-layout .page.active img {
+      .pages.double-layout .page.active img,
+      .pages.double-layout .page.active video {
         max-height: 92vh;
       }
     }
@@ -105,7 +105,8 @@
   </div>
 
   <script>
-    const fileList = [
+    // ✅ 1) Liste des images (adapte si besoin : 44 pages)
+    const imageList = [
       "couverture.png",
       ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
       "derniere-couverture.png"
@@ -113,9 +114,11 @@
 
     const pagesContainer = document.getElementById("pagesContainer");
 
-    fileList.forEach((fileName) => {
+    // ✅ Ajoute pages images
+    imageList.forEach((fileName) => {
       const page = document.createElement("div");
       page.className = "page";
+      page.dataset.type = "image";
 
       const img = document.createElement("img");
       img.src = `IMAGES/${fileName}`;
@@ -125,6 +128,27 @@
       pagesContainer.appendChild(page);
     });
 
+    // ✅ 2) Ajoute page vidéo finale
+    const videoPage = document.createElement("div");
+    videoPage.className = "page";
+    videoPage.dataset.type = "video";
+
+    const video = document.createElement("video");
+    video.src = `VIDEOS/sphere-close.mp4`;   // ✅ ton fichier dans HARPERS/VIDEOS/
+    video.playsInline = true;
+    video.preload = "metadata";
+
+    // ✅ AUTOPLAY propre (la plupart des navigateurs l'acceptent si muted)
+    video.muted = true;
+    video.autoplay = true;
+
+    // ✅ je laisse les contrôles pour qu'ils puissent relancer si besoin
+    video.controls = true;
+
+    videoPage.appendChild(video);
+    pagesContainer.appendChild(videoPage);
+
+    // Navigation
     let currentPage = 0;
     const pages = document.querySelectorAll(".page");
     const pageNumber = document.getElementById("pageNumber");
@@ -134,25 +158,48 @@
       return window.innerWidth >= 1024;
     }
 
+    function stopVideos() {
+      pages.forEach(p => {
+        const v = p.querySelector("video");
+        if (v) { v.pause(); v.currentTime = 0; }
+      });
+    }
+
+    function tryPlayVideoOnActivePages() {
+      document.querySelectorAll(".page.active video").forEach(v => {
+        // tentative autoplay (si bloqué, l'utilisateur peut cliquer Play)
+        v.play().catch(() => {});
+      });
+    }
+
+    function pageType(index) {
+      return pages[index]?.dataset?.type || "image";
+    }
+
     function render() {
       const desktop = isDesktop();
 
       pages.forEach(p => p.classList.remove("active"));
       pagesContainer.classList.remove("double-layout");
 
+      // ✅ Règle anti-bug : si une vidéo est concernée, on force 1 seule page (même sur ordi)
       if (desktop && currentPage > 0) {
         const first = currentPage;
         const second = Math.min(currentPage + 1, pages.length - 1);
 
-        pages[first].classList.add("active");
-        if (second !== first) pages[second].classList.add("active");
+        const firstType = pageType(first);
+        const secondType = pageType(second);
 
-        pagesContainer.classList.add("double-layout");
+        const mustSingle = (firstType === "video" || secondType === "video");
 
-        if (second !== first) {
-          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
-        } else {
+        if (mustSingle) {
+          pages[first].classList.add("active");
           pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
+        } else {
+          pages[first].classList.add("active");
+          if (second !== first) pages[second].classList.add("active");
+          pagesContainer.classList.add("double-layout");
+          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
         }
       } else {
         pages[currentPage].classList.add("active");
@@ -160,9 +207,14 @@
       }
 
       prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
+
+      // ✅ si on arrive sur la page vidéo, on lance autoplay
+      tryPlayVideoOnActivePages();
     }
 
     function nextPage() {
+      stopVideos();
+
       if (isDesktop()) {
         if (currentPage === 0) {
           currentPage = 1;
@@ -177,6 +229,8 @@
     }
 
     function prevPage() {
+      stopVideos();
+
       if (isDesktop()) {
         if (currentPage === 0) {
           currentPage = pages.length - 2;
