@@ -1,1 +1,52 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARPER’S BAZAAR — Start</title>
+<style>
+body{
+  margin:0;
+  background:black;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  font-family:Arial,sans-serif;
+}
+button{
+  padding:18px 28px;
+  font-size:20px;
+  border:none;
+  border-radius:999px;
+  background:#b48b43;
+  color:white;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<button id="go">ENTRER</button>
+
+<audio id="bgm" loop preload="auto">
+  <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const audio=document.getElementById("bgm");
+document.getElementById("go").onclick=async()=>{
+  try{
+    await audio.play(); // autorisation audio
+  }catch(e){}
+  setTimeout(()=>{
+    window.location.href="index.html";
+  },500);
+};
+</script>
+
+</body>
+</html>
