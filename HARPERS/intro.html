@@ -59,4 +59,48 @@ video{
   font-weight:500;
 }
 .cta:hover{
-  backgr
+  background:#d4a64d;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>ABDZ — HARPER’S BAZAAR</h1>
+
+<p class="sous-titre">
+Une porte d’entrée vers l’univers éditorial ABDZ
+</p>
+
+<div class="video-wrapper">
+<video id="introVideo" controls playsinline>
+<source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
+</video>
+</div>
+
+<a class="cta" id="enterBtn" href="index.html">
+ENTREZ DANS MON UNIVERS
+</a>
+
+</div>
+
+<script>
+const KEY="ABDZ_BGM_ON";
+const video=document.getElementById("introVideo");
+const btn=document.getElementById("enterBtn");
+
+function enable(){
+  try{localStorage.setItem(KEY,"1");}catch(e){}
+}
+
+["play","click","touchstart"].forEach(e=>{
+  video.addEventListener(e,enable,{passive:true});
+});
+
+btn.addEventListener("click",enable);
+</script>
+
+</body>
+</html>
