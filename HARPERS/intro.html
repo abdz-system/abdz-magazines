@@ -1,100 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ABDZ — Harper’s Bazaar</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABDZ — Porte d’ouverture</title>
 
-  <style>
-    body{
-      margin:0;
-      background:#0b0b0b;
-      color:#fff;
-      font-family: Arial, sans-serif;
-      text-align:center;
-      padding:24px 12px;
-    }
-    .container{
-      max-width:900px;
-      margin:0 auto;
-    }
-    h2{
-      margin: 18px 0 8px;
-      font-size: 34px;
-      letter-spacing: 1px;
-    }
-    p{
-      margin: 0 0 18px;
-      opacity: 0.9;
-    }
-    .card{
-      background: rgba(255,255,255,0.06);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.55);
-    }
-    video{
-      width:100%;
-      max-height:80vh;
-      border-radius:14px;
-      background:#000;
-      box-shadow:0 10px 30px rgba(0,0,0,0.6);
-    }
-    a.cta{
-      display:inline-block;
-      margin-top:18px;
-      color:#111;
-      text-decoration:none;
-      font-size:18px;
-      font-weight:700;
-      padding:14px 22px;
-      border-radius:28px;
-      background: linear-gradient(135deg,#d6b56b,#b38b3a);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
-      transition: 0.2s;
-    }
-    a.cta:active{ transform: scale(0.99); }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <h2>ABDZ — HARPER’S BAZAAR</h2>
-    <p>Cliquez sur Lecture pour ouvrir la sphère.</p>
-
-    <div class="card">
-      <!-- Vidéo d'ouverture -->
-      <video id="introVideo" controls playsinline preload="metadata">
-        <source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
-      </video>
-
-      <!-- Musique -->
-      <audio id="bgMusic" loop preload="auto">
-        <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
-      </audio>
-
-      <br>
-      <a class="cta" id="enterBtn" href="index.html">ENTREZ DANS MON UNIVERS</a>
-    </div>
-  </div>
-
-  <script>
-    const video = document.getElementById("introVideo");
-    const music = document.getElementById("bgMusic");
-    const enterBtn = document.getElementById("enterBtn");
-
-    // Au moment où l'utilisateur lance la vidéo => on lance la musique aussi
-    video.addEventListener("play", () => {
-      music.volume = 0.7;
-      music.play().catch(()=>{});
-      // petit drapeau pour dire à index.html "la musique a déjà été voulue"
-      localStorage.setItem("abdz_music_intent", "1");
-    });
-
-    // Optionnel : si tu cliques sur le bouton "Entrer", on coupe proprement l'audio de l'intro
-    enterBtn.addEventListener("click", () => {
-      try { music.pause(); } catch(e){}
-    });
-  </script>
-</body>
-</html>
+<style>
+body{
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+  color:white;
+  background:radial-gradient(circle at top,#3a2d1a 0%,#000 70%);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.container{
+  max-width:900px;
+  padding:20px;
+}
+h1{
+  font-size:30px;
+  margin-bottom:6px;
+  letter-spacing:1px;
+}
+.sous-titre{
+  font-size:18px;
+  opacity:.95;
+  margin-bottom:18px;
+  font-weight:300;
+}
+.video-wrapper{
+  margin:0 auto 18px;
+  max-width:800px;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 8px 25px rgba(0,0,0,.5);
+}
+video{
+  width:100%;
+  max-height:70vh;
+  background:#000;
+}
+.cta{
+  display:inline-block;
+  margin-top:6px;
+  padding:14px 28px;
+  background:#b48b43;
+  color:white;
+  font-size:20px;
+  border-radius:999px;
+  text-decoration:none;
+  box-shadow:0 8px 22px rgba(0,0,0,.4);
+  letter-spacing:.5px;
+  font-weight:500;
+}
+.cta:hover{
+  backgr
