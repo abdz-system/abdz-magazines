@@ -3,134 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ABDZ — Ouverture</title>
+<title>ABDZ — Porte d’ouverture</title>
 
 <style>
-
-body {
+  body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #3a2d1a 0%, #000 70%);
     color: white;
-
+    background: radial-gradient(circle at top, #3a2d1a 0%, #000 70%);
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
-}
-
-.container {
-    max-width: 900px;
-    padding: 20px;
-}
-
-h1 {
-    font-size: 28px;
-    margin-bottom: 8px;
-}
-
-.subtitle {
-    font-size: 17px;
-    opacity: 0.9;
-    margin-bottom: 20px;
-}
-
-.video-box {
+  }
+  .container { max-width: 900px; padding: 20px; }
+  h1 { font-size: 30px; margin-bottom: 6px; letter-spacing: 1px; }
+  p.sous-titre {
+    font-size: 18px; line-height: 1.4; opacity: 0.95;
+    margin-bottom: 18px; font-weight: 300;
+  }
+  .video-wrapper {
+    margin: 0 auto 18px auto;
     max-width: 800px;
-    margin: auto;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
-
-video {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+  }
+  video {
     width: 100%;
-    background: black;
-}
-
-.button {
-    margin-top: 20px;
+    display: block;
+    background: #000;
+    max-height: 70vh;
+  }
+  a.cta {
     display: inline-block;
-
-    padding: 14px 30px;
+    margin-top: 6px;
+    padding: 14px 28px;
     background: #b48b43;
     color: white;
-
-    text-decoration: none;
-    font-size: 18px;
+    font-size: 20px;
     border-radius: 999px;
-
+    text-decoration: none;
     transition: 0.3s;
-}
-
-.button:hover {
-    background: #d4a64d;
-    transform: translateY(-2px);
-}
-
+    box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  a.cta:hover { background: #d4a64d; transform: translateY(-3px); }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-    <h1>ABDZ — HARPER’S BAZAAR</h1>
+  <h1>ABDZ : LA SPHÈRE</h1>
+  <p class="sous-titre">Une porte d’entrée vers l’univers éditorial ABDZ.</p>
 
-    <div class="subtitle">
-        Cliquez pour ouvrir la sphère
-    </div>
+  <div class="video-wrapper">
+    <video id="introVideo" controls playsinline preload="metadata">
+      <source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
+      Votre navigateur ne peut pas lire cette vidéo.
+    </video>
+  </div>
 
-    <!-- AUDIO -->
-    <audio id="bgMusic" preload="auto">
-        <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
-    </audio>
+  <!-- Audio invisible, aucun contrôle -->
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
+  </audio>
 
-    <!-- VIDEO -->
-    <div class="video-box">
-        <video id="introVideo" controls playsinline>
-            <source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
-        </video>
-    </div>
-
-    <!-- BOUTON -->
-    <a class="button" href="index.html">
-        Entrer dans l’univers
-    </a>
+  <a class="cta" href="index.html">ENTREZ DANS MON UNIVERS</a>
 
 </div>
 
 <script>
+  const video = document.getElementById("introVideo");
+  const music = document.getElementById("bgMusic");
+  music.volume = 0.22;
 
-const video = document.getElementById("introVideo");
-const music = document.getElementById("bgMusic");
+  async function startMusic() {
+    try { await music.play(); } catch (e) {}
+  }
+  function stopMusic() {
+    try { music.pause(); music.currentTime = 0; } catch (e) {}
+  }
 
-let started = false;
-
-// Quand elle clique PLAY → musique démarre
-video.addEventListener("play", () => {
-
-    if (!started) {
-        music.volume = 0.8;
-        music.play().catch(()=>{});
-        started = true;
-    }
-
-});
-
-// Quand vidéo pause → musique pause
-video.addEventListener("pause", () => {
-    music.pause();
-});
-
-// Quand vidéo finie → musique continue doucement
-video.addEventListener("ended", () => {
-    music.volume = 0.4;
-});
-
+  video.addEventListener("play", startMusic);
+  video.addEventListener("pause", stopMusic);
+  video.addEventListener("ended", stopMusic);
 </script>
 
 </body>
