@@ -6,28 +6,38 @@
   <title>HARPER’S BAZAAR — ABDZ</title>
 
   <style>
-    body {font-family: Arial, sans-serif;background: #f2f2f2;margin: 0;padding: 10px;}
-    .viewer {max-width: 1100px;margin: 0 auto;background: white;padding: 20px;border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);text-align: center;}
+    body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 10px; }
+    .viewer {
+      max-width: 1100px; margin: 0 auto; background: white; padding: 20px;
+      border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-align: center;
+    }
     .pages { display: block; }
     .page { display: none; }
     .page.active { display: block; }
-    .page img, .page video {max-width: 100%;max-height: 85vh;width: 100%;height: auto;border-radius: 12px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);object-fit: contain;background: #000;}
-    .nav-buttons {margin-top: 18px;display: flex;justify-content: space-between;gap: 10px;}
-    button {background: black;color: white;padding: 10px 20px;border: none;border-radius: 8px;cursor: pointer;
-      font-size: 15px;transition: 0.2s;flex: 1;}
-    button:hover { background: #b30000; }
-    .page-number {margin-top: 8px;font-size: 14px;color: #5a5a5a;text-align: center;}
-    @media (max-width: 600px){ body{padding:5px;} .viewer{padding:12px;border-radius:12px;} }
-    @media (min-width: 1024px){
-      .pages.double-layout{display:flex;justify-content:center;gap:24px;}
-      .pages.double-layout .page.active{flex:0 0 45%;}
-      .pages.double-layout .page.active img,.pages.double-layout .page.active video{max-height:92vh;}
+    .page img, .page video {
+      max-width: 100%; max-height: 85vh; width: 100%; height: auto;
+      border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      object-fit: contain; background: #000;
     }
-    #bgmBtn{
-      position:fixed;bottom:16px;right:16px;z-index:9999;padding:10px 14px;border-radius:999px;border:none;
-      background:#9D2F94;color:white;font-weight:600;box-shadow:0 8px 22px rgba(0,0,0,0.25);cursor:pointer;
+    .nav-buttons { margin-top: 18px; display: flex; justify-content: space-between; gap: 10px; }
+    button {
+      background: black; color: white; padding: 10px 20px; border: none;
+      border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.2s; flex: 1;
+    }
+    button:hover { background: #b30000; }
+    .page-number { margin-top: 8px; font-size: 14px; color: #5a5a5a; text-align: center; }
+
+    @media (max-width: 600px) {
+      body { padding: 5px; }
+      .viewer { padding: 12px; border-radius: 12px; }
+    }
+
+    /* 🖥 Double page uniquement sur ordi */
+    @media (min-width: 1024px) {
+      .pages.double-layout { display: flex; justify-content: center; gap: 24px; }
+      .pages.double-layout .page.active { flex: 0 0 45%; }
+      .pages.double-layout .page.active img,
+      .pages.double-layout .page.active video { max-height: 92vh; }
     }
   </style>
 </head>
@@ -35,40 +45,36 @@
 <body>
   <div class="viewer">
     <div class="pages" id="pagesContainer"></div>
+
     <div class="nav-buttons">
       <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
       <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
     </div>
+
     <div class="page-number" id="pageNumber"></div>
   </div>
 
-  <!-- 🎵 MUSIQUE -->
+  <!-- 🎵 MUSIQUE (INVISIBLE) -->
   <audio id="bgm" preload="auto" loop>
     <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
   </audio>
-  <button id="bgmBtn">▶︎ Musique</button>
 
   <script>
-    /******** 🎵 MUSIQUE ********/
-    const BGM_KEY = "ABDZ_BGM_ON";
+    /******** 🎵 MUSIQUE (INVISIBLE + SAFE) ********/
     const bgm = document.getElementById("bgm");
-    const bgmBtn = document.getElementById("bgmBtn");
 
-    async function startBgm(){
-      try{ await bgm.play(); bgmBtn.textContent = "⏸︎ Pause"; }
-      catch(e){ bgmBtn.textContent = "▶︎ Musique"; }
+    function startBgm(){
+      if(!bgm) return;
+      bgm.play().catch(()=>{});
     }
-    function ensureBgmOnUserAction(){
-      try{ localStorage.setItem(BGM_KEY,"1"); }catch(e){}
-      if(bgm.paused) startBgm();
-    }
-    try{ if(localStorage.getItem(BGM_KEY)==="1") startBgm(); }catch(e){}
 
-    bgmBtn.addEventListener("click", async ()=>{
-      try{ localStorage.setItem(BGM_KEY,"1"); }catch(e){}
-      if(bgm.paused) await startBgm();
-      else{ bgm.pause(); bgmBtn.textContent="▶︎ Musique"; }
-    });
+    // ✅ tentative au chargement si on a "armé" depuis intro
+    try{
+      if(localStorage.getItem("ABDZ_BGM_ON")==="1") startBgm();
+    }catch(e){}
+
+    // ✅ sinon, 1er clic n'importe où la lance
+    document.addEventListener("pointerdown", startBgm, { once:true, passive:true });
 
     /******** MAGAZINE (TON CODE) ********/
     const imageList = [
@@ -158,7 +164,7 @@
     }
 
     function nextPage(){
-      ensureBgmOnUserAction(); // ✅ musique démarre sur clic
+      startBgm();     // ✅ musique démarre au clic
       stopVideos();
 
       if (isDesktop()) {
@@ -174,7 +180,7 @@
     }
 
     function prevPage(){
-      ensureBgmOnUserAction(); // ✅ musique démarre sur clic
+      startBgm();     // ✅ musique démarre au clic
       stopVideos();
 
       if (isDesktop()) {
