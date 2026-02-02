@@ -24,11 +24,10 @@
     }
 
     .pages { display: block; }
-
     .page { display: none; }
     .page.active { display: block; }
 
-    .page img, .page video {
+    .page img {
       max-width: 100%;
       max-height: 85vh;
       width: 100%;
@@ -36,7 +35,6 @@
       border-radius: 12px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       object-fit: contain;
-      background: #000;
     }
 
     .nav-buttons {
@@ -79,20 +77,18 @@
         justify-content: center;
         gap: 24px;
       }
-
-      .pages.double-layout .page.active {
-        flex: 0 0 45%;
-      }
-
-      .pages.double-layout .page.active img,
-      .pages.double-layout .page.active video {
-        max-height: 92vh;
-      }
+      .pages.double-layout .page.active { flex: 0 0 45%; }
+      .pages.double-layout .page.active img { max-height: 92vh; }
     }
   </style>
 </head>
 
 <body>
+  <!-- 🎵 Musique en fond (sans bouton) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
+  </audio>
+
   <div class="viewer">
     <div class="pages" id="pagesContainer"></div>
 
@@ -104,14 +100,8 @@
     <div class="page-number" id="pageNumber"></div>
   </div>
 
-  <!-- 🎵 Musique du magazine (démarre au 1er clic, règle navigateur) -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
-  </audio>
-
   <script>
-    // ✅ Liste des images
-    const imageList = [
+    const fileList = [
       "couverture.png",
       ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
       "derniere-couverture.png"
@@ -119,11 +109,9 @@
 
     const pagesContainer = document.getElementById("pagesContainer");
 
-    // 1) Pages images
-    imageList.forEach((fileName) => {
+    fileList.forEach((fileName) => {
       const page = document.createElement("div");
       page.className = "page";
-      page.dataset.type = "image";
 
       const img = document.createElement("img");
       img.src = `IMAGES/${fileName}`;
@@ -133,65 +121,25 @@
       pagesContainer.appendChild(page);
     });
 
-    // 2) Page vidéo finale (fermeture)
-    const videoPage = document.createElement("div");
-    videoPage.className = "page";
-    videoPage.dataset.type = "video";
-
-    const video = document.createElement("video");
-    video.src = `VIDEOS/sphere-close.mp4`;
-    video.playsInline = true;
-    video.preload = "metadata";
-    video.controls = true;
-
-    videoPage.appendChild(video);
-    pagesContainer.appendChild(videoPage);
-
-    // Navigation
     let currentPage = 0;
     const pages = document.querySelectorAll(".page");
     const pageNumber = document.getElementById("pageNumber");
     const prevBtn = document.getElementById("prevBtn");
+    const music = document.getElementById("bgMusic");
+    let musicStarted = false;
 
     function isDesktop() {
       return window.innerWidth >= 1024;
     }
 
-    // 🎵 Musique : démarre au 1er geste utilisateur (obligatoire)
-    const bgMusic = document.getElementById("bgMusic");
-    let musicStarted = false;
-
     function startMusicOnce() {
       if (musicStarted) return;
       musicStarted = true;
-      bgMusic.volume = 0.7;
-      bgMusic.play().catch(()=>{});
-    }
-
-    // 1er clic/tap n'importe où
-    document.addEventListener("pointerdown", startMusicOnce, { once: true });
-    document.addEventListener("keydown", startMusicOnce, { once: true });
-
-    // Vidéo finale : on coupe la musique pendant la vidéo (plus clean)
-    function handleMusicForActivePages() {
-      const hasVideoActive = document.querySelector(".page.active video") !== null;
-
-      if (hasVideoActive) {
-        bgMusic.pause();
-      } else {
-        if (musicStarted) bgMusic.play().catch(()=>{});
-      }
-    }
-
-    function stopVideos() {
-      pages.forEach(p => {
-        const v = p.querySelector("video");
-        if (v) { v.pause(); v.currentTime = 0; }
+      music.volume = 0.6;
+      music.play().catch(() => {
+        // Si bloqué, le prochain clic utilisateur relancera automatiquement
+        musicStarted = false;
       });
-    }
-
-    function pageType(index) {
-      return pages[index]?.dataset?.type || "image";
     }
 
     function render() {
@@ -200,21 +148,19 @@
       pages.forEach(p => p.classList.remove("active"));
       pagesContainer.classList.remove("double-layout");
 
-      // ✅ Si vidéo dans le duo → on force 1 seule page (évite le bug ordi)
       if (desktop && currentPage > 0) {
         const first = currentPage;
         const second = Math.min(currentPage + 1, pages.length - 1);
 
-        const mustSingle = (pageType(first) === "video" || pageType(second) === "video");
+        pages[first].classList.add("active");
+        if (second !== first) pages[second].classList.add("active");
 
-        if (mustSingle) {
-          pages[first].classList.add("active");
-          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
-        } else {
-          pages[first].classList.add("active");
-          if (second !== first) pages[second].classList.add("active");
-          pagesContainer.classList.add("double-layout");
+        pagesContainer.classList.add("double-layout");
+
+        if (second !== first) {
           pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
+        } else {
+          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
         }
       } else {
         pages[currentPage].classList.add("active");
@@ -222,19 +168,15 @@
       }
 
       prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
-      handleMusicForActivePages();
     }
 
     function nextPage() {
-      startMusicOnce();
-      stopVideos();
-
+      startMusicOnce(); // ✅ démarre au 1er clic sur "Page suivante"
       if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = 1;
-        } else {
+        if (currentPage === 0) currentPage = 1;
+        else {
           currentPage += 2;
-          if (currentPage >= pages.length) currentPage = pages.length - 1;
+          if (currentPage >= pages.length) currentPage = 0;
         }
       } else {
         currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
@@ -243,22 +185,19 @@
     }
 
     function prevPage() {
-      startMusicOnce();
-      stopVideos();
-
+      startMusicOnce(); // ✅ démarre aussi si clic "Page précédente"
       if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = pages.length - 2;
-        } else if (currentPage === 1) {
-          currentPage = 0;
-        } else {
-          currentPage -= 2;
-        }
+        if (currentPage === 0) currentPage = pages.length - 2;
+        else if (currentPage === 1) currentPage = 0;
+        else currentPage -= 2;
       } else {
         currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
       }
       render();
     }
+
+    // ✅ AU CAS OÙ : si l'utilisateur clique n'importe où, on démarre aussi
+    document.addEventListener("click", startMusicOnce, { passive: true });
 
     window.addEventListener("resize", render);
     render();
