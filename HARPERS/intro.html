@@ -1,99 +1,143 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABDZ — Porte d’ouverture</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABDZ — HARPER’S BAZAAR</title>
+  <style>
+    body{
+      margin:0;
+      font-family: "Georgia", serif;
+      color:#fff;
+      background: radial-gradient(circle at top, #3a2d1a 0%, #000 70%);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:18px;
+    }
+    .container{
+      width:100%;
+      max-width:900px;
+    }
+    h1{
+      margin:0 0 10px 0;
+      font-size:28px;
+      letter-spacing:0.5px;
+    }
+    .hint{
+      margin:0 0 14px 0;
+      font-size:16px;
+      opacity:0.9;
+    }
 
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    color: white;
-    background: radial-gradient(circle at top, #3a2d1a 0%, #000 70%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .container { max-width: 900px; padding: 20px; }
-  h1 { font-size: 30px; margin-bottom: 6px; letter-spacing: 1px; }
-  p.sous-titre {
-    font-size: 18px; line-height: 1.4; opacity: 0.95;
-    margin-bottom: 18px; font-weight: 300;
-  }
-  .video-wrapper {
-    margin: 0 auto 18px auto;
-    max-width: 800px;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-  }
-  video {
-    width: 100%;
-    display: block;
-    background: #000;
-    max-height: 70vh;
-  }
-  a.cta {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 14px 28px;
-    background: #b48b43;
-    color: white;
-    font-size: 20px;
-    border-radius: 999px;
-    text-decoration: none;
-    transition: 0.3s;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.4);
-    letter-spacing: 0.5px;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-  a.cta:hover { background: #d4a64d; transform: translateY(-3px); }
-</style>
+    .video-wrapper{
+      margin: 0 auto 16px auto;
+      width: min(92vw, 520px);
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+      background:#000;
+      position:relative;
+    }
+    video{
+      width:100%;
+      height:auto;
+      display:block;
+      background:#000;
+    }
+
+    .cta{
+      display:inline-block;
+      margin-top:8px;
+      padding:14px 26px;
+      background:#b48b43;
+      color:#fff;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:600;
+      letter-spacing:0.6px;
+      text-transform:uppercase;
+      box-shadow:0 10px 26px rgba(0,0,0,0.45);
+      transition:0.25s;
+    }
+    .cta:hover{ transform: translateY(-2px); background:#d4a64d; }
+
+    /* petit bouton discret "activer le son" (si besoin) */
+    .sound-btn{
+      display:none;
+      margin:10px auto 0 auto;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.35);
+      background: rgba(0,0,0,0.35);
+      color:#fff;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .sound-btn.show{ display:inline-block; }
+  </style>
 </head>
-
 <body>
-<div class="container">
+  <div class="container">
+    <h1>ABDZ — HARPER’S BAZAAR</h1>
+    <p class="hint">Cliquez sur la sphère pour entrer.</p>
 
-  <h1>ABDZ : LA SPHÈRE</h1>
-  <p class="sous-titre">Une porte d’entrée vers l’univers éditorial ABDZ.</p>
+    <div class="video-wrapper">
+      <video id="introVideo" playsinline preload="metadata" muted>
+        <source src="VIDEOS/sphere-abdz.mp4?v=1" type="video/mp4">
+        Votre navigateur ne peut pas lire cette vidéo.
+      </video>
+    </div>
 
-  <div class="video-wrapper">
-    <video id="introVideo" controls playsinline preload="metadata">
-      <source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
-      Votre navigateur ne peut pas lire cette vidéo.
-    </video>
+    <!-- audio indépendant -->
+    <audio id="bgMusic" preload="auto" loop>
+      <source src="AUDIOS/abdz-music.mp3?v=1" type="audio/mpeg">
+    </audio>
+
+    <button id="soundBtn" class="sound-btn">Activer le son</button>
+
+    <br>
+    <a class="cta" href="index.html">Entrer dans l’univers</a>
   </div>
 
-  <!-- Audio invisible, aucun contrôle -->
-  <audio id="bgMusic" preload="auto" loop>
-    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
-  </audio>
+  <script>
+    const video = document.getElementById("introVideo");
+    const music = document.getElementById("bgMusic");
+    const soundBtn = document.getElementById("soundBtn");
 
-  <a class="cta" href="index.html">ENTREZ DANS MON UNIVERS</a>
+    let musicStarted = false;
 
-</div>
+    async function startMusic() {
+      if (musicStarted) return;
+      musicStarted = true;
+      try {
+        music.volume = 0.55;     // doux
+        await music.play();      // démarre et boucle
+        soundBtn.classList.remove("show");
+      } catch (e) {
+        // si le navigateur bloque encore, on affiche un bouton manuel
+        soundBtn.classList.add("show");
+      }
+    }
 
-<script>
-  const video = document.getElementById("introVideo");
-  const music = document.getElementById("bgMusic");
-  music.volume = 0.22;
+    // ✅ 1) au premier TAP sur la vidéo : lance la vidéo + la musique
+    video.addEventListener("click", async () => {
+      // vidéo (muette, car la musique est à part)
+      if (video.paused) {
+        try { await video.play(); } catch(e) {}
+      }
+      startMusic();
+    });
 
-  async function startMusic() {
-    try { await music.play(); } catch (e) {}
-  }
-  function stopMusic() {
-    try { music.pause(); music.currentTime = 0; } catch (e) {}
-  }
+    // ✅ 2) si la vidéo se termine : on NE TOUCHE PAS la musique
+    video.addEventListener("ended", () => {
+      // on laisse l’image finale, et la musique continue
+    });
 
-  video.addEventListener("play", startMusic);
-  video.addEventListener("pause", stopMusic);
-  video.addEventListener("ended", stopMusic);
-</script>
-
+    // ✅ 3) bouton de secours si le navigateur refuse encore
+    soundBtn.addEventListener("click", () => startMusic());
+  </script>
 </body>
 </html>
