@@ -110,6 +110,14 @@
     video.autoplay = true;
     video.controls = true;
 
+    // ✅ STOP musique à la FIN de la vidéo (c’est ton exigence)
+    video.addEventListener("ended", () => {
+      if(bgm){
+        bgm.pause();
+        bgm.currentTime = 0;
+      }
+    });
+
     videoPage.appendChild(video);
     pagesContainer.appendChild(videoPage);
 
