@@ -1,306 +1,252 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HARPER'S BAZAAR — ABDZ</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HARPER'S BAZAAR — ABDZ</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 10px;
-    }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 10px;
+    }
 
-    .viewer {
-      max-width: 1100px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      text-align: center;
-      position: relative;
-    }
+    .viewer {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+    }
 
-    .pages { display: block; }
+    .pages { display: block; }
 
-    .page { display: none; }
-    .page.active { display: block; }
+    .page { display: none; }
+    .page.active { display: block; }
 
-    .page img, .page video {
-      max-width: 100%;
-      max-height: 85vh;
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-      object-fit: contain;
-      background: #000;
-    }
+    .page img, .page video {
+      max-width: 100%;
+      max-height: 85vh;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      object-fit: contain;
+      background: #000;
+    }
 
-    .nav-buttons {
-      margin-top: 18px;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
+    .nav-buttons {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
 
-    button {
-      background: black;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 15px;
-      transition: 0.2s;
-      flex: 1;
-    }
+    button {
+      background: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
+      flex: 1;
+    }
 
-    button:hover { background: #b30000; }
+    button:hover { background: #b30000; }
 
-    .page-number {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #5a5a5a;
-      text-align: center;
-    }
+    .page-number {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #5a5a5a;
+      text-align: center;
+    }
 
-    /* Petit bouton son */
-    .sound-btn {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: rgba(0,0,0,0.8);
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 13px;
-    }
+    @media (max-width: 600px) {
+      body { padding: 5px; }
+      .viewer { padding: 12px; border-radius: 12px; }
+    }
 
-    @media (max-width: 600px) {
-      body { padding: 5px; }
-      .viewer { padding: 12px; border-radius: 12px; }
-      .sound-btn { top: 10px; right: 10px; }
-    }
+    /* 🖥 Double page uniquement sur ordi */
+    @media (min-width: 1024px) {
+      .pages.double-layout {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+      }
 
-    /* 🖥 Double page uniquement sur ordi */
-    @media (min-width: 1024px) {
-      .pages.double-layout {
-        display: flex;
-        justify-content: center;
-        gap: 24px;
-      }
+      .pages.double-layout .page.active {
+        flex: 0 0 45%;
+      }
 
-      .pages.double-layout .page.active {
-        flex: 0 0 45%;
-      }
-
-      .pages.double-layout .page.active img,
-      .pages.double-layout .page.active video {
-        max-height: 92vh;
-      }
-    }
-  </style>
+      .pages.double-layout .page.active img,
+      .pages.double-layout .page.active video {
+        max-height: 92vh;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <div class="viewer">
-    <button class="sound-btn" id="soundBtn" type="button">🔇 Son OFF</button>
+  <div class="viewer">
+    <div class="pages" id="pagesContainer"></div>
 
-    <div class="pages" id="pagesContainer"></div>
+    <div class="nav-buttons">
+      <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
+      <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
+    </div>
 
-    <div class="nav-buttons">
-      <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
-      <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
-    </div>
+    <div class="page-number" id="pageNumber"></div>
+  </div>
 
-    <div class="page-number" id="pageNumber"></div>
-  </div>
+  <script>
+    // ✅ 1) Liste des images (adapte si besoin : 44 pages)
+    const imageList = [
+      "couverture.png",
+      ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
+      "derniere-couverture.png"
+    ];
 
-  <script>
-    /***********************
-     * 1) LISTE DES PAGES
-     ***********************/
-    const imageCount = 44; // <-- mets 44 si tu as 1.png à 44.png
-    const imageList = [
-      "couverture.png",
-      ...Array.from({ length: imageCount }, (_, i) => `${i + 1}.png`),
-      "derniere-couverture.png"
-    ];
+    const pagesContainer = document.getElementById("pagesContainer");
 
-    const pagesContainer = document.getElementById("pagesContainer");
+    // ✅ Ajoute pages images
+    imageList.forEach((fileName) => {
+      const page = document.createElement("div");
+      page.className = "page";
+      page.dataset.type = "image";
 
-    // Ajoute toutes les pages images
-    imageList.forEach((fileName) => {
-      const page = document.createElement("div");
-      page.className = "page";
-      page.dataset.type = "image";
+      const img = document.createElement("img");
+      img.src = `IMAGES/${fileName}`;
+      img.alt = fileName;
 
-      const img = document.createElement("img");
-      img.src = `IMAGES/${fileName}`;
-      img.alt = fileName;
+      page.appendChild(img);
+      pagesContainer.appendChild(page);
+    });
 
-      page.appendChild(img);
-      pagesContainer.appendChild(page);
-    });
+    // ✅ 2) Ajoute page vidéo finale
+    const videoPage = document.createElement("div");
+    videoPage.className = "page";
+    videoPage.dataset.type = "video";
 
-    // Ajoute la page vidéo finale
-    const videoPage = document.createElement("div");
-    videoPage.className = "page";
-    videoPage.dataset.type = "video";
+    const video = document.createElement("video");
+    video.src = `VIDEOS/sphere-close.mp4`;   // ✅ ton fichier dans HARPERS/VIDEOS/
+    video.playsInline = true;
+    video.preload = "metadata";
 
-    const video = document.createElement("video");
-    video.src = `VIDEOS/sphere-close.mp4`;
-    video.playsInline = true;
-    video.preload = "metadata";
-    video.controls = true;
-    // autoplay vidéo : souvent OK si muted
-    video.muted = true;
-    video.autoplay = true;
+    // ✅ AUTOPLAY propre (la plupart des navigateurs l'acceptent si muted)
+    video.muted = true;
+    video.autoplay = true;
 
-    videoPage.appendChild(video);
-    pagesContainer.appendChild(videoPage);
+    // ✅ je laisse les contrôles pour qu'ils puissent relancer si besoin
+    video.controls = true;
 
-    /***********************
-     * 2) MUSIQUE
-     ***********************/
-    const audio = new Audio("AUDIOS/abdz-music.mp3");
-    audio.loop = true;
-    audio.volume = 0.5;
+    videoPage.appendChild(video);
+    pagesContainer.appendChild(videoPage);
 
-    let audioWanted = false;   // OFF par défaut
-    let audioStarted = false;  // démarre au 1er clic si ON
+    // Navigation
+    let currentPage = 0;
+    const pages = document.querySelectorAll(".page");
+    const pageNumber = document.getElementById("pageNumber");
+    const prevBtn = document.getElementById("prevBtn");
 
-    const soundBtn = document.getElementById("soundBtn");
-    function updateSoundBtn() {
-      soundBtn.textContent = audioWanted ? "🔊 Son ON" : "🔇 Son OFF";
-    }
-    updateSoundBtn();
+    function isDesktop() {
+      return window.innerWidth >= 1024;
+    }
 
-    soundBtn.addEventListener("click", () => {
-      audioWanted = !audioWanted;
-      updateSoundBtn();
+    function stopVideos() {
+      pages.forEach(p => {
+        const v = p.querySelector("video");
+        if (v) { v.pause(); v.currentTime = 0; }
+      });
+    }
 
-      if (!audioWanted) {
-        audio.pause();
-        audioStarted = false;
-      } else {
-        // on tente de démarrer (si le navigateur veut un geste, ce clic est un geste)
-        audio.play().then(() => { audioStarted = true; }).catch(() => {});
-      }
-    });
+    function tryPlayVideoOnActivePages() {
+      document.querySelectorAll(".page.active video").forEach(v => {
+        // tentative autoplay (si bloqué, l'utilisateur peut cliquer Play)
+        v.play().catch(() => {});
+      });
+    }
 
-    function ensureAudioStartedByGesture() {
-      if (!audioWanted) return;
-      if (audioStarted) return;
-      audio.play().then(() => { audioStarted = true; }).catch(() => {});
-    }
+    function pageType(index) {
+      return pages[index]?.dataset?.type || "image";
+    }
 
-    /***********************
-     * 3) NAVIGATION
-     ***********************/
-    let currentPage = 0;
-    const pages = document.querySelectorAll(".page");
-    const pageNumber = document.getElementById("pageNumber");
-    const prevBtn = document.getElementById("prevBtn");
+    function render() {
+      const desktop = isDesktop();
 
-    function isDesktop() {
-      return window.innerWidth >= 1024;
-    }
+      pages.forEach(p => p.classList.remove("active"));
+      pagesContainer.classList.remove("double-layout");
 
-    function pageType(index) {
-      return pages[index]?.dataset?.type || "image";
-    }
+      // ✅ Règle anti-bug : si une vidéo est concernée, on force 1 seule page (même sur ordi)
+      if (desktop && currentPage > 0) {
+        const first = currentPage;
+        const second = Math.min(currentPage + 1, pages.length - 1);
 
-    function stopAllVideos() {
-      pages.forEach(p => {
-        const v = p.querySelector("video");
-        if (v) { v.pause(); v.currentTime = 0; }
-      });
-    }
+        const firstType = pageType(first);
+        const secondType = pageType(second);
 
-    function tryPlayVideoOnActivePages() {
-      document.querySelectorAll(".page.active video").forEach(v => {
-        v.play().catch(() => {});
-      });
-    }
+        const mustSingle = (firstType === "video" || secondType === "video");
 
-    // IMPORTANT : sur ordi, on ne montre jamais 2 pages si une des 2 est une vidéo
-    function render() {
-      const desktop = isDesktop();
+        if (mustSingle) {
+          pages[first].classList.add("active");
+          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
+        } else {
+          pages[first].classList.add("active");
+          if (second !== first) pages[second].classList.add("active");
+          pagesContainer.classList.add("double-layout");
+          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
+        }
+      } else {
+        pages[currentPage].classList.add("active");
+        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+      }
 
-      pages.forEach(p => p.classList.remove("active"));
-      pagesContainer.classList.remove("double-layout");
+      prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
 
-      if (desktop && currentPage > 0) {
-        const first = currentPage;
-        const second = Math.min(currentPage + 1, pages.length - 1);
+      // ✅ si on arrive sur la page vidéo, on lance autoplay
+      tryPlayVideoOnActivePages();
+    }
 
-        const mustSingle = (pageType(first) === "video" || pageType(second) === "video");
+    function nextPage() {
+      stopVideos();
 
-        if (mustSingle) {
-          pages[first].classList.add("active");
-          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
-        } else {
-          pages[first].classList.add("active");
-          if (second !== first) pages[second].classList.add("active");
-          pagesContainer.classList.add("double-layout");
-          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
-        }
-      } else {
-        pages[currentPage].classList.add("active");
-        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
-      }
+      if (isDesktop()) {
+        if (currentPage === 0) {
+          currentPage = 1;
+        } else {
+          currentPage += 2;
+          if (currentPage >= pages.length) currentPage = pages.length - 1;
+        }
+      } else {
+        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
+      }
+      render();
+    }
 
-      prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
+    function prevPage() {
+      stopVideos();
 
-      tryPlayVideoOnActivePages();
-    }
+      if (isDesktop()) {
+        if (currentPage === 0) {
+          currentPage = pages.length - 2;
+        } else if (currentPage === 1) {
+          currentPage = 0;
+        } else {
+          currentPage -= 2;
+        }
+      } else {
+        currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
+      }
+      render();
+    }
 
-    function nextPage() {
-      ensureAudioStartedByGesture(); // musique démarre au 1er clic si ON
-      stopAllVideos();
-
-      if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = 1;
-        } else {
-          // Si on est juste avant la dernière page vidéo, on va dessus directement
-          const next = currentPage + 2;
-          currentPage = Math.min(next, pages.length - 1);
-        }
-      } else {
-        currentPage = Math.min(currentPage + 1, pages.length - 1);
-      }
-
-      render();
-    }
-
-    function prevPage() {
-      ensureAudioStartedByGesture();
-      stopAllVideos();
-
-      if (isDesktop()) {
-        if (currentPage === 0) return;
-        if (currentPage === 1) {
-          currentPage = 0;
-        } else {
-          currentPage = Math.max(currentPage - 2, 0);
-        }
-      } else {
-        currentPage = Math.max(currentPage - 1, 0);
-      }
-
-      render();
-    }
-
-    window.addEventListener("resize", render);
-    render();
-  </script>
+    window.addEventListener("resize", render);
+    render();
+  </script>
 </body>
 </html>
