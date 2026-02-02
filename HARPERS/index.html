@@ -32,7 +32,6 @@
       .viewer { padding: 12px; border-radius: 12px; }
     }
 
-    /* 🖥 Double page uniquement sur ordi */
     @media (min-width: 1024px) {
       .pages.double-layout { display: flex; justify-content: center; gap: 24px; }
       .pages.double-layout .page.active { flex: 0 0 45%; }
@@ -43,6 +42,7 @@
 </head>
 
 <body>
+
   <div class="viewer">
     <div class="pages" id="pagesContainer"></div>
 
@@ -54,29 +54,31 @@
     <div class="page-number" id="pageNumber"></div>
   </div>
 
-  <!-- 🎵 MUSIQUE (INVISIBLE) -->
+  <!-- 🎵 MUSIQUE -->
   <audio id="bgm" preload="auto" loop>
     <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    /******** 🎵 MUSIQUE (INVISIBLE + SAFE) ********/
+
+    /******** 🎵 MUSIQUE ********/
     const bgm = document.getElementById("bgm");
 
     function startBgm(){
-      if(!bgm) return;
-      bgm.play().catch(()=>{});
+      if(bgm && bgm.paused){
+        bgm.play().catch(()=>{});
+      }
     }
 
-    // ✅ tentative au chargement si on a "armé" depuis intro
+    // démarrage si on vient de l’intro
     try{
-      if(localStorage.getItem("ABDZ_BGM_ON")==="1") startBgm();
+      if(localStorage.getItem("ABDZ_BGM_ON")==="1"){
+        startBgm();
+      }
     }catch(e){}
 
-    // ✅ sinon, 1er clic n'importe où la lance
-    document.addEventListener("pointerdown", startBgm, { once:true, passive:true });
+    /******** MAGAZINE ********/
 
-    /******** MAGAZINE (TON CODE) ********/
     const imageList = [
       "couverture.png",
       ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
@@ -86,6 +88,7 @@
     const pagesContainer = document.getElementById("pagesContainer");
 
     imageList.forEach((fileName) => {
+
       const page = document.createElement("div");
       page.className = "page";
       page.dataset.type = "image";
@@ -96,6 +99,7 @@
 
       page.appendChild(img);
       pagesContainer.appendChild(page);
+
     });
 
     const videoPage = document.createElement("div");
@@ -103,6 +107,7 @@
     videoPage.dataset.type = "video";
 
     const video = document.createElement("video");
+
     video.src = `VIDEOS/sphere-close.mp4`;
     video.playsInline = true;
     video.preload = "metadata";
@@ -110,7 +115,7 @@
     video.autoplay = true;
     video.controls = true;
 
-    // ✅ STOP musique à la FIN de la vidéo (c’est ton exigence)
+    // ✅ STOP musique à la FIN de la vidéo
     video.addEventListener("ended", () => {
       if(bgm){
         bgm.pause();
@@ -122,87 +127,160 @@
     pagesContainer.appendChild(videoPage);
 
     let currentPage = 0;
+
     const pages = document.querySelectorAll(".page");
     const pageNumber = document.getElementById("pageNumber");
     const prevBtn = document.getElementById("prevBtn");
 
-    function isDesktop(){ return window.innerWidth >= 1024; }
+    function isDesktop(){
+      return window.innerWidth >= 1024;
+    }
 
     function stopVideos(){
+
       pages.forEach(p => {
+
         const v = p.querySelector("video");
-        if (v) { v.pause(); v.currentTime = 0; }
+
+        if (v){
+          v.pause();
+          v.currentTime = 0;
+        }
+
       });
+
     }
 
     function tryPlayVideoOnActivePages(){
+
       document.querySelectorAll(".page.active video").forEach(v => {
-        v.play().catch(() => {});
+        v.play().catch(()=>{});
       });
+
     }
 
-    function pageType(index){ return pages[index]?.dataset?.type || "image"; }
+    function pageType(index){
+      return pages[index]?.dataset?.type || "image";
+    }
 
     function render(){
+
       const desktop = isDesktop();
+
       pages.forEach(p => p.classList.remove("active"));
       pagesContainer.classList.remove("double-layout");
 
-      if (desktop && currentPage > 0) {
+      if (desktop && currentPage > 0){
+
         const first = currentPage;
         const second = Math.min(currentPage + 1, pages.length - 1);
-        const mustSingle = (pageType(first) === "video" || pageType(second) === "video");
 
-        if (mustSingle) {
+        const mustSingle =
+          (pageType(first) === "video" || pageType(second) === "video");
+
+        if (mustSingle){
+
           pages[first].classList.add("active");
-          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
+          pageNumber.textContent =
+            `Page ${first + 1} / ${pages.length}`;
+
         } else {
+
           pages[first].classList.add("active");
-          if (second !== first) pages[second].classList.add("active");
+
+          if (second !== first){
+            pages[second].classList.add("active");
+          }
+
           pagesContainer.classList.add("double-layout");
-          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
+
+          pageNumber.textContent =
+            `Pages ${first + 1}–${second + 1} / ${pages.length}`;
+
         }
+
       } else {
+
         pages[currentPage].classList.add("active");
-        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+
+        pageNumber.textContent =
+          `Page ${currentPage + 1} / ${pages.length}`;
+
       }
 
-      prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
+      prevBtn.style.visibility =
+        (currentPage === 0) ? "hidden" : "visible";
+
       tryPlayVideoOnActivePages();
+
     }
 
     function nextPage(){
-      startBgm();     // ✅ musique démarre au clic
+
+      startBgm();   // 🎵 démarre musique
       stopVideos();
 
-      if (isDesktop()) {
-        if (currentPage === 0) currentPage = 1;
-        else {
+      if (isDesktop()){
+
+        if (currentPage === 0){
+          currentPage = 1;
+        } else {
+
           currentPage += 2;
-          if (currentPage >= pages.length) currentPage = pages.length - 1;
+
+          if (currentPage >= pages.length){
+            currentPage = pages.length - 1;
+          }
+
         }
+
       } else {
-        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
+
+        currentPage =
+          (currentPage === pages.length - 1)
+          ? 0
+          : currentPage + 1;
+
       }
+
       render();
+
     }
 
     function prevPage(){
-      startBgm();     // ✅ musique démarre au clic
+
+      startBgm();   // 🎵 démarre musique
       stopVideos();
 
-      if (isDesktop()) {
-        if (currentPage === 0) currentPage = pages.length - 2;
-        else if (currentPage === 1) currentPage = 0;
-        else currentPage -= 2;
+      if (isDesktop()){
+
+        if (currentPage === 0){
+          currentPage = pages.length - 2;
+        }
+        else if (currentPage === 1){
+          currentPage = 0;
+        }
+        else{
+          currentPage -= 2;
+        }
+
       } else {
-        currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
+
+        currentPage =
+          (currentPage > 0)
+          ? currentPage - 1
+          : pages.length - 1;
+
       }
+
       render();
+
     }
 
     window.addEventListener("resize", render);
     render();
+
   </script>
+
 </body>
 </html>
