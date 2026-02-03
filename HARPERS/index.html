@@ -285,12 +285,14 @@ function nextPage(){
   stopVideos();
 
 
-  /* ✅ SI ON EST SUR LA DERNIÈRE PAGE → RETOUR COVER */
+  /* ✅ SI ON EST SUR LA DERNIÈRE PAGE → RETOUR INTRO (VIDÉO D’OUVERTURE) */
 
   if(currentPage === pages.length - 1){
 
-    currentPage = 0;
-    render();
+    // optionnel : on "désarme" la musique pour l’intro (si tu veux)
+    try { localStorage.setItem("ABDZ_BGM_ON", "0"); } catch(e){}
+
+    window.location.href = "intro.html";
     return;
 
   }
