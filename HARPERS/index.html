@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,25 +7,60 @@
 
   <style>
     body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 10px; }
+
     .viewer {
-      max-width: 1100px; margin: 0 auto; background: white; padding: 20px;
-      border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-align: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
     }
+
     .pages { display: block; }
+
     .page { display: none; }
     .page.active { display: block; }
+
     .page img, .page video {
-      max-width: 100%; max-height: 85vh; width: 100%; height: auto;
-      border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-      object-fit: contain; background: #000;
+      max-width: 100%;
+      max-height: 85vh;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      object-fit: contain;
+      background: #000;
     }
-    .nav-buttons { margin-top: 18px; display: flex; justify-content: space-between; gap: 10px; }
+
+    .nav-buttons {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
     button {
-      background: black; color: white; padding: 10px 20px; border: none;
-      border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.2s; flex: 1;
+      background: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
+      flex: 1;
     }
+
     button:hover { background: #b30000; }
-    .page-number { margin-top: 8px; font-size: 14px; color: #5a5a5a; text-align: center; }
+
+    .page-number {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #5a5a5a;
+      text-align: center;
+    }
 
     @media (max-width: 600px) {
       body { padding: 5px; }
@@ -34,271 +68,298 @@
     }
 
     @media (min-width: 1024px) {
-      .pages.double-layout { display: flex; justify-content: center; gap: 24px; }
-      .pages.double-layout .page.active { flex: 0 0 45%; }
+      .pages.double-layout {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+      }
+
+      .pages.double-layout .page.active {
+        flex: 0 0 45%;
+      }
+
       .pages.double-layout .page.active img,
-      .pages.double-layout .page.active video { max-height: 92vh; }
+      .pages.double-layout .page.active video {
+        max-height: 92vh;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="viewer">
-    <div class="pages" id="pagesContainer"></div>
+<div class="viewer">
 
-    <div class="nav-buttons">
-      <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
-      <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
-    </div>
+  <div class="pages" id="pagesContainer"></div>
 
-    <div class="page-number" id="pageNumber"></div>
+  <div class="nav-buttons">
+    <button onclick="prevPage()">← Page précédente</button>
+    <button onclick="nextPage()">Page suivante →</button>
   </div>
 
-  <!-- 🎵 MUSIQUE -->
-  <audio id="bgm" preload="auto" loop>
-    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
-  </audio>
+  <div class="page-number" id="pageNumber"></div>
 
-  <script>
+</div>
 
-    /******** 🎵 MUSIQUE ********/
-    const bgm = document.getElementById("bgm");
 
-    function startBgm(){
-      if(bgm && bgm.paused){
-        bgm.play().catch(()=>{});
-      }
+<!-- 🎵 MUSIQUE -->
+<audio id="bgm" preload="auto" loop>
+  <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
+</audio>
+
+
+<script>
+
+/******** 🎵 MUSIQUE ********/
+
+const bgm = document.getElementById("bgm");
+
+function startBgm(){
+  if(bgm && bgm.paused){
+    bgm.play().catch(()=>{});
+  }
+}
+
+try{
+  if(localStorage.getItem("ABDZ_BGM_ON")==="1"){
+    startBgm();
+  }
+}catch(e){}
+
+
+/******** MAGAZINE ********/
+
+const imageList = [
+  "couverture.png",
+  ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
+  "derniere-couverture.png"
+];
+
+const pagesContainer = document.getElementById("pagesContainer");
+
+
+/* Pages images */
+
+imageList.forEach(fileName => {
+
+  const page = document.createElement("div");
+  page.className = "page";
+  page.dataset.type = "image";
+
+  const img = document.createElement("img");
+  img.src = `IMAGES/${fileName}`;
+
+  page.appendChild(img);
+  pagesContainer.appendChild(page);
+
+});
+
+
+/* Page vidéo finale */
+
+const videoPage = document.createElement("div");
+videoPage.className = "page";
+videoPage.dataset.type = "video";
+
+const video = document.createElement("video");
+
+video.src = "VIDEOS/sphere-close.mp4";
+video.playsInline = true;
+video.preload = "metadata";
+video.muted = true;
+video.autoplay = true;
+video.controls = true;
+
+
+/* Stop musique fin vidéo */
+
+video.addEventListener("ended", () => {
+  if(bgm){
+    bgm.pause();
+    bgm.currentTime = 0;
+  }
+});
+
+videoPage.appendChild(video);
+pagesContainer.appendChild(videoPage);
+
+
+/******** NAVIGATION ********/
+
+let currentPage = 0;
+
+const pages = document.querySelectorAll(".page");
+const pageNumber = document.getElementById("pageNumber");
+
+
+function isDesktop(){
+  return window.innerWidth >= 1024;
+}
+
+
+function stopVideos(){
+
+  pages.forEach(p => {
+
+    const v = p.querySelector("video");
+
+    if(v){
+      v.pause();
+      v.currentTime = 0;
     }
 
-    // démarrage si on vient de l’intro
-    try{
-      if(localStorage.getItem("ABDZ_BGM_ON")==="1"){
-        startBgm();
-      }
-    }catch(e){}
+  });
 
-    /******** MAGAZINE ********/
+}
 
-    const imageList = [
-      "couverture.png",
-      ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
-      "derniere-couverture.png"
-    ];
 
-    const pagesContainer = document.getElementById("pagesContainer");
+function tryPlayVideo(){
 
-    imageList.forEach((fileName) => {
+  document.querySelectorAll(".page.active video")
+    .forEach(v => v.play().catch(()=>{}));
 
-      const page = document.createElement("div");
-      page.className = "page";
-      page.dataset.type = "image";
+}
 
-      const img = document.createElement("img");
-      img.src = `IMAGES/${fileName}`;
-      img.alt = fileName;
 
-      page.appendChild(img);
-      pagesContainer.appendChild(page);
+function pageType(i){
+  return pages[i]?.dataset?.type || "image";
+}
 
-    });
 
-    const videoPage = document.createElement("div");
-    videoPage.className = "page";
-    videoPage.dataset.type = "video";
+function render(){
 
-    const video = document.createElement("video");
+  const desktop = isDesktop();
 
-    video.src = `VIDEOS/sphere-close.mp4`;
-    video.playsInline = true;
-    video.preload = "metadata";
-    video.muted = true;
-    video.autoplay = true;
-    video.controls = true;
+  pages.forEach(p => p.classList.remove("active"));
+  pagesContainer.classList.remove("double-layout");
 
-    // ✅ STOP musique à la FIN de la vidéo
-    video.addEventListener("ended", () => {
-      if(bgm){
-        bgm.pause();
-        bgm.currentTime = 0;
-      }
-    });
 
-    videoPage.appendChild(video);
-    pagesContainer.appendChild(videoPage);
+  if(desktop && currentPage > 0){
 
-    let currentPage = 0;
+    const first = currentPage;
+    const second = Math.min(currentPage + 1, pages.length - 1);
 
-    const pages = document.querySelectorAll(".page");
-    const pageNumber = document.getElementById("pageNumber");
-    const prevBtn = document.getElementById("prevBtn");
+    const mustSingle =
+      pageType(first)==="video" || pageType(second)==="video";
 
-    function isDesktop(){
-      return window.innerWidth >= 1024;
-    }
 
-    function stopVideos(){
+    if(mustSingle){
 
-      pages.forEach(p => {
+      pages[first].classList.add("active");
+      pageNumber.textContent =
+        `Page ${first+1} / ${pages.length}`;
 
-        const v = p.querySelector("video");
+    }else{
 
-        if (v){
-          v.pause();
-          v.currentTime = 0;
-        }
+      pages[first].classList.add("active");
+      pages[second].classList.add("active");
 
-      });
+      pagesContainer.classList.add("double-layout");
 
-    }
-
-    function tryPlayVideoOnActivePages(){
-
-      document.querySelectorAll(".page.active video").forEach(v => {
-        v.play().catch(()=>{});
-      });
-
-    }
-
-    function pageType(index){
-      return pages[index]?.dataset?.type || "image";
-    }
-
-    function render(){
-
-      const desktop = isDesktop();
-
-      pages.forEach(p => p.classList.remove("active"));
-      pagesContainer.classList.remove("double-layout");
-
-      if (desktop && currentPage > 0){
-
-        const first = currentPage;
-        const second = Math.min(currentPage + 1, pages.length - 1);
-
-        const mustSingle =
-          (pageType(first) === "video" || pageType(second) === "video");
-
-        if (mustSingle){
-
-          pages[first].classList.add("active");
-          pageNumber.textContent =
-            `Page ${first + 1} / ${pages.length}`;
-
-        } else {
-
-          pages[first].classList.add("active");
-
-          if (second !== first){
-            pages[second].classList.add("active");
-          }
-
-          pagesContainer.classList.add("double-layout");
-
-          pageNumber.textContent =
-            `Pages ${first + 1}–${second + 1} / ${pages.length}`;
-
-        }
-
-      } else {
-
-        pages[currentPage].classList.add("active");
-
-        pageNumber.textContent =
-          `Page ${currentPage + 1} / ${pages.length}`;
-
-      }
-
-      prevBtn.style.visibility =
-        (currentPage === 0) ? "hidden" : "visible";
-
-      tryPlayVideoOnActivePages();
-
-    }
-
-    function nextPage(){
-
-      startBgm();   // 🎵 démarre musique
-      stopVideos();
-
-      if (isDesktop()){
-
-        if (currentPage === 0){
-          currentPage = 1;
-        } else {
-
-          currentPage += 2;
-
-          if (currentPage >= pages.length){
-            currentPage = pages.length - 1;
-          }
-
-        }
-
-      } else {
-
-        currentPage =
-          (currentPage === pages.length - 1)
-          ? 0
-          : currentPage + 1;
-
-      }
-
-      render();
+      pageNumber.textContent =
+        `Pages ${first+1}–${second+1} / ${pages.length}`;
 
     }
 
-    function prevPage(){
+  }else{
 
-      startBgm();   // 🎵 démarre musique
-      stopVideos();
+    pages[currentPage].classList.add("active");
 
-      if (isDesktop()){
+    pageNumber.textContent =
+      `Page ${currentPage+1} / ${pages.length}`;
 
-        if (currentPage === 0){
-          currentPage = pages.length - 2;
-        }
-        else if (currentPage === 1){
-          currentPage = 0;
-        }
-        else{
-          currentPage -= 2;
-        }
+  }
 
-      } else {
 
-        currentPage =
-          (currentPage > 0)
-          ? currentPage - 1
-          : pages.length - 1;
+  tryPlayVideo();
 
-      }
+}
 
-      render();
 
-    }
+/******** BOUTONS ********/
 
-    window.addEventListener("resize", render);
+
+function nextPage(){
+
+  startBgm();
+  stopVideos();
+
+
+  /* ✅ SI ON EST SUR LA DERNIÈRE PAGE → RETOUR COVER */
+
+  if(currentPage === pages.length - 1){
+
+    currentPage = 0;
     render();
+    return;
 
-  </script>
+  }
+
+
+  if(isDesktop()){
+
+    if(currentPage === 0){
+      currentPage = 1;
+    }else{
+
+      currentPage += 2;
+
+      if(currentPage >= pages.length){
+        currentPage = pages.length - 1;
+      }
+
+    }
+
+  }else{
+
+    currentPage++;
+
+  }
+
+
+  render();
+
+}
+
+
+
+function prevPage(){
+
+  startBgm();
+  stopVideos();
+
+
+  if(isDesktop()){
+
+    if(currentPage === 0){
+      return;
+    }
+
+    if(currentPage === 1){
+      currentPage = 0;
+    }else{
+      currentPage -= 2;
+    }
+
+  }else{
+
+    if(currentPage > 0){
+      currentPage--;
+    }
+
+  }
+
+
+  render();
+
+}
+
+
+
+window.addEventListener("resize", render);
+render();
+
+</script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
