@@ -1,128 +1,304 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HARPER’S BAZAAR — ABDZ</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HARPER’S BAZAAR — ABDZ</title>
 
-<style>
-body{font-family:Arial;background:#f2f2f2;margin:0;padding:10px}
-.viewer{
-max-width:1100px;margin:auto;background:white;padding:20px;
-border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.15);text-align:center}
-.page{display:none}
-.page.active{display:block}
-.page img,.page video{
-width:100%;max-height:85vh;border-radius:12px;background:#000}
-.nav{display:flex;gap:10px;margin-top:18px}
-button{
-flex:1;background:black;color:white;border:0;padding:10px;
-border-radius:8px;cursor:pointer}
-button:hover{background:#b30000}
-</style>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 10px; }
+    .viewer {
+      max-width: 1100px; margin: 0 auto; background: white; padding: 20px;
+      border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-align: center;
+    }
+    .pages { display: block; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .page img, .page video {
+      max-width: 100%; max-height: 85vh; width: 100%; height: auto;
+      border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      object-fit: contain; background: #000;
+    }
+    .nav-buttons { margin-top: 18px; display: flex; justify-content: space-between; gap: 10px; }
+    button {
+      background: black; color: white; padding: 10px 20px; border: none;
+      border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.2s; flex: 1;
+    }
+    button:hover { background: #b30000; }
+    .page-number { margin-top: 8px; font-size: 14px; color: #5a5a5a; text-align: center; }
+
+    @media (max-width: 600px) {
+      body { padding: 5px; }
+      .viewer { padding: 12px; border-radius: 12px; }
+    }
+
+    @media (min-width: 1024px) {
+      .pages.double-layout { display: flex; justify-content: center; gap: 24px; }
+      .pages.double-layout .page.active { flex: 0 0 45%; }
+      .pages.double-layout .page.active img,
+      .pages.double-layout .page.active video { max-height: 92vh; }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="viewer">
+  <div class="viewer">
+    <div class="pages" id="pagesContainer"></div>
 
-<div id="pages"></div>
+    <div class="nav-buttons">
+      <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
+      <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
+    </div>
 
-<div class="nav">
-<button onclick="prev()">← Précédente</button>
-<button onclick="next()">Suivante →</button>
-</div>
+    <div class="page-number" id="pageNumber"></div>
+  </div>
 
-<div id="num"></div>
+  <!-- 🎵 MUSIQUE -->
+  <audio id="bgm" preload="auto" loop>
+    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
+  </audio>
 
-</div>
+  <script>
 
-<audio id="bgm" loop>
-<source src="AUDIOS/abdz-music.mp3">
-</audio>
+    /******** 🎵 MUSIQUE ********/
+    const bgm = document.getElementById("bgm");
 
-<script>
+    function startBgm(){
+      if(bgm && bgm.paused){
+        bgm.play().catch(()=>{});
+      }
+    }
 
-const bgm=document.getElementById("bgm");
+    // démarrage si on vient de l’intro
+    try{
+      if(localStorage.getItem("ABDZ_BGM_ON")==="1"){
+        startBgm();
+      }
+    }catch(e){}
 
-function play(){
-if(bgm.paused)bgm.play().catch(()=>{});
-}
+    /******** MAGAZINE ********/
 
-try{
-if(localStorage.getItem("ABDZ_BGM_ON")==="1")play();
-}catch(e){}
+    const imageList = [
+      "couverture.png",
+      ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
+      "derniere-couverture.png"
+    ];
 
-const files=[
-"couverture.png",
-...Array.from({length:44},(_,i)=>i+1+".png"),
-"derniere-couverture.png"
-];
+    const pagesContainer = document.getElementById("pagesContainer");
 
-const pages=document.getElementById("pages");
+    imageList.forEach((fileName) => {
 
-files.forEach(f=>{
-let d=document.createElement("div");
-d.className="page";
-let i=document.createElement("img");
-i.src="IMAGES/"+f;
-d.appendChild(i);
-pages.appendChild(d);
-});
+      const page = document.createElement("div");
+      page.className = "page";
+      page.dataset.type = "image";
 
-let vwrap=document.createElement("div");
-vwrap.className="page";
+      const img = document.createElement("img");
+      img.src = `IMAGES/${fileName}`;
+      img.alt = fileName;
 
-let v=document.createElement("video");
-v.src="VIDEOS/sphere-close.mp4";
-v.controls=true;
-v.muted=true;
-v.autoplay=true;
+      page.appendChild(img);
+      pagesContainer.appendChild(page);
 
-v.addEventListener("ended",()=>{
-bgm.pause();
-bgm.currentTime=0;
-});
+    });
 
-vwrap.appendChild(v);
-pages.appendChild(vwrap);
+    const videoPage = document.createElement("div");
+    videoPage.className = "page";
+    videoPage.dataset.type = "video";
 
-const list=[...document.querySelectorAll(".page")];
+    const video = document.createElement("video");
 
-let cur=0;
+    video.src = `VIDEOS/sphere-close.mp4`;
+    video.playsInline = true;
+    video.preload = "metadata";
+    video.muted = true;
+    video.autoplay = true;
+    video.controls = true;
 
-function show(){
-list.forEach(p=>p.classList.remove("active"));
-list[cur].classList.add("active");
-document.getElementById("num").innerText=
-"Page "+(cur+1)+" / "+list.length;
-}
+    // ✅ STOP musique à la FIN de la vidéo
+    video.addEventListener("ended", () => {
+      if(bgm){
+        bgm.pause();
+        bgm.currentTime = 0;
+      }
+    });
 
-function next(){
+    videoPage.appendChild(video);
+    pagesContainer.appendChild(videoPage);
 
-play();
+    let currentPage = 0;
 
-if(cur===list.length-1){
-localStorage.setItem("ABDZ_BGM_ON","0");
-location.href="intro.html";
-return;
-}
+    const pages = document.querySelectorAll(".page");
+    const pageNumber = document.getElementById("pageNumber");
+    const prevBtn = document.getElementById("prevBtn");
 
-cur++;
-show();
-}
+    function isDesktop(){
+      return window.innerWidth >= 1024;
+    }
 
-function prev(){
+    function stopVideos(){
 
-play();
+      pages.forEach(p => {
 
-cur=cur>0?cur-1:list.length-1;
-show();
-}
+        const v = p.querySelector("video");
 
-show();
+        if (v){
+          v.pause();
+          v.currentTime = 0;
+        }
 
-</script>
+      });
+
+    }
+
+    function tryPlayVideoOnActivePages(){
+
+      document.querySelectorAll(".page.active video").forEach(v => {
+        v.play().catch(()=>{});
+      });
+
+    }
+
+    function pageType(index){
+      return pages[index]?.dataset?.type || "image";
+    }
+
+    function render(){
+
+      const desktop = isDesktop();
+
+      pages.forEach(p => p.classList.remove("active"));
+      pagesContainer.classList.remove("double-layout");
+
+      if (desktop && currentPage > 0){
+
+        const first = currentPage;
+        const second = Math.min(currentPage + 1, pages.length - 1);
+
+        const mustSingle =
+          (pageType(first) === "video" || pageType(second) === "video");
+
+        if (mustSingle){
+
+          pages[first].classList.add("active");
+          pageNumber.textContent =
+            `Page ${first + 1} / ${pages.length}`;
+
+        } else {
+
+          pages[first].classList.add("active");
+
+          if (second !== first){
+            pages[second].classList.add("active");
+          }
+
+          pagesContainer.classList.add("double-layout");
+
+          pageNumber.textContent =
+            `Pages ${first + 1}–${second + 1} / ${pages.length}`;
+
+        }
+
+      } else {
+
+        pages[currentPage].classList.add("active");
+
+        pageNumber.textContent =
+          `Page ${currentPage + 1} / ${pages.length}`;
+
+      }
+
+      prevBtn.style.visibility =
+        (currentPage === 0) ? "hidden" : "visible";
+
+      tryPlayVideoOnActivePages();
+
+    }
+
+    function nextPage(){
+
+      startBgm();   // 🎵 démarre musique
+      stopVideos();
+
+      if (isDesktop()){
+
+        if (currentPage === 0){
+          currentPage = 1;
+        } else {
+
+          currentPage += 2;
+
+          if (currentPage >= pages.length){
+            currentPage = pages.length - 1;
+          }
+
+        }
+
+      } else {
+
+        currentPage =
+          (currentPage === pages.length - 1)
+          ? 0
+          : currentPage + 1;
+
+      }
+
+      render();
+
+    }
+
+    function prevPage(){
+
+      startBgm();   // 🎵 démarre musique
+      stopVideos();
+
+      if (isDesktop()){
+
+        if (currentPage === 0){
+          currentPage = pages.length - 2;
+        }
+        else if (currentPage === 1){
+          currentPage = 0;
+        }
+        else{
+          currentPage -= 2;
+        }
+
+      } else {
+
+        currentPage =
+          (currentPage > 0)
+          ? currentPage - 1
+          : pages.length - 1;
+
+      }
+
+      render();
+
+    }
+
+    window.addEventListener("resize", render);
+    render();
+
+  </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
