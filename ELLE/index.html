@@ -6,12 +6,7 @@
   <title>ELLE — ABDZ</title>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 10px;
-    }
+    body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 10px; }
 
     .viewer {
       max-width: 1100px;
@@ -28,7 +23,7 @@
     .page { display: none; }
     .page.active { display: block; }
 
-    .page img {
+    .page img, .page video {
       max-width: 100%;
       max-height: 85vh;
       width: 100%;
@@ -36,9 +31,9 @@
       border-radius: 12px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       object-fit: contain;
+      background: #000;
     }
 
-  
     .nav-buttons {
       margin-top: 18px;
       display: flex;
@@ -72,7 +67,6 @@
       .viewer { padding: 12px; border-radius: 12px; }
     }
 
-    /* 🖥 Double page uniquement sur ordi */
     @media (min-width: 1024px) {
       .pages.double-layout {
         display: flex;
@@ -84,7 +78,8 @@
         flex: 0 0 45%;
       }
 
-      .pages.double-layout .page.active img {
+      .pages.double-layout .page.active img,
+      .pages.double-layout .page.active video {
         max-height: 92vh;
       }
     }
@@ -92,109 +87,281 @@
 </head>
 
 <body>
-  <div class="viewer">
-    <div class="pages" id="pagesContainer"></div>
 
-    <div class="nav-buttons">
-      <button id="prevBtn" onclick="prevPage()">← Page précédente</button>
-      <button id="nextBtn" onclick="nextPage()">Page suivante →</button>
-    </div>
+<div class="viewer">
 
-    <div class="page-number" id="pageNumber"></div>
+  <div class="pages" id="pagesContainer"></div>
+
+  <div class="nav-buttons">
+    <button onclick="prevPage()">← Page précédente</button>
+    <button onclick="nextPage()">Page suivante →</button>
   </div>
 
-  <script>
-    const fileList = [
-      "couverture.png",
-      ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
-      "derniere-couverture.png"
-    ];
+  <div class="page-number" id="pageNumber"></div>
 
-    const pagesContainer = document.getElementById("pagesContainer");
+</div>
 
-    fileList.forEach((fileName) => {
-      const page = document.createElement("div");
-      page.className = "page";
 
-      const img = document.createElement("img");
-      img.src = `IMAGES/${fileName}`;
-      img.alt = fileName;
+<!-- 🎵 MUSIQUE -->
+<audio id="bgm" preload="auto" loop>
+  <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
+</audio>
 
-      page.appendChild(img);
-      pagesContainer.appendChild(page);
-    });
 
-    let currentPage = 0;
-    const pages = document.querySelectorAll(".page");
-    const pageNumber = document.getElementById("pageNumber");
-    const prevBtn = document.getElementById("prevBtn");
+<script>
 
-    function isDesktop() {
-      return window.innerWidth >= 1024;
+/******** 🎵 MUSIQUE ********/
+
+const bgm = document.getElementById("bgm");
+
+function startBgm(){
+  if(bgm && bgm.paused){
+    bgm.play().catch(()=>{});
+  }
+}
+
+try{
+  if(localStorage.getItem("ABDZ_BGM_ON")==="1"){
+    startBgm();
+  }
+}catch(e){}
+
+
+/******** MAGAZINE ********/
+
+const imageList = [
+  "couverture.png",
+  ...Array.from({ length: 44 }, (_, i) => `${i + 1}.png`),
+  "derniere-couverture.png"
+];
+
+const pagesContainer = document.getElementById("pagesContainer");
+
+
+/* Pages images */
+
+imageList.forEach(fileName => {
+
+  const page = document.createElement("div");
+  page.className = "page";
+  page.dataset.type = "image";
+
+  const img = document.createElement("img");
+  img.src = `IMAGES/${fileName}`;
+
+  page.appendChild(img);
+  pagesContainer.appendChild(page);
+
+});
+
+
+/* Page vidéo finale */
+
+const videoPage = document.createElement("div");
+videoPage.className = "page";
+videoPage.dataset.type = "video";
+
+const video = document.createElement("video");
+
+video.src = "VIDEOS/sphere-close.mp4";
+video.playsInline = true;
+video.preload = "metadata";
+video.muted = true;
+video.autoplay = true;
+video.controls = true;
+
+
+/* Stop musique fin vidéo */
+
+video.addEventListener("ended", () => {
+  if(bgm){
+    bgm.pause();
+    bgm.currentTime = 0;
+  }
+});
+
+videoPage.appendChild(video);
+pagesContainer.appendChild(videoPage);
+
+
+/******** NAVIGATION ********/
+
+let currentPage = 0;
+
+const pages = document.querySelectorAll(".page");
+const pageNumber = document.getElementById("pageNumber");
+
+
+function isDesktop(){
+  return window.innerWidth >= 1024;
+}
+
+
+function stopVideos(){
+
+  pages.forEach(p => {
+
+    const v = p.querySelector("video");
+
+    if(v){
+      v.pause();
+      v.currentTime = 0;
     }
 
-    function render() {
-      const desktop = isDesktop();
+  });
 
-      pages.forEach(p => p.classList.remove("active"));
-      pagesContainer.classList.remove("double-layout");
+}
 
-      if (desktop && currentPage > 0) {
-        const first = currentPage;
-        const second = Math.min(currentPage + 1, pages.length - 1);
 
-        pages[first].classList.add("active");
-        if (second !== first) pages[second].classList.add("active");
+function tryPlayVideo(){
 
-        pagesContainer.classList.add("double-layout");
+  document.querySelectorAll(".page.active video")
+    .forEach(v => v.play().catch(()=>{}));
 
-        if (second !== first) {
-          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
-        } else {
-          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
-        }
-      } else {
-        pages[currentPage].classList.add("active");
-        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+}
+
+
+function pageType(i){
+  return pages[i]?.dataset?.type || "image";
+}
+
+
+function render(){
+
+  const desktop = isDesktop();
+
+  pages.forEach(p => p.classList.remove("active"));
+  pagesContainer.classList.remove("double-layout");
+
+
+  if(desktop && currentPage > 0){
+
+    const first = currentPage;
+    const second = Math.min(currentPage + 1, pages.length - 1);
+
+    const mustSingle =
+      pageType(first)==="video" || pageType(second)==="video";
+
+
+    if(mustSingle){
+
+      pages[first].classList.add("active");
+      pageNumber.textContent =
+        `Page ${first+1} / ${pages.length}`;
+
+    }else{
+
+      pages[first].classList.add("active");
+      pages[second].classList.add("active");
+
+      pagesContainer.classList.add("double-layout");
+
+      pageNumber.textContent =
+        `Pages ${first+1}–${second+1} / ${pages.length}`;
+
+    }
+
+  }else{
+
+    pages[currentPage].classList.add("active");
+
+    pageNumber.textContent =
+      `Page ${currentPage+1} / ${pages.length}`;
+
+  }
+
+
+  tryPlayVideo();
+
+}
+
+
+/******** BOUTONS ********/
+
+
+function nextPage(){
+
+  startBgm();
+  stopVideos();
+
+
+  /* ✅ SI ON EST SUR LA DERNIÈRE PAGE → RETOUR INTRO (VIDÉO D’OUVERTURE) */
+
+  if(currentPage === pages.length - 1){
+
+    // optionnel : on "désarme" la musique pour l’intro (si tu veux)
+    try { localStorage.setItem("ABDZ_BGM_ON", "0"); } catch(e){}
+
+    window.location.href = "intro.html";
+    return;
+
+  }
+
+
+  if(isDesktop()){
+
+    if(currentPage === 0){
+      currentPage = 1;
+    }else{
+
+      currentPage += 2;
+
+      if(currentPage >= pages.length){
+        currentPage = pages.length - 1;
       }
 
-      prevBtn.style.visibility = (currentPage === 0) ? "hidden" : "visible";
     }
 
-    function nextPage() {
-      if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = 1;
-        } else {
-          currentPage += 2;
-          if (currentPage >= pages.length) currentPage = 0;
-        }
-      } else {
-        currentPage = (currentPage === pages.length - 1) ? 0 : currentPage + 1;
-      }
-      render();
+  }else{
+
+    currentPage++;
+
+  }
+
+
+  render();
+
+}
+
+
+
+function prevPage(){
+
+  startBgm();
+  stopVideos();
+
+
+  if(isDesktop()){
+
+    if(currentPage === 0){
+      return;
     }
 
-    function prevPage() {
-      if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = pages.length - 2;
-        } else if (currentPage === 1) {
-          currentPage = 0;
-        } else {
-          currentPage -= 2;
-        }
-      } else {
-        currentPage = (currentPage > 0) ? currentPage - 1 : pages.length - 1;
-      }
-      render();
+    if(currentPage === 1){
+      currentPage = 0;
+    }else{
+      currentPage -= 2;
     }
 
-    window.addEventListener("resize", render);
-    render();
-  </script>
+  }else{
+
+    if(currentPage > 0){
+      currentPage--;
+    }
+
+  }
+
+
+  render();
+
+}
+
+
+
+window.addEventListener("resize", render);
+render();
+
+</script>
+
 </body>
 </html>
-
-
-
