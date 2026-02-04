@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HARPER’S BAZAAR — ABDZ</title>
+<title>ABDZ — Porte d’ouverture</title>
 
 <style>
     body {
@@ -18,41 +18,28 @@
         justify-content: center;
         text-align: center;
     }
-
-    .container {
-        max-width: 900px;
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 30px;
-        margin-bottom: 6px;
-        letter-spacing: 1px;
-    }
-
+    .container { max-width: 900px; padding: 20px; }
+    h1 { font-size: 30px; margin-bottom: 6px; letter-spacing: 1px; }
     p.sous-titre {
-        font-size: 18px;           /* un peu plus petit */
+        font-size: 18px;
         line-height: 1.4;
         opacity: 0.95;
-        margin-bottom: 18px;       /* moins d’espace pour remonter le bloc */
+        margin-bottom: 18px;
         font-weight: 300;
     }
-
     .video-wrapper {
-        margin: 0 auto 18px auto;  /* bouton plus proche de la vidéo */
+        margin: 0 auto 18px auto;
         max-width: 800px;
         border-radius: 16px;
         overflow: hidden;
         box-shadow: 0 8px 25px rgba(0,0,0,0.5);
     }
-
     video {
         width: 100%;
         display: block;
         background: #000;
-        max-height: 70vh;          /* évite que la vidéo pousse le bouton trop bas sur tel */
+        max-height: 70vh;
     }
-
     a.cta {
         display: inline-block;
         margin-top: 6px;
@@ -63,39 +50,60 @@
         border-radius: 999px;
         text-decoration: none;
         transition: 0.3s;
-        box-shadow: 0 8px 22px rgba(0,0,0,0.4); /* effet bouton plus marqué */
+        box-shadow: 0 8px 22px rgba(0,0,0,0.4);
         letter-spacing: 0.5px;
         font-weight: 500;
         text-transform: uppercase;
     }
-
-    a.cta:hover {
-        background: #d4a64d;
-        transform: translateY(-3px);
-    }
+    a.cta:hover { background: #d4a64d; transform: translateY(-3px); }
 </style>
 </head>
 
 <body>
 <div class="container">
-<h1>ABDZ : LA SPHERE ELLE</h1>
 
-  <p class="sous-titre">
-    Une porte d’entrée vers l’univers éditorial ABDZ.
-</p>
+    <h1>ABDZ : LA SPHÈRE ELLE</h1>
+
+    <p class="sous-titre">Une porte d’entrée vers l’univers éditorial ABDZ.</p>
 
     <!-- 🎬 VIDÉO -->
     <div class="video-wrapper">
-        <video controls playsinline>
+        <video id="introVideo" controls playsinline>
             <source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
             Votre navigateur ne peut pas lire cette vidéo.
         </video>
     </div>
 
     <!-- 🔗 BOUTON -->
-    <a class="cta" href="index.html">ENTREZ DANS MON UNIVERS</a>
+    <a class="cta" id="enterBtn" href="index.html">ENTREZ DANS MON UNIVERS</a>
 
 </div>
+
+<script>
+  // ✅ On "arme" la musique pour la page suivante (index.html)
+  // (la lecture audio réelle démarrera au clic sur index, car navigateur)
+  try { localStorage.setItem("ABDZ_BGM_ON", "1"); } catch(e) {}
+
+  const v = document.getElementById("introVideo");
+  const btn = document.getElementById("enterBtn");
+
+  function arm(){
+    try { localStorage.setItem("ABDZ_BGM_ON", "1"); } catch(e) {}
+  }
+
+  // Armer sur interaction vidéo ou clic bouton
+  ["play","click","touchstart","pointerdown"].forEach(evt => {
+    v.addEventListener(evt, arm, { passive:true });
+  });
+  btn.addEventListener("click", arm);
+</script>
+
 </body>
 </html>
+
+
+
+
+
+
 
