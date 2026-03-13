@@ -1,128 +1,411 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABDZ01 — ABDZ</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABDZ01 — ABDZ</title>
 
-<style>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body{
-margin:0;
-padding:10px;
-font-family:Arial,sans-serif;
-background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
-color:white;
-}
+    corps {
+      marge : 0 ;
+      marge intérieure : 10px ;
+      police de caractères : Arial, sans-serif ;
+      arrière-plan : dégradé radial (cercle en haut, #2e2315 0 %, #111 45 %, #000 100 %) ;
+      couleur : #fff ;
+    }
 
-.viewer{
-max-width:1200px;
-margin:auto;
-background:rgba(20,20,20,0.92);
-border:1px solid rgba(212,166,77,0.25);
-padding:20px;
-border-radius:22px;
-box-shadow:0 14px 40px rgba(0,0,0,0.35);
-text-align:center;
-}
+    .viewer {
+      largeur maximale : 1280px ;
+      marge : 0 automatique ;
+      arrière-plan : rgba(20, 20, 20, 0,92);
+      bordure : 1px solide rgba(212, 166, 77, 0,25);
+      marge intérieure : 20px ;
+      bordure-radius: 22px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+      text-align: centre;
+      filtre de fond : flou (6px);
+    }
 
-.page{
-display:none;
-}
+    .pages {
+      affichage : bloc ;
+      largeur : 100 % ;
+    }
 
-.page.active{
-display:block;
-}
+    .page {
+      affichage : aucun ;
+      largeur : 100 % ;
+      aligner les éléments : centrer ;
+      justifier-contenu : centre ;
+    }
 
-.page img{
-width:100%;
-max-height:90vh;
-object-fit:contain;
-border-radius:14px;
-}
+    .page.active {
+      affichage : flexible ;
+    }
 
-.nav-buttons{
-margin-top:20px;
-display:flex;
-gap:10px;
-}
+    .page img,
+    .page vidéo {
+      largeur maximale : 100 % ;
+      hauteur maximale : 85vh ;
+      largeur : 100 % ;
+      hauteur : automatique ;
+      bordure-radius: 14px;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+      objet-fit : contient ;
+      arrière-plan : #000 ;
+      rendu d'image : -webkit-optimize-contrast ;
+      rendu d'image : contours nets ;
+    }
 
-button{
-flex:1;
-padding:12px;
-background:#111;
-color:#f4e3bb;
-border:1px solid rgba(212,166,77,0.45);
-border-radius:10px;
-cursor:pointer;
-}
+    .nav-buttons {
+      marge supérieure : 20px ;
+      affichage : flexible ;
+      justificatif-contenu : espace-entre ;
+      écart : 12 px ;
+    }
 
-</style>
+    bouton {
+      flex : 1 ;
+      arrière-plan : gradient linéaire (180°, #1d1d1d 0 %, #000 100 %) ;
+      couleur : #f4e3bb ;
+      marge intérieure : 12px 20px ;
+      bordure : 1px solide rgba(212, 166, 77, 0,45);
+      bordure-radius: 10px;
+      curseur : pointeur ;
+      taille de police : 15 px ;
+      transition : 0,25 s d'accélération ;
+    }
+
+    bouton:survol {
+      arrière-plan : gradient linéaire (180°, #3a2a12 0 %, #161616 100 %) ;
+      transform: translateY(-1px);
+    }
+
+    .numéro-de-page {
+      marge supérieure : 12px ;
+      taille de police : 14px ;
+      couleur : #d8c08a ;
+      text-align: centre;
+      espacement des lettres : 0,3 px ;
+    }
+
+    @media (max-width: 600px) {
+      corps {
+        marge intérieure : 6 px ;
+      }
+
+      .viewer {
+        marge intérieure : 12px ;
+        bordure-radius: 14px;
+      }
+
+      bouton {
+        taille de police : 14px ;
+        marge intérieure : 11px 12px ;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .pages.double-layout {
+        affichage : flexible ;
+        justifier-contenu : centre ;
+        écart : 24 px ;
+        aligner les éléments : centrer ;
+      }
+
+      .pages.double-layout .page.active {
+        flex : 0 0 45 % ;
+      }
+
+      .pages.double-layout .page.active img,
+      .pages.double-layout .page.active vidéo {
+        hauteur maximale : 92vh ;
+      }
+
+      .pages.single-layout .page.active {
+        largeur : 100 % ;
+      }
+
+      .pages.single-layout .page.active img,
+      .pages.single-layout .page.active vidéo {
+        hauteur maximale : 92vh ;
+        largeur : automatique ;
+        largeur maximale : 100 % ;
+      }
+    }
+  </style>
 </head>
 
-<body>
+<corps>
 
-<div class="viewer">
+  <div class="viewer">
+    <div class="pages" id="pagesContainer"></div>
 
-<div id="pageContainer"></div>
+    <div class="nav-buttons">
+      <button onclick="prevPage()">← Page précédente</button>
+      <button onclick="nextPage()">Page suivante →</button>
+    </div>
 
-<div class="nav-buttons">
-<button onclick="prevPage()">← Page précédente</button>
-<button onclick="nextPage()">Page suivante →</button>
-</div>
+    <div class="page-number" id="pageNumber"></div>
+  </div>
 
-</div>
+  <audio id="bgm" preload="auto" loop>
+    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
+  </audio>
 
-<script>
+  <script>
+    const PREMIÈRE_PAGE_NUMÉROTÉE = 2;
+    const NOMBRE_DE_PAGES_NUMÉROTÉES = 160;
 
-const images = [
+    const PANORAMA_PAGES = [
+      12, 31, 52, 83, 88, 93, 110, 113, 114, 118, 119, 128, 133, 146, 157
+    ];
 
-"couverture.png",
+    const bgm = document.getElementById("bgm");
 
-...Array.from({length:160},(_,i)=>`${i+2}.png`),
+    fonction startBgm() {
+      si (bgm && bgm.paused) {
+        bgm.play().catch(() => {});
+      }
+    }
 
-"derniere-couverture.png"
+    essayer {
+      si (localStorage.getItem("ABDZ_BGM_ON") === "1") {
+        démarrerBgm();
+      }
+    } attraper (e) {}
 
-];
+    const pagesData = [];
 
-const container = document.getElementById("pageContainer");
+    pagesData.push({
+      Nom du fichier : "couverture.png",
+      type : « couverture »,
+      étiquette : "Couverture"
+    });
 
-images.forEach(src=>{
-const div=document.createElement("div");
-div.className="page";
+    pour (soit i = 0 ; i < NOMBRE_DE_PAGES_NUMÉROTÉES ; i++) {
+      const realPageNumber = FIRST_NUMBERED_PAGE + i;
 
-const img=document.createElement("img");
-img.src="IMAGES/"+src;
+      pagesData.push({
+        Nom du fichier : `${realPageNumber}.png`,
+        type: PANORAMA_PAGES.includes(realPageNumber) ? "panorama" : "image",
+        étiquette : `Page ${realPageNumber}`,
+        numéro de page : numéro de page réel
+      });
+    }
 
-div.appendChild(img);
-container.appendChild(div);
-});
+    pagesData.push({
+      nom du fichier : "dernière-couverture.png",
+      type : « quatrième de couverture »,
+      étiquette : "Dernière couverture"
+    });
 
-const pages=document.querySelectorAll(".page");
-let current=0;
+    pagesData.push({
+      Nom du fichier : "VIDEOS/sphere-close.mp4",
+      type : "vidéo",
+      étiquette : "Vidéo finale"
+    });
 
-function render(){
-pages.forEach(p=>p.classList.remove("active"));
-pages[current].classList.add("active");
-}
+    const pagesContainer = document.getElementById("pagesContainer");
+    const pageNumber = document.getElementById("pageNumber");
 
-function nextPage(){
-if(current<pages.length-1){
-current++;
-render();
-}
-}
+    pagesData.forEach((item) => {
+      const page = document.createElement("div");
+      page.className = "page";
+      page.dataset.type = item.type;
+      page.dataset.label = item.label;
 
-function prevPage(){
-if(current>0){
-current--;
-render();
-}
-}
+      si (item.pageNumber) {
+        page.dataset.pageNumber = item.pageNumber;
+      }
 
-render();
+      si (item.type === "video") {
+        const video = document.createElement("video");
+        vidéo.src = élément.nom_du_fichier;
+        vidéo.playsInline = vrai ;
+        vidéo.préchargement = "métadonnées";
+        vidéo.muet = vrai;
+        vidéo.lectureautomatique = vrai;
+        vidéo.contrôles = vrai;
 
-</script>
+        vidéo.addEventListener("ended", () => {
+          si (bgm) {
+            bgm.pause();
+            bgm.currentTime = 0;
+          }
+        });
+
+        page.appendChild(video);
+      } autre {
+        const img = document.createElement("img");
+        img.src = `IMAGES/${item.fileName}`;
+        img.alt = item.label;
+        img.loading = "impatient";
+        page.appendChild(img);
+      }
+
+      pagesContainer.appendChild(page);
+    });
+
+    const pages = document.querySelectorAll(".page");
+    soit currentPage = 0 ;
+
+    fonction isDesktop() {
+      retourner window.innerWidth >= 1024 ;
+    }
+
+    fonction pageType(i) {
+      retourner pages[i]?.dataset?.type || "image";
+    }
+
+    fonction pageLabel(i) {
+      retourner pages[i]?.dataset?.label || "";
+    }
+
+    fonction isSingleDisplayPage(i) {
+      const type = pageType(i);
+      retour (
+        type === "cover" ||
+        type === "couverture arrière" ||
+        type === "vidéo" ||
+        type === "panorama"
+      );
+    }
+
+    fonction stopVideos() {
+      pages.forEach((p) => {
+        const v = p.querySelector("video");
+        si (v) {
+          v.pause();
+          v.currentTime = 0;
+        }
+      });
+    }
+
+    fonction tryPlayVideo() {
+      document
+        .querySelectorAll(".page.active video")
+        .forEach((v) => v.play().catch(() => {}));
+    }
+
+    fonction render() {
+      const bureau = estBureau();
+
+      pages.forEach((p) => p.classList.remove("active"));
+      pagesContainer.classList.remove("double-layout", "single-layout");
+
+      si (bureau) {
+        si (isSingleDisplayPage(currentPage)) {
+          pages[currentPage].classList.add("active");
+          pagesContainer.classList.add("single-layout");
+          pageNumber.textContent = pageLabel(currentPage);
+        } autre {
+          const premier = page_actuelle;
+          const second = Math.min(currentPage + 1, pages.length - 1);
+
+          si (isSingleDisplayPage(seconde)) {
+            pages[first].classList.add("active");
+            pagesContainer.classList.add("single-layout");
+            pageNumber.textContent = pageLabel(premier);
+          } autre {
+            pages[first].classList.add("active");
+            pages[second].classList.add("active");
+            pagesContainer.classList.add("double-layout");
+            pageNumber.textContent = `${pageLabel(first)} — ${pageLabel(second)}`;
+          }
+        }
+      } autre {
+        pages[currentPage].classList.add("active");
+        pageNumber.textContent = pageLabel(currentPage);
+      }
+
+      essayerPlayVideo();
+    }
+
+    fonction nextPage() {
+      démarrerBgm();
+      stopVideos();
+
+      si (currentPage >= pages.length - 1) {
+        essayer {
+          localStorage.setItem("ABDZ_BGM_ON", "0");
+        } attraper (e) {}
+
+        window.location.href = "intro.html";
+        retour;
+      }
+
+      si (isDesktop()) {
+        si (isSingleDisplayPage(currentPage)) {
+          page_actuelle += 1 ;
+        } autre {
+          const nextIndex = currentPage + 1;
+
+          si (isSingleDisplayPage(nextIndex)) {
+            page_actuelle = index_suivant ;
+          } autre {
+            page_actuelle += 2;
+          }
+        }
+      } autre {
+        page_actuelle += 1 ;
+      }
+
+      si (currentPage >= pages.length) {
+        page_actuelle = pages.longueur - 1 ;
+      }
+
+      rendre();
+    }
+
+    fonction prevPage() {
+      démarrerBgm();
+      stopVideos();
+
+      si (currentPage <= 0) {
+        page actuelle = 0 ;
+        rendre();
+        retour;
+      }
+
+      si (isDesktop()) {
+        soit cible = page_actuelle - 1 ;
+
+        tant que (cible > 0 && !isSingleDisplayPage(cible)) {
+          const avantCible = cible - 1;
+
+          si (avantCible >= 0 && !isSingleDisplayPage(avantCible)) {
+            cible = avantCible;
+            casser;
+          } autre {
+            casser;
+          }
+        }
+
+        page_actuelle = Math.max(0, cible);
+      } autre {
+        page_actuelle -= 1;
+      }
+
+      rendre();
+    }
+
+    window.addEventListener("resize", render);
+    rendre();
+  </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
