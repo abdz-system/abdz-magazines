@@ -1,145 +1,74 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ABDZ — Porte d’ouverture</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABDZ — Entrée</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      background: radial-gradient(circle at top, #2e2315 0%, #111 45%, #000 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
+body{
+margin:0;
+padding:0;
+font-family:Arial,sans-serif;
+background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:100vh;
+text-align:center;
+}
 
-    .container {
-      max-width: 980px;
-      width: 100%;
-      padding: 20px;
-    }
+.container{
+max-width:900px;
+padding:20px;
+}
 
-    h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-      color: #f4e3bb;
-    }
+.video-wrapper{
+margin:0 auto 20px auto;
+max-width:800px;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
 
-    p.sous-titre {
-      font-size: 18px;
-      line-height: 1.5;
-      opacity: 0.95;
-      margin-bottom: 22px;
-      font-weight: 300;
-      color: #f5f0e6;
-    }
+video{
+width:100%;
+display:block;
+max-height:70vh;
+}
 
-    .video-wrapper {
-      margin: 0 auto 22px auto;
-      max-width: 860px;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
-      border: 1px solid rgba(212, 166, 77, 0.25);
-      background: #000;
-    }
+a.cta{
+display:inline-block;
+margin-top:15px;
+padding:14px 28px;
+background:#b48b43;
+color:white;
+font-size:20px;
+border-radius:999px;
+text-decoration:none;
+letter-spacing:1px;
+}
 
-    video {
-      width: 100%;
-      display: block;
-      background: #000;
-      max-height: 72vh;
-    }
-
-    a.cta {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 14px 30px;
-      background: linear-gradient(180deg, #c59a4b 0%, #a97a2e 100%);
-      color: white;
-      font-size: 18px;
-      border-radius: 999px;
-      text-decoration: none;
-      transition: 0.3s ease;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-      letter-spacing: 0.6px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    a.cta:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.05);
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 14px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-
-      p.sous-titre {
-        font-size: 16px;
-      }
-
-      a.cta {
-        font-size: 16px;
-        padding: 13px 22px;
-      }
-    }
-  </style>
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>ABDZ : LA SPHÈRE VOGUE</h1>
 
-    <p class="sous-titre">Une porte d’entrée vers l’univers éditorial ABDZ.</p>
+<div class="container">
 
-    <div class="video-wrapper">
-      <video id="introVideo" controls playsinline>
-        <source src="VIDEOS/sphere-abdz.mp4" type="video/mp4" />
-        Votre navigateur ne peut pas lire cette vidéo.
-      </video>
-    </div>
+<div class="video-wrapper">
+<video controls playsinline>
+<source src="VIDEOS/sphere-abdz.mp4" type="video/mp4">
+</video>
+</div>
 
-    <a class="cta" id="enterBtn" href="magazine.html">ENTREZ DANS MON UNIVERS</a>
-  </div>
+<a class="cta" href="magazine.html">
+ENTRER DANS L’UNIVERS ABDZ
+</a>
 
-  <script>
-    try {
-      localStorage.setItem("ABDZ_BGM_ON", "1");
-    } catch (e) {}
+</div>
 
-    const v = document.getElementById("introVideo");
-    const btn = document.getElementById("enterBtn");
-
-    function arm() {
-      try {
-        localStorage.setItem("ABDZ_BGM_ON", "1");
-      } catch (e) {}
-    }
-
-    ["play", "click", "touchstart", "pointerdown"].forEach((evt) => {
-      v.addEventListener(evt, arm, { passive: true });
-    });
-
-    btn.addEventListener("click", arm);
-  </script>
 </body>
 </html>
