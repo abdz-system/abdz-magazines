@@ -184,18 +184,7 @@ imageList.forEach((fileName, index) => {
   pagesContainer.appendChild(page);
 });
 
-const videoPage = document.createElement("div");
-videoPage.className = "page";
-videoPage.dataset.type = "video";
 
-const video = document.createElement("video");
-video.src = "VIDEOS/sphere-close.mp4";
-video.controls = true;
-video.playsInline = true;
-video.preload = "metadata";
-
-videoPage.appendChild(video);
-pagesContainer.appendChild(videoPage);
 
 const pages = Array.from(document.querySelectorAll(".page"));
 
