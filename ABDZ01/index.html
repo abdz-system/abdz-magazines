@@ -19,7 +19,7 @@
     }
 
     .viewer {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
       background: rgba(20, 20, 20, 0.92);
       border: 1px solid rgba(212, 166, 77, 0.25);
@@ -32,14 +32,18 @@
 
     .pages {
       display: block;
+      width: 100%;
     }
 
     .page {
       display: none;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
     }
 
     .page.active {
-      display: block;
+      display: flex;
     }
 
     .page img,
@@ -52,6 +56,8 @@
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
       object-fit: contain;
       background: #000;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
 
     .nav-buttons {
@@ -107,6 +113,7 @@
         display: flex;
         justify-content: center;
         gap: 24px;
+        align-items: center;
       }
 
       .pages.double-layout .page.active {
@@ -116,6 +123,17 @@
       .pages.double-layout .page.active img,
       .pages.double-layout .page.active video {
         max-height: 92vh;
+      }
+
+      .pages.single-layout .page.active {
+        width: 100%;
+      }
+
+      .pages.single-layout .page.active img,
+      .pages.single-layout .page.active video {
+        max-height: 92vh;
+        width: auto;
+        max-width: 100%;
       }
     }
   </style>
@@ -142,6 +160,10 @@
     const FIRST_NUMBERED_PAGE = 2;
     const NUMBER_OF_NUMBERED_PAGES = 160;
 
+    const PANORAMA_PAGES = [
+      12, 31, 52, 83, 88, 93, 110, 113, 114, 118, 119, 128, 133, 146, 157
+    ];
+
     const bgm = document.getElementById("bgm");
 
     function startBgm() {
@@ -156,60 +178,101 @@
       }
     } catch (e) {}
 
-    const imageList = [
-      "couverture.png",
-      ...Array.from(
-        { length: NUMBER_OF_NUMBERED_PAGES },
-        (_, i) => `${FIRST_NUMBERED_PAGE + i}.png`
-      ),
-      "derniere-couverture.png"
-    ];
+    const pagesData = [];
+
+    pagesData.push({
+      fileName: "couverture.png",
+      type: "cover",
+      label: "Couverture"
+    });
+
+    for (let i = 0; i < NUMBER_OF_NUMBERED_PAGES; i++) {
+      const realPageNumber = FIRST_NUMBERED_PAGE + i;
+
+      pagesData.push({
+        fileName: `${realPageNumber}.png`,
+        type: PANORAMA_PAGES.includes(realPageNumber) ? "panorama" : "image",
+        label: `Page ${realPageNumber}`,
+        pageNumber: realPageNumber
+      });
+    }
+
+    pagesData.push({
+      fileName: "derniere-couverture.png",
+      type: "back-cover",
+      label: "Dernière couverture"
+    });
+
+    pagesData.push({
+      fileName: "VIDEOS/sphere-close.mp4",
+      type: "video",
+      label: "Vidéo finale"
+    });
 
     const pagesContainer = document.getElementById("pagesContainer");
+    const pageNumber = document.getElementById("pageNumber");
 
-    imageList.forEach((fileName) => {
+    pagesData.forEach((item) => {
       const page = document.createElement("div");
       page.className = "page";
-      page.dataset.type = "image";
+      page.dataset.type = item.type;
+      page.dataset.label = item.label;
 
-      const img = document.createElement("img");
-      img.src = `IMAGES/${fileName}`;
-      img.alt = fileName;
-      img.loading = "eager";
+      if (item.pageNumber) {
+        page.dataset.pageNumber = item.pageNumber;
+      }
 
-      page.appendChild(img);
+      if (item.type === "video") {
+        const video = document.createElement("video");
+        video.src = item.fileName;
+        video.playsInline = true;
+        video.preload = "metadata";
+        video.muted = true;
+        video.autoplay = true;
+        video.controls = true;
+
+        video.addEventListener("ended", () => {
+          if (bgm) {
+            bgm.pause();
+            bgm.currentTime = 0;
+          }
+        });
+
+        page.appendChild(video);
+      } else {
+        const img = document.createElement("img");
+        img.src = `IMAGES/${item.fileName}`;
+        img.alt = item.label;
+        img.loading = "eager";
+        page.appendChild(img);
+      }
+
       pagesContainer.appendChild(page);
     });
 
-    const videoPage = document.createElement("div");
-    videoPage.className = "page";
-    videoPage.dataset.type = "video";
-
-    const video = document.createElement("video");
-    video.src = "VIDEOS/sphere-close.mp4";
-    video.playsInline = true;
-    video.preload = "metadata";
-    video.muted = true;
-    video.autoplay = true;
-    video.controls = true;
-
-    video.addEventListener("ended", () => {
-      if (bgm) {
-        bgm.pause();
-        bgm.currentTime = 0;
-      }
-    });
-
-    videoPage.appendChild(video);
-    pagesContainer.appendChild(videoPage);
-
-    let currentPage = 0;
-
     const pages = document.querySelectorAll(".page");
-    const pageNumber = document.getElementById("pageNumber");
+    let currentPage = 0;
 
     function isDesktop() {
       return window.innerWidth >= 1024;
+    }
+
+    function pageType(i) {
+      return pages[i]?.dataset?.type || "image";
+    }
+
+    function pageLabel(i) {
+      return pages[i]?.dataset?.label || "";
+    }
+
+    function isSingleDisplayPage(i) {
+      const type = pageType(i);
+      return (
+        type === "cover" ||
+        type === "back-cover" ||
+        type === "video" ||
+        type === "panorama"
+      );
     }
 
     function stopVideos() {
@@ -228,35 +291,35 @@
         .forEach((v) => v.play().catch(() => {}));
     }
 
-    function pageType(i) {
-      return pages[i]?.dataset?.type || "image";
-    }
-
     function render() {
       const desktop = isDesktop();
 
       pages.forEach((p) => p.classList.remove("active"));
-      pagesContainer.classList.remove("double-layout");
+      pagesContainer.classList.remove("double-layout", "single-layout");
 
-      if (desktop && currentPage > 0) {
-        const first = currentPage;
-        const second = Math.min(currentPage + 1, pages.length - 1);
-
-        const mustSingle =
-          pageType(first) === "video" || pageType(second) === "video";
-
-        if (mustSingle) {
-          pages[first].classList.add("active");
-          pageNumber.textContent = `Page ${first + 1} / ${pages.length}`;
+      if (desktop) {
+        if (isSingleDisplayPage(currentPage)) {
+          pages[currentPage].classList.add("active");
+          pagesContainer.classList.add("single-layout");
+          pageNumber.textContent = pageLabel(currentPage);
         } else {
-          pages[first].classList.add("active");
-          pages[second].classList.add("active");
-          pagesContainer.classList.add("double-layout");
-          pageNumber.textContent = `Pages ${first + 1}–${second + 1} / ${pages.length}`;
+          const first = currentPage;
+          const second = Math.min(currentPage + 1, pages.length - 1);
+
+          if (isSingleDisplayPage(second)) {
+            pages[first].classList.add("active");
+            pagesContainer.classList.add("single-layout");
+            pageNumber.textContent = pageLabel(first);
+          } else {
+            pages[first].classList.add("active");
+            pages[second].classList.add("active");
+            pagesContainer.classList.add("double-layout");
+            pageNumber.textContent = `${pageLabel(first)} — ${pageLabel(second)}`;
+          }
         }
       } else {
         pages[currentPage].classList.add("active");
-        pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+        pageNumber.textContent = pageLabel(currentPage);
       }
 
       tryPlayVideo();
@@ -266,7 +329,7 @@
       startBgm();
       stopVideos();
 
-      if (currentPage === pages.length - 1) {
+      if (currentPage >= pages.length - 1) {
         try {
           localStorage.setItem("ABDZ_BGM_ON", "0");
         } catch (e) {}
@@ -276,17 +339,23 @@
       }
 
       if (isDesktop()) {
-        if (currentPage === 0) {
-          currentPage = 1;
+        if (isSingleDisplayPage(currentPage)) {
+          currentPage += 1;
         } else {
-          currentPage += 2;
+          const nextIndex = currentPage + 1;
 
-          if (currentPage >= pages.length) {
-            currentPage = pages.length - 1;
+          if (isSingleDisplayPage(nextIndex)) {
+            currentPage = nextIndex;
+          } else {
+            currentPage += 2;
           }
         }
       } else {
-        currentPage++;
+        currentPage += 1;
+      }
+
+      if (currentPage >= pages.length) {
+        currentPage = pages.length - 1;
       }
 
       render();
@@ -296,20 +365,29 @@
       startBgm();
       stopVideos();
 
+      if (currentPage <= 0) {
+        currentPage = 0;
+        render();
+        return;
+      }
+
       if (isDesktop()) {
-        if (currentPage === 0) {
-          return;
+        let target = currentPage - 1;
+
+        while (target > 0 && !isSingleDisplayPage(target)) {
+          const beforeTarget = target - 1;
+
+          if (beforeTarget >= 0 && !isSingleDisplayPage(beforeTarget)) {
+            target = beforeTarget;
+            break;
+          } else {
+            break;
+          }
         }
 
-        if (currentPage === 1) {
-          currentPage = 0;
-        } else {
-          currentPage -= 2;
-        }
+        currentPage = Math.max(0, target);
       } else {
-        if (currentPage > 0) {
-          currentPage--;
-        }
+        currentPage -= 1;
       }
 
       render();
