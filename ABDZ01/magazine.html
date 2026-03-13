@@ -1,430 +1,128 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ABDZ01 — ABDZ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABDZ01 — ABDZ</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      padding: 10px;
-      font-family: Arial, sans-serif;
-      background: radial-gradient(circle at top, #2e2315 0%, #111 45%, #000 100%);
-      color: #fff;
-    }
+body{
+margin:0;
+padding:10px;
+font-family:Arial,sans-serif;
+background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
+color:white;
+}
 
-    .viewer {
-      max-width: 1280px;
-      margin: 0 auto;
-      background: rgba(20, 20, 20, 0.92);
-      border: 1px solid rgba(212, 166, 77, 0.25);
-      padding: 20px;
-      border-radius: 22px;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
-      text-align: center;
-      backdrop-filter: blur(6px);
-    }
+.viewer{
+max-width:1200px;
+margin:auto;
+background:rgba(20,20,20,0.92);
+border:1px solid rgba(212,166,77,0.25);
+padding:20px;
+border-radius:22px;
+box-shadow:0 14px 40px rgba(0,0,0,0.35);
+text-align:center;
+}
 
-    .pages {
-      display: block;
-      width: 100%;
-    }
+.page{
+display:none;
+}
 
-    .page {
-      display: none;
-      width: 100%;
-      align-items: center;
-      justify-content: center;
-    }
+.page.active{
+display:block;
+}
 
-    .page.active {
-      display: flex;
-    }
+.page img{
+width:100%;
+max-height:90vh;
+object-fit:contain;
+border-radius:14px;
+}
 
-    .page img,
-    .page video {
-      max-width: 100%;
-      max-height: 85vh;
-      width: 100%;
-      height: auto;
-      border-radius: 14px;
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
-      object-fit: contain;
-      background: #000;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
-    }
+.nav-buttons{
+margin-top:20px;
+display:flex;
+gap:10px;
+}
 
-    .final-video {
-      width: 100%;
-      max-width: 860px;
-      max-height: 72vh;
-      height: auto;
-      background: #000;
-      border-radius: 18px;
-      border: 1px solid rgba(212, 166, 77, 0.25);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
-    }
+button{
+flex:1;
+padding:12px;
+background:#111;
+color:#f4e3bb;
+border:1px solid rgba(212,166,77,0.45);
+border-radius:10px;
+cursor:pointer;
+}
 
-    .nav-buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    button {
-      flex: 1;
-      background: linear-gradient(180deg, #1d1d1d 0%, #000 100%);
-      color: #f4e3bb;
-      padding: 12px 20px;
-      border: 1px solid rgba(212, 166, 77, 0.45);
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 15px;
-      transition: 0.25s ease;
-    }
-
-    button:hover {
-      background: linear-gradient(180deg, #3a2a12 0%, #161616 100%);
-      transform: translateY(-1px);
-    }
-
-    .page-number {
-      margin-top: 12px;
-      font-size: 14px;
-      color: #d8c08a;
-      text-align: center;
-      letter-spacing: 0.3px;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 6px;
-      }
-
-      .viewer {
-        padding: 12px;
-        border-radius: 14px;
-      }
-
-      button {
-        font-size: 14px;
-        padding: 11px 12px;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .pages.double-layout {
-        display: flex;
-        justify-content: center;
-        gap: 24px;
-        align-items: center;
-      }
-
-      .pages.double-layout .page.active {
-        flex: 0 0 45%;
-      }
-
-      .pages.double-layout .page.active img,
-      .pages.double-layout .page.active video {
-        max-height: 92vh;
-      }
-
-      .pages.single-layout .page.active {
-        width: 100%;
-      }
-
-      .pages.single-layout .page.active img {
-        max-height: 92vh;
-        width: auto;
-        max-width: 100%;
-      }
-
-      .pages.single-layout .page.active video.final-video {
-        width: 100%;
-        max-width: 860px;
-        max-height: 72vh;
-        height: auto;
-      }
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-  <div class="viewer">
-    <div class="pages" id="pagesContainer"></div>
+<div class="viewer">
 
-    <div class="nav-buttons">
-      <button onclick="prevPage()">← Page précédente</button>
-      <button onclick="nextPage()">Page suivante →</button>
-    </div>
+<div id="pageContainer"></div>
 
-    <div class="page-number" id="pageNumber"></div>
-  </div>
+<div class="nav-buttons">
+<button onclick="prevPage()">← Page précédente</button>
+<button onclick="nextPage()">Page suivante →</button>
+</div>
 
-  <audio id="bgm" preload="auto" loop>
-    <source src="AUDIOS/abdz-music.mp3" type="audio/mpeg">
-  </audio>
+</div>
 
-  <script>
-    const FIRST_NUMBERED_PAGE = 2;
-    const NUMBER_OF_NUMBERED_PAGES = 160;
+<script>
 
-    const PANORAMA_PAGES = [
-      12, 31, 52, 83, 88, 93, 110, 113, 114, 118, 119, 128, 133, 146, 157
-    ];
+const images = [
 
-    const bgm = document.getElementById("bgm");
+"couverture.png",
 
-    function startBgm() {
-      if (bgm && bgm.paused) {
-        bgm.play().catch(() => {});
-      }
-    }
+...Array.from({length:160},(_,i)=>`${i+2}.png`),
 
-    function unlockBgm() {
-      startBgm();
-      document.removeEventListener("click", unlockBgm);
-      document.removeEventListener("touchstart", unlockBgm);
-      document.removeEventListener("pointerdown", unlockBgm);
-    }
+"derniere-couverture.png"
 
-    try {
-      if (localStorage.getItem("ABDZ_BGM_ON") === "1") {
-        startBgm();
-      }
-    } catch (e) {}
+];
 
-    document.addEventListener("click", unlockBgm, { passive: true });
-    document.addEventListener("touchstart", unlockBgm, { passive: true });
-    document.addEventListener("pointerdown", unlockBgm, { passive: true });
+const container = document.getElementById("pageContainer");
 
-    const pagesData = [];
+images.forEach(src=>{
+const div=document.createElement("div");
+div.className="page";
 
-    pagesData.push({
-      fileName: "couverture.png",
-      type: "cover",
-      label: "Couverture"
-    });
+const img=document.createElement("img");
+img.src="IMAGES/"+src;
 
-    for (let i = 0; i < NUMBER_OF_NUMBERED_PAGES; i++) {
-      const realPageNumber = FIRST_NUMBERED_PAGE + i;
+div.appendChild(img);
+container.appendChild(div);
+});
 
-      pagesData.push({
-        fileName: `${realPageNumber}.png`,
-        type: PANORAMA_PAGES.includes(realPageNumber) ? "panorama" : "image",
-        label: `Page ${realPageNumber}`,
-        pageNumber: realPageNumber
-      });
-    }
+const pages=document.querySelectorAll(".page");
+let current=0;
 
-    pagesData.push({
-      fileName: "derniere-couverture.png",
-      type: "back-cover",
-      label: "Dernière couverture"
-    });
+function render(){
+pages.forEach(p=>p.classList.remove("active"));
+pages[current].classList.add("active");
+}
 
-    pagesData.push({
-      fileName: "VIDEOS/sphere-close.mp4",
-      type: "video",
-      label: "Vidéo finale"
-    });
+function nextPage(){
+if(current<pages.length-1){
+current++;
+render();
+}
+}
 
-    const pagesContainer = document.getElementById("pagesContainer");
-    const pageNumber = document.getElementById("pageNumber");
+function prevPage(){
+if(current>0){
+current--;
+render();
+}
+}
 
-    pagesData.forEach((item) => {
-      const page = document.createElement("div");
-      page.className = "page";
-      page.dataset.type = item.type;
-      page.dataset.label = item.label;
+render();
 
-      if (item.pageNumber) {
-        page.dataset.pageNumber = item.pageNumber;
-      }
-
-      if (item.type === "video") {
-        const video = document.createElement("video");
-        video.src = item.fileName;
-        video.playsInline = true;
-        video.preload = "metadata";
-        video.muted = true;
-        video.autoplay = true;
-        video.controls = true;
-        video.classList.add("final-video");
-
-        video.addEventListener("ended", () => {
-          if (bgm) {
-            bgm.pause();
-            bgm.currentTime = 0;
-          }
-        });
-
-        page.appendChild(video);
-      } else {
-        const img = document.createElement("img");
-        img.src = `IMAGES/${item.fileName}`;
-        img.alt = item.label;
-        img.loading = "eager";
-        page.appendChild(img);
-      }
-
-      pagesContainer.appendChild(page);
-    });
-
-    const pages = document.querySelectorAll(".page");
-    let currentPage = 0;
-
-    function isDesktop() {
-      return window.innerWidth >= 1024;
-    }
-
-    function pageType(i) {
-      return pages[i]?.dataset?.type || "image";
-    }
-
-    function pageLabel(i) {
-      return pages[i]?.dataset?.label || "";
-    }
-
-    function isSingleDisplayPage(i) {
-      const type = pageType(i);
-      return (
-        type === "cover" ||
-        type === "back-cover" ||
-        type === "video" ||
-        type === "panorama"
-      );
-    }
-
-    function stopVideos() {
-      pages.forEach((p) => {
-        const v = p.querySelector("video");
-        if (v) {
-          v.pause();
-          v.currentTime = 0;
-        }
-      });
-    }
-
-    function tryPlayVideo() {
-      document
-        .querySelectorAll(".page.active video")
-        .forEach((v) => v.play().catch(() => {}));
-    }
-
-    function render() {
-      const desktop = isDesktop();
-
-      pages.forEach((p) => p.classList.remove("active"));
-      pagesContainer.classList.remove("double-layout", "single-layout");
-
-      if (desktop) {
-        if (isSingleDisplayPage(currentPage)) {
-          pages[currentPage].classList.add("active");
-          pagesContainer.classList.add("single-layout");
-          pageNumber.textContent = pageLabel(currentPage);
-        } else {
-          const first = currentPage;
-          const second = Math.min(currentPage + 1, pages.length - 1);
-
-          if (isSingleDisplayPage(second)) {
-            pages[first].classList.add("active");
-            pagesContainer.classList.add("single-layout");
-            pageNumber.textContent = pageLabel(first);
-          } else {
-            pages[first].classList.add("active");
-            pages[second].classList.add("active");
-            pagesContainer.classList.add("double-layout");
-            pageNumber.textContent = `${pageLabel(first)} — ${pageLabel(second)}`;
-          }
-        }
-      } else {
-        pages[currentPage].classList.add("active");
-        pageNumber.textContent = pageLabel(currentPage);
-      }
-
-      tryPlayVideo();
-    }
-
-    function nextPage() {
-      startBgm();
-      stopVideos();
-
-      if (currentPage >= pages.length - 1) {
-        try {
-          localStorage.setItem("ABDZ_BGM_ON", "0");
-        } catch (e) {}
-
-        window.location.href = "index.html";
-        return;
-      }
-
-      if (isDesktop()) {
-        if (isSingleDisplayPage(currentPage)) {
-          currentPage += 1;
-        } else {
-          const nextIndex = currentPage + 1;
-
-          if (isSingleDisplayPage(nextIndex)) {
-            currentPage = nextIndex;
-          } else {
-            currentPage += 2;
-          }
-        }
-      } else {
-        currentPage += 1;
-      }
-
-      if (currentPage >= pages.length) {
-        currentPage = pages.length - 1;
-      }
-
-      render();
-    }
-
-    function prevPage() {
-      startBgm();
-      stopVideos();
-
-      if (currentPage <= 0) {
-        currentPage = 0;
-        render();
-        return;
-      }
-
-      if (isDesktop()) {
-        let target = currentPage - 1;
-
-        while (target > 0 && !isSingleDisplayPage(target)) {
-          const beforeTarget = target - 1;
-
-          if (beforeTarget >= 0 && !isSingleDisplayPage(beforeTarget)) {
-            target = beforeTarget;
-            break;
-          } else {
-            break;
-          }
-        }
-
-        currentPage = Math.max(0, target);
-      } else {
-        currentPage -= 1;
-      }
-
-      render();
-    }
-
-    window.addEventListener("resize", render);
-    render();
-  </script>
+</script>
 
 </body>
 </html>
