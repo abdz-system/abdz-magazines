@@ -69,8 +69,15 @@ body{
   box-shadow:0 14px 28px rgba(0,0,0,0.28);
   object-fit:contain;
   background:#000;
+
   image-rendering:-webkit-optimize-contrast;
   image-rendering:crisp-edges;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+}
+
+  image-rendering:auto;
+  image-rendering:-webkit-optimize-contrast;
   backface-visibility:hidden;
   transform:translateZ(0);
 }
@@ -187,12 +194,18 @@ imageList.forEach((fileName, index) => {
   pagesContainer.appendChild(page);
 });
 
+
+
 const pages = Array.from(document.querySelectorAll(".page"));
 
 let currentPage = 0;
 
 function isDesktop(){
   return window.innerWidth >= 1024;
+}
+
+function isVideoPage(index){
+  return pages[index]?.dataset?.type === "video";
 }
 
 function isPanorama(index){
@@ -210,6 +223,7 @@ function isLastCover(index){
 function getLabel(index){
   if (isCover(index)) return "Couverture";
   if (isLastCover(index)) return "Dernière couverture";
+  if (isVideoPage(index)) return "Vidéo finale";
   return `Page ${index + 1}`;
 }
 
@@ -218,6 +232,7 @@ function canPair(index){
   if (index < 0 || index >= pages.length) return false;
   if (isCover(index)) return false;
   if (isLastCover(index)) return false;
+  if (isVideoPage(index)) return false;
   if (isPanorama(index)) return false;
 
   const nextIndex = index + 1;
@@ -225,6 +240,7 @@ function canPair(index){
   if (nextIndex >= pages.length) return false;
   if (isPanorama(nextIndex)) return false;
   if (isLastCover(nextIndex)) return false;
+  if (isVideoPage(nextIndex)) return false;
 
   return true;
 }
@@ -259,8 +275,8 @@ function nextPage(){
   }
 
   if (currentPage >= pages.length) {
-    currentPage = 0;
-  }
+  currentPage = 0;
+}
 
   render();
 }
