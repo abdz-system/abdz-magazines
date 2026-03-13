@@ -1,213 +1,317 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABDZ Magazine</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ABDZ01 — Magazine</title>
 
 <style>
-
-*{box-sizing:border-box;}
+*{
+  box-sizing:border-box;
+}
 
 body{
-margin:0;
-padding:10px;
-font-family:Arial,sans-serif;
-background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
-color:#fff;
+  margin:0;
+  padding:10px;
+  font-family:Arial,sans-serif;
+  background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
+  color:#fff;
 }
 
 .viewer{
-max-width:1200px;
-margin:auto;
-background:#111;
-padding:20px;
-border-radius:20px;
-text-align:center;
+  max-width:1200px;
+  margin:0 auto;
+  background:rgba(20,20,20,0.92);
+  border:1px solid rgba(212,166,77,0.25);
+  padding:20px;
+  border-radius:22px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.35);
+  text-align:center;
+  backdrop-filter:blur(6px);
+}
+
+.pages{
+  display:block;
+}
+
+.pages.double-layout{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:24px;
 }
 
 .page{
-display:none;
+  display:none;
 }
 
 .page.active{
-display:block;
+  display:block;
+}
+
+.pages.double-layout .page.active{
+  flex:0 0 calc(50% - 12px);
 }
 
 .page img,
 .page video{
-width:100%;
-max-height:85vh;
-object-fit:contain;
-border-radius:12px;
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  max-height:85vh;
+  margin:0 auto;
+  border-radius:14px;
+  box-shadow:0 14px 28px rgba(0,0,0,0.28);
+  object-fit:contain;
+  background:#000;
+
+  image-rendering:auto;
+  image-rendering:-webkit-optimize-contrast;
+  backface-visibility:hidden;
+  transform:translateZ(0);
 }
 
-.pages.double{
-display:flex;
-gap:20px;
+.pages.double-layout .page.active img,
+.pages.double-layout .page.active video{
+  max-height:88vh;
 }
 
-.pages.double .page{
-flex:1;
-}
-
-.nav{
-margin-top:20px;
-display:flex;
-justify-content:space-between;
+.nav-buttons{
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
 }
 
 button{
-padding:12px 18px;
-border:none;
-background:#222;
-color:#fff;
-cursor:pointer;
-border-radius:8px;
+  flex:1;
+  background:linear-gradient(180deg,#1d1d1d 0%,#000 100%);
+  color:#f4e3bb;
+  padding:12px 20px;
+  border:1px solid rgba(212,166,77,0.45);
+  border-radius:10px;
+  cursor:pointer;
+  font-size:15px;
+  transition:0.25s ease;
+}
+
+button:hover{
+  background:linear-gradient(180deg,#3a2a12 0%,#161616 100%);
+  transform:translateY(-1px);
 }
 
 .page-number{
-margin-top:10px;
+  margin-top:12px;
+  font-size:14px;
+  color:#d8c08a;
+  text-align:center;
+  letter-spacing:0.3px;
+  min-height:18px;
 }
 
+@media (max-width:1023px){
+  .viewer{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  .nav-buttons{
+    gap:10px;
+  }
+
+  button{
+    font-size:14px;
+    padding:11px 14px;
+  }
+
+  .page img,
+  .page video{
+    max-height:78vh;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <div class="viewer">
+  <div class="pages" id="pagesContainer"></div>
 
-<div class="pages" id="pages"></div>
+  <div class="nav-buttons">
+    <button type="button" onclick="prevPage()">← Page précédente</button>
+    <button type="button" onclick="nextPage()">Page suivante →</button>
+  </div>
 
-<div class="nav">
-<button onclick="prev()">← Page précédente</button>
-<button onclick="next()">Page suivante →</button>
-</div>
-
-<div class="page-number" id="num"></div>
-
+  <div class="page-number" id="pageNumber"></div>
 </div>
 
 <script>
+const FIRST_NUMBERED_FILE = 2;
+const NUMBER_OF_NUMBERED_PAGES = 160;
 
-const PANORAMA=[
-12,31,52,83,88,93,110,113,114,118,119,128,133,146,157
+const PANORAMA_PAGES = [
+  12,31,52,83,88,93,110,113,114,118,119,128,133,146,157
 ];
 
-const pagesContainer=document.getElementById("pages");
-
-const images=[
-"couverture.png",
-...Array.from({length:160},(_,i)=>`${i+2}.png`),
-"derniere-couverture.png"
+const imageList = [
+  "couverture.png",
+  ...Array.from({ length: NUMBER_OF_NUMBERED_PAGES }, (_, i) => `${FIRST_NUMBERED_FILE + i}.png`),
+  "derniere-couverture.png"
 ];
 
-images.forEach((img,i)=>{
+const pagesContainer = document.getElementById("pagesContainer");
+const pageNumber = document.getElementById("pageNumber");
 
-let page=document.createElement("div");
-page.className="page";
+imageList.forEach((fileName, index) => {
+  const page = document.createElement("div");
+  page.className = "page";
 
-if(PANORAMA.includes(i+1)){
-page.dataset.panorama="true";
-}
+  const displayNumber = index + 1;
 
-let im=document.createElement("img");
-im.src="IMAGES/"+img;
+  if (PANORAMA_PAGES.includes(displayNumber)) {
+    page.dataset.panorama = "true";
+  }
 
-page.appendChild(im);
-pagesContainer.appendChild(page);
+  const img = document.createElement("img");
+  img.src = `IMAGES/${fileName}`;
+  img.alt = fileName;
+  img.loading = index < 4 ? "eager" : "lazy";
+  img.decoding = "async";
+  img.draggable = false;
 
+  page.appendChild(img);
+  pagesContainer.appendChild(page);
 });
 
-let videoPage=document.createElement("div");
-videoPage.className="page";
+const videoPage = document.createElement("div");
+videoPage.className = "page";
+videoPage.dataset.type = "video";
 
-let v=document.createElement("video");
-v.src="VIDEOS/sphere-close.mp4";
-v.controls=true;
+const video = document.createElement("video");
+video.src = "VIDEOS/sphere-close.mp4";
+video.controls = true;
+video.playsInline = true;
+video.preload = "metadata";
 
-videoPage.appendChild(v);
+videoPage.appendChild(video);
 pagesContainer.appendChild(videoPage);
 
-const pages=document.querySelectorAll(".page");
-const num=document.getElementById("num");
+const pages = Array.from(document.querySelectorAll(".page"));
 
-let current=0;
+let currentPage = 0;
 
-function desktop(){
-return window.innerWidth>1000;
+function isDesktop(){
+  return window.innerWidth >= 1024;
 }
 
-function pano(i){
-return pages[i]?.dataset.panorama==="true";
+function isVideoPage(index){
+  return pages[index]?.dataset?.type === "video";
+}
+
+function isPanorama(index){
+  return pages[index]?.dataset?.panorama === "true";
+}
+
+function isCover(index){
+  return index === 0;
+}
+
+function isLastCover(index){
+  return index === imageList.length - 1;
+}
+
+function getLabel(index){
+  if (isCover(index)) return "Couverture";
+  if (isLastCover(index)) return "Dernière couverture";
+  if (isVideoPage(index)) return "Vidéo finale";
+  return `Page ${index + 1}`;
+}
+
+function canPair(index){
+  if (!isDesktop()) return false;
+  if (index < 0 || index >= pages.length) return false;
+  if (isCover(index)) return false;
+  if (isLastCover(index)) return false;
+  if (isVideoPage(index)) return false;
+  if (isPanorama(index)) return false;
+
+  const nextIndex = index + 1;
+
+  if (nextIndex >= pages.length) return false;
+  if (isPanorama(nextIndex)) return false;
+  if (isLastCover(nextIndex)) return false;
+  if (isVideoPage(nextIndex)) return false;
+
+  return true;
 }
 
 function render(){
+  pages.forEach(page => page.classList.remove("active"));
+  pagesContainer.classList.remove("double-layout");
 
-pages.forEach(p=>p.classList.remove("active"));
-pagesContainer.classList.remove("double");
+  if (!pages[currentPage]) return;
 
-if(desktop()){
+  if (isDesktop() && canPair(currentPage)) {
+    pages[currentPage].classList.add("active");
+    pages[currentPage + 1].classList.add("active");
+    pagesContainer.classList.add("double-layout");
+    pageNumber.textContent = `Pages ${currentPage + 1}-${currentPage + 2}`;
+    return;
+  }
 
-if(pano(current)){
-pages[current].classList.add("active");
-num.textContent="Page "+(current+1);
-}
-else{
-
-pages[current].classList.add("active");
-pages[current+1]?.classList.add("active");
-
-pagesContainer.classList.add("double");
-
-num.textContent="Pages "+(current+1)+"-"+(current+2);
+  pages[currentPage].classList.add("active");
+  pageNumber.textContent = getLabel(currentPage);
 }
 
+function nextPage(){
+  if (isDesktop()) {
+    if (canPair(currentPage)) {
+      currentPage += 2;
+    } else {
+      currentPage += 1;
+    }
+  } else {
+    currentPage += 1;
+  }
+
+  if (currentPage >= pages.length) {
+    currentPage = pages.length - 1;
+  }
+
+  render();
 }
 
-else{
+function prevPage(){
+  if (isDesktop()) {
+    const previousStart = currentPage - 2;
 
-pages[current].classList.add("active");
-num.textContent="Page "+(current+1);
+    if (currentPage <= 0) {
+      currentPage = 0;
+    } else if (previousStart >= 0 && canPair(previousStart)) {
+      currentPage = previousStart;
+    } else {
+      currentPage -= 1;
+    }
+  } else {
+    currentPage -= 1;
+  }
 
+  if (currentPage < 0) {
+    currentPage = 0;
+  }
+
+  render();
 }
 
-}
+window.addEventListener("resize", render);
 
-function next(){
-
-if(desktop()){
-current+=pano(current)?1:2;
-}
-else{
-current+=1;
-}
-
-if(current>=pages.length)current=pages.length-1;
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight") nextPage();
+  if (event.key === "ArrowLeft") prevPage();
+});
 
 render();
-
-}
-
-function prev(){
-
-if(desktop()){
-current-=pano(current)?1:2;
-}
-else{
-current-=1;
-}
-
-if(current<0)current=0;
-
-render();
-
-}
-
-window.addEventListener("resize",render);
-
-render();
-
 </script>
 
 </body>
