@@ -286,7 +286,26 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight") nextPage();
   if (event.key === "ArrowLeft") prevPage();
 });
+let touchStartX = 0;
+let touchEndX = 0;
 
+document.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener("touchend", e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe(){
+  if(touchEndX < touchStartX - 50){
+    nextPage();
+  }
+  if(touchEndX > touchStartX + 50){
+    prevPage();
+  }
+}
 render();
 </script>
 
