@@ -58,19 +58,23 @@ body{
 
 .page img{
   display:block;
-  width:100%;
+  width:auto;
   max-width:100%;
   height:auto;
   max-height:85vh;
-  margin:0 auto;
+  margin:auto;
   border-radius:14px;
   box-shadow:0 14px 28px rgba(0,0,0,0.28);
   object-fit:contain;
   background:#000;
-  image-rendering:-webkit-optimize-contrast;
-  image-rendering:crisp-edges;
+
+  image-rendering:auto;
   backface-visibility:hidden;
-  transform:translateZ(0);
+  transform:translate3d(0,0,0);
+  will-change:transform;
+
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
 .pages.double-layout .page.active img{
