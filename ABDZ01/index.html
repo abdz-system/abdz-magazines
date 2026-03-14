@@ -74,7 +74,16 @@ body{
   transform:translateZ(0);
   will-change:transform;
 }
-
+.page::after{
+  content:"© ABDZ Creations®";
+  position:absolute;
+  bottom:8px;
+  right:12px;
+  font-size:11px;
+  color:rgba(255,255,255,0.55);
+  pointer-events:none;
+}
+ 
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
