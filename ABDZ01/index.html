@@ -4,13 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ABDZ01 — Magazine</title>
- <link rel="icon" type="image/png" href="IMAGES/favicon.png">
+<link rel="icon" type="image/png" href="IMAGES/favicon.png">
 <meta property="og:title" content="ABDZ Magazine — Issue 01">
 <meta property="og:description" content="An independent magazine where fashion meets symbols, colors, animals and emotions.">
 <meta property="og:image" content="https://abdz-system.github.io/abdz-magazines/ABDZ01/IMAGES/couverture.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://abdz-system.github.io/abdz-magazines/ABDZ01/">
-  
 
 <style>
 *{box-sizing:border-box;}
@@ -83,6 +82,14 @@ body{
   display:flex;
   justify-content:space-between;
   gap:12px;
+  opacity:0;
+  transition:opacity 0.35s ease;
+  pointer-events:none;
+}
+
+.nav-buttons.controls-visible{
+  opacity:1;
+  pointer-events:auto;
 }
 
 button{
@@ -110,6 +117,7 @@ button:hover{
   letter-spacing:0.3px;
   min-height:18px;
 }
+
 @media (max-width:1023px){
   .viewer{
     padding:14px;
@@ -132,7 +140,6 @@ button:hover{
     max-height:78vh;
   }
 }
-
 </style>
 </head>
 
@@ -141,7 +148,7 @@ button:hover{
 <div class="viewer">
   <div class="pages" id="pagesContainer"></div>
 
-  <div class="nav-buttons">
+  <div class="nav-buttons controls-visible" id="navButtons">
     <button type="button" onclick="prevPage()">← Page précédente</button>
     <button type="button" onclick="nextPage()">Page suivante →</button>
   </div>
@@ -165,6 +172,7 @@ const imageList = [
 
 const pagesContainer = document.getElementById("pagesContainer");
 const pageNumber = document.getElementById("pageNumber");
+const navButtons = document.getElementById("navButtons");
 
 imageList.forEach((fileName, index) => {
   const page = document.createElement("div");
@@ -188,6 +196,9 @@ imageList.forEach((fileName, index) => {
 
 const pages = Array.from(document.querySelectorAll(".page"));
 let currentPage = 0;
+let controlsTimeout;
+let touchStartX = 0;
+let touchEndX = 0;
 
 function isDesktop(){
   return window.innerWidth >= 1024;
@@ -280,23 +291,32 @@ function prevPage(){
   render();
 }
 
-window.addEventListener("resize", render);
+function showControls(){
+  navButtons.classList.add("controls-visible");
+  clearTimeout(controlsTimeout);
+  controlsTimeout = setTimeout(() => {
+    navButtons.classList.remove("controls-visible");
+  }, 2200);
+}
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowRight") nextPage();
-  if (event.key === "ArrowLeft") prevPage();
-});
-let touchStartX = 0;
-let touchEndX = 0;
-
+document.addEventListener("mousemove", showControls);
 document.addEventListener("touchstart", e => {
   touchStartX = e.changedTouches[0].screenX;
+  showControls();
 });
 
 document.addEventListener("touchend", e => {
   touchEndX = e.changedTouches[0].screenX;
   handleSwipe();
 });
+
+document.addEventListener("keydown", (event) => {
+  showControls();
+  if (event.key === "ArrowRight") nextPage();
+  if (event.key === "ArrowLeft") prevPage();
+});
+
+document.addEventListener("click", showControls);
 
 function handleSwipe(){
   if(touchEndX < touchStartX - 50){
@@ -306,6 +326,10 @@ function handleSwipe(){
     prevPage();
   }
 }
+
+window.addEventListener("resize", render);
+
+showControls();
 render();
 </script>
 
