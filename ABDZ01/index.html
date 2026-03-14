@@ -236,12 +236,12 @@ function render(){
     pages[currentPage].classList.add("active");
     pages[currentPage + 1].classList.add("active");
     pagesContainer.classList.add("double-layout");
-    pageNumber.textContent = `Pages ${currentPage + 1}-${currentPage + 2}`;
+    pageNumber.textContent = `Pages ${currentPage + 1}-${currentPage + 2} / ${pages.length}`;
     return;
   }
 
   pages[currentPage].classList.add("active");
-  pageNumber.textContent = getLabel(currentPage);
+  pageNumber.textContent = `${getLabel(currentPage)} / ${pages.length}`;
 }
 
 function nextPage(){
