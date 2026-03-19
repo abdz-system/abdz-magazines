@@ -46,6 +46,7 @@ body{
 
 .page{
   display:none;
+  position:relative;
 }
 
 .page.active{
@@ -67,13 +68,15 @@ body{
   box-shadow:0 14px 28px rgba(0,0,0,0.28);
   object-fit:contain;
   background:#000;
-
   image-rendering:-webkit-optimize-contrast;
   image-rendering:auto;
   backface-visibility:hidden;
   transform:translateZ(0);
   will-change:transform;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
+
 .page::after{
   content:"© ABDZ Creations®";
   position:absolute;
@@ -82,10 +85,6 @@ body{
   font-size:11px;
   color:rgba(255,255,255,0.55);
   pointer-events:none;
-}
- 
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
 }
 
 .pages.double-layout .page.active img{
@@ -133,6 +132,23 @@ button:hover{
   min-height:18px;
 }
 
+#closingOverlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#000;
+  z-index:99999;
+  justify-content:center;
+  align-items:center;
+}
+
+#closingOverlay video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#000;
+}
+
 @media (max-width:1023px){
   .viewer{
     padding:14px;
@@ -171,6 +187,13 @@ button:hover{
   <div class="page-number" id="pageNumber"></div>
 </div>
 
+<div id="closingOverlay">
+  <video id="closingVideo" playsinline>
+    <source src="VIDEOS/sphére-fermer.mp4" type="video/mp4">
+    Votre navigateur ne peut pas lire cette vidéo.
+  </video>
+</div>
+
 <script>
 const FIRST_NUMBERED_FILE = 2;
 const NUMBER_OF_NUMBERED_PAGES = 160;
@@ -188,6 +211,8 @@ const imageList = [
 const pagesContainer = document.getElementById("pagesContainer");
 const pageNumber = document.getElementById("pageNumber");
 const navButtons = document.getElementById("navButtons");
+const closingOverlay = document.getElementById("closingOverlay");
+const closingVideo = document.getElementById("closingVideo");
 
 imageList.forEach((fileName, index) => {
   const page = document.createElement("div");
@@ -270,17 +295,38 @@ function render(){
   pageNumber.textContent = `${getLabel(currentPage)} / ${pages.length}`;
 }
 
-function nextPage(){
-  if (isDesktop()) {
-    currentPage += canPair(currentPage) ? 2 : 1;
-  } else {
-    currentPage += 1;
+function playClosingVideo(){
+  if (!closingOverlay || !closingVideo) return;
+
+  closingOverlay.style.display = "flex";
+  navButtons.classList.remove("controls-visible");
+
+  closingVideo.pause();
+  closingVideo.currentTime = 0;
+
+  const playPromise = closingVideo.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {});
   }
 
-  if (currentPage >= pages.length) {
+  closingVideo.onended = () => {
+    closingOverlay.style.display = "none";
     currentPage = 0;
+    render();
+    showControls();
+  };
+}
+
+function nextPage(){
+  const step = (isDesktop() && canPair(currentPage)) ? 2 : 1;
+  const nextIndex = currentPage + step;
+
+  if (nextIndex >= pages.length) {
+    playClosingVideo();
+    return;
   }
 
+  currentPage = nextIndex;
   render();
 }
 
@@ -315,6 +361,7 @@ function showControls(){
 }
 
 document.addEventListener("mousemove", showControls);
+
 document.addEventListener("touchstart", e => {
   touchStartX = e.changedTouches[0].screenX;
   showControls();
@@ -334,24 +381,25 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("click", showControls);
 
 function handleSwipe(){
-  if(touchEndX < touchStartX - 50){
+  if (touchEndX < touchStartX - 50){
     nextPage();
   }
-  if(touchEndX > touchStartX + 50){
+  if (touchEndX > touchStartX + 50){
     prevPage();
   }
 }
 
 window.addEventListener("resize", render);
 
-showControls();
-  document.addEventListener("contextmenu", function(e){
+document.addEventListener("contextmenu", function(e){
   e.preventDefault();
 });
 
 document.addEventListener("dragstart", function(e){
   e.preventDefault();
 });
+
+showControls();
 render();
 </script>
 
