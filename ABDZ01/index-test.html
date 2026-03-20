@@ -3,20 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ABDZ01 — Magazine</title>
+<title>ABDZ01 — Flipbook Test</title>
 <link rel="icon" type="image/png" href="../ABDZ01/IMAGES/favicon.png">
-<meta property="og:title" content="ABDZ Magazine — Issue 01">
-<meta property="og:description" content="An independent magazine where fashion meets symbols, colors, animals and emotions.">
-<meta property="og:image" content="https://abdz-system.github.io/abdz-magazines/ABDZ01/IMAGES/couverture.png">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://abdz-system.github.io/abdz-magazines/ABDZ01/">
 
 <style>
 *{box-sizing:border-box;}
 
 body{
   margin:0;
-  padding:10px;
+  padding:20px;
   font-family:Arial,sans-serif;
   background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
   color:#fff;
@@ -27,82 +22,87 @@ body{
   margin:0 auto;
   background:rgba(20,20,20,0.92);
   border:1px solid rgba(212,166,77,0.25);
-  padding:20px;
+  padding:24px;
   border-radius:22px;
   box-shadow:0 14px 40px rgba(0,0,0,0.35);
   text-align:center;
   backdrop-filter:blur(6px);
 }
 
-.pages{
-  display:block;
+h1{
+  margin:0 0 18px 0;
+  font-size:28px;
+  color:#f4e3bb;
+  letter-spacing:0.5px;
 }
 
-.pages.double-layout{
+.book-wrap{
   display:flex;
   justify-content:center;
-  gap:24px;
+  align-items:center;
+  perspective:2200px;
+  min-height:78vh;
+  overflow:hidden;
+}
+
+.book{
+  position:relative;
+  width:min(90vw, 900px);
+  height:min(78vh, 640px);
+  transform-style:preserve-3d;
 }
 
 .page{
-  display:none;
-  position:relative;
-}
-
-.page.active{
-  display:block;
-}
-
-.pages.double-layout .page.active{
-  flex:0 0 45%;
+  position:absolute;
+  inset:0;
+  transform-origin:left center;
+  transform-style:preserve-3d;
+  transition:transform 1s cubic-bezier(.22,.61,.36,1), z-index 0s linear .5s;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 14px 28px rgba(0,0,0,0.30);
+  background:#111;
+  border:1px solid rgba(212,166,77,0.18);
 }
 
 .page img{
-  display:block;
-  width:auto;
-  max-width:100%;
-  height:auto;
-  max-height:85vh;
-  margin:auto;
-  border-radius:14px;
-  box-shadow:0 14px 28px rgba(0,0,0,0.28);
+  width:100%;
+  height:100%;
   object-fit:contain;
+  display:block;
   background:#000;
-  image-rendering:auto;
-  backface-visibility:hidden;
-  transform:translateZ(0);
-  will-change:transform;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  user-select:none;
+  pointer-events:none;
 }
 
 .page::after{
   content:"© ABDZ Creations®";
   position:absolute;
-  bottom:8px;
-  right:12px;
+  bottom:10px;
+  right:14px;
   font-size:11px;
-  color:rgba(255,255,255,0.55);
+  color:rgba(255,255,255,0.58);
   pointer-events:none;
 }
 
-.pages.double-layout .page.active img{
-  max-height:88vh;
+.page.flipped{
+  transform:rotateY(-180deg);
+}
+
+.page.shadow::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to right, rgba(0,0,0,.35), rgba(0,0,0,0) 18%, rgba(0,0,0,0) 82%, rgba(0,0,0,.18));
+  pointer-events:none;
+  z-index:2;
 }
 
 .nav-buttons{
-  margin-top:20px;
+  margin-top:22px;
   display:flex;
   justify-content:space-between;
   gap:12px;
-  opacity:0;
-  transition:opacity 0.35s ease;
-  pointer-events:none;
-}
-
-.nav-buttons.controls-visible{
-  opacity:1;
-  pointer-events:auto;
 }
 
 button{
@@ -123,35 +123,24 @@ button:hover{
 }
 
 .page-number{
-  margin-top:12px;
+  margin-top:14px;
   font-size:14px;
   color:#d8c08a;
-  text-align:center;
   letter-spacing:0.3px;
   min-height:18px;
 }
 
-@media (max-width:1023px){
-  .viewer{
-    padding:14px;
-    border-radius:16px;
-  }
+.note{
+  margin-top:8px;
+  font-size:13px;
+  color:rgba(255,255,255,0.62);
+}
 
-  button{
-    font-size:14px;
-    padding:11px 14px;
-  }
-
-  .page.active{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:78vh;
-  }
-
-  .page img{
-    max-height:78vh;
-  }
+@media (max-width:768px){
+  body{padding:12px;}
+  .viewer{padding:16px;border-radius:16px;}
+  .book{height:min(72vh, 560px);}
+  h1{font-size:22px;}
 }
 </style>
 </head>
@@ -159,191 +148,104 @@ button:hover{
 <body>
 
 <div class="viewer">
-  <div class="pages" id="pagesContainer"></div>
+  <h1>ABDZ — Test pages qui tournent</h1>
 
-  <div class="nav-buttons controls-visible" id="navButtons">
+  <div class="book-wrap">
+    <div class="book" id="book"></div>
+  </div>
+
+  <div class="nav-buttons">
     <button type="button" onclick="prevPage()">← Page précédente</button>
     <button type="button" onclick="nextPage()">Page suivante →</button>
   </div>
 
   <div class="page-number" id="pageNumber"></div>
+  <div class="note">Test sur 4 pages seulement</div>
 </div>
 
 <script>
-const FIRST_NUMBERED_FILE = 2;
-const NUMBER_OF_NUMBERED_PAGES = 160;
-
-const PANORAMA_PAGES = [
-  12,31,52,83,88,93,110,113,114,118,119,128,133,146,157
-];
-
 const imageList = [
   "couverture.png",
-  ...Array.from({ length: NUMBER_OF_NUMBERED_PAGES }, (_, i) => `${FIRST_NUMBERED_FILE + i}.png`),
+  "2.png",
+  "3.png",
   "derniere-couverture.png"
 ];
 
-const pagesContainer = document.getElementById("pagesContainer");
+const book = document.getElementById("book");
 const pageNumber = document.getElementById("pageNumber");
-const navButtons = document.getElementById("navButtons");
+
+let currentIndex = 0;
+let isAnimating = false;
 
 imageList.forEach((fileName, index) => {
   const page = document.createElement("div");
-  page.className = "page";
-
-  const displayNumber = index + 1;
-  if (PANORAMA_PAGES.includes(displayNumber)) {
-    page.dataset.panorama = "true";
-  }
+  page.className = "page shadow";
+  page.style.zIndex = String(imageList.length - index);
 
   const img = document.createElement("img");
   img.src = `../ABDZ01/IMAGES/${fileName}`;
   img.alt = fileName;
-  img.loading = index < 6 ? "eager" : "lazy";
-  img.decoding = "async";
   img.draggable = false;
 
   page.appendChild(img);
-  pagesContainer.appendChild(page);
+  book.appendChild(page);
 });
 
 const pages = Array.from(document.querySelectorAll(".page"));
-let currentPage = 0;
-let controlsTimeout;
-let touchStartX = 0;
-let touchEndX = 0;
 
-function isDesktop(){
-  return window.innerWidth >= 1024;
-}
-
-function isPanorama(index){
-  return pages[index]?.dataset?.panorama === "true";
-}
-
-function isCover(index){
-  return index === 0;
-}
-
-function isLastCover(index){
-  return index === imageList.length - 1;
-}
-
-function getLabel(index){
-  if (isCover(index)) return "Couverture";
-  if (isLastCover(index)) return "Dernière couverture";
-  return `Page ${index + 1}`;
-}
-
-function canPair(index){
-  if (!isDesktop()) return false;
-  if (index < 0 || index >= pages.length) return false;
-  if (isCover(index)) return false;
-  if (isLastCover(index)) return false;
-  if (isPanorama(index)) return false;
-
-  const nextIndex = index + 1;
-  if (nextIndex >= pages.length) return false;
-  if (isPanorama(nextIndex)) return false;
-  if (isLastCover(nextIndex)) return false;
-
-  return true;
-}
-
-function render(){
-  pages.forEach(page => page.classList.remove("active"));
-  pagesContainer.classList.remove("double-layout");
-
-  if (!pages[currentPage]) return;
-
-  if (isDesktop() && canPair(currentPage)) {
-    pages[currentPage].classList.add("active");
-    pages[currentPage + 1].classList.add("active");
-    pagesContainer.classList.add("double-layout");
-    pageNumber.textContent = `Pages ${currentPage + 1}-${currentPage + 2} / ${pages.length}`;
-    return;
-  }
-
-  pages[currentPage].classList.add("active");
-  pageNumber.textContent = `${getLabel(currentPage)} / ${pages.length}`;
+function updateCounter(){
+  pageNumber.textContent = `Page ${currentIndex + 1} / ${imageList.length}`;
 }
 
 function nextPage(){
-  if (isDesktop()) {
-    currentPage += canPair(currentPage) ? 2 : 1;
-  } else {
-    currentPage += 1;
-  }
-if (currentPage >= pages.length) {
-  window.location.href = "intro-test.html?mode=outro";
-  return;
-}
- 
+  if (isAnimating) return;
 
-  render();
+  if (currentIndex >= pages.length - 1) {
+    window.location.href = "intro-test.html?mode=outro";
+    return;
+  }
+
+  isAnimating = true;
+  pages[currentIndex].classList.add("flipped");
+  currentIndex += 1;
+  updateCounter();
+
+  setTimeout(() => {
+    isAnimating = false;
+  }, 1000);
 }
 
 function prevPage(){
-  if (isDesktop()) {
-    const previousStart = currentPage - 2;
+  if (isAnimating) return;
+  if (currentIndex <= 0) return;
 
-    if (currentPage <= 0) {
-      currentPage = 0;
-    } else if (previousStart >= 0 && canPair(previousStart)) {
-      currentPage = previousStart;
-    } else {
-      currentPage -= 1;
-    }
-  } else {
-    currentPage -= 1;
-  }
+  isAnimating = true;
+  currentIndex -= 1;
+  pages[currentIndex].classList.remove("flipped");
+  updateCounter();
 
-  if (currentPage < 0) {
-    currentPage = 0;
-  }
-
-  render();
+  setTimeout(() => {
+    isAnimating = false;
+  }, 1000);
 }
-
-function showControls(){
-  navButtons.classList.add("controls-visible");
-  clearTimeout(controlsTimeout);
-  controlsTimeout = setTimeout(() => {
-    navButtons.classList.remove("controls-visible");
-  }, 2200);
-}
-
-document.addEventListener("mousemove", showControls);
-document.addEventListener("touchstart", e => {
-  touchStartX = e.changedTouches[0].screenX;
-  showControls();
-});
-
-document.addEventListener("touchend", e => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipe();
-});
 
 document.addEventListener("keydown", (event) => {
-  showControls();
   if (event.key === "ArrowRight") nextPage();
   if (event.key === "ArrowLeft") prevPage();
 });
 
-document.addEventListener("click", showControls);
+let touchStartX = 0;
+let touchEndX = 0;
 
-function handleSwipe(){
-  if(touchEndX < touchStartX - 50){
-    nextPage();
-  }
-  if(touchEndX > touchStartX + 50){
-    prevPage();
-  }
-}
+document.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive:true });
 
-window.addEventListener("resize", render);
-
-showControls();
+document.addEventListener("touchend", e => {
+  touchEndX = e.changedTouches[0].screenX;
+  if (touchEndX < touchStartX - 50) nextPage();
+  if (touchEndX > touchStartX + 50) prevPage();
+}, { passive:true });
 
 document.addEventListener("contextmenu", function(e){
   e.preventDefault();
@@ -353,9 +255,8 @@ document.addEventListener("dragstart", function(e){
   e.preventDefault();
 });
 
-render();
+updateCounter();
 </script>
 
 </body>
 </html>
-
