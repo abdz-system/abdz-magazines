@@ -57,7 +57,7 @@ h1{
   inset:0;
   transform-origin:left center;
   transform-style:preserve-3d;
-  transition:transform 1.6s cubic-bezier(.25,.8,.25,1), z-index 0s linear .9s;
+  transition:transform 2.2s cubic-bezier(.22,.7,.25,1), z-index 0s linear 1.1s;
   border-radius:16px;
   overflow:hidden;
   box-shadow:0 18px 34px rgba(0,0,0,0.34);
@@ -117,7 +117,7 @@ h1{
     linear-gradient(to bottom right, rgba(255,255,255,0.04), rgba(255,255,255,0) 28%);
 }
 
-/* Petit reflet sur le bord quand la page tourne */
+/* Petit reflet sur le bord */
 .page.edge-light{
   box-shadow:
     0 18px 34px rgba(0,0,0,0.34),
@@ -191,14 +191,16 @@ button:hover{
   </div>
 
   <div class="page-number" id="pageNumber"></div>
-  <div class="note">Test sur 4 pages seulement</div>
+  <div class="note">Test complet sur tout le magazine</div>
 </div>
 
 <script>
+const FIRST_NUMBERED_FILE = 2;
+const NUMBER_OF_NUMBERED_PAGES = 160;
+
 const imageList = [
   "couverture.png",
-  "2.png",
-  "3.png",
+  ...Array.from({ length: NUMBER_OF_NUMBERED_PAGES }, (_, i) => `${FIRST_NUMBERED_FILE + i}.png`),
   "derniere-couverture.png"
 ];
 
@@ -216,6 +218,8 @@ imageList.forEach((fileName, index) => {
   const img = document.createElement("img");
   img.src = `../ABDZ01/IMAGES/${fileName}`;
   img.alt = fileName;
+  img.loading = index < 6 ? "eager" : "lazy";
+  img.decoding = "async";
   img.draggable = false;
 
   const overlay = document.createElement("div");
@@ -228,8 +232,14 @@ imageList.forEach((fileName, index) => {
 
 const pages = Array.from(document.querySelectorAll(".page"));
 
+function getLabel(index){
+  if (index === 0) return "Couverture";
+  if (index === imageList.length - 1) return "Dernière couverture";
+  return `Page ${index + 1}`;
+}
+
 function updateCounter(){
-  pageNumber.textContent = `Page ${currentIndex + 1} / ${imageList.length}`;
+  pageNumber.textContent = `${getLabel(currentIndex)} / ${imageList.length}`;
 }
 
 function nextPage(){
