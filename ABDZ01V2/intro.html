@@ -34,8 +34,17 @@
     font-size:18px;
     line-height:1.4;
     opacity:0.95;
-    margin-bottom:18px;
+    margin-bottom:6px;
     font-weight:300;
+  }
+
+  /* ✨ TEXTE AIDE */
+  p.helper{
+    font-size:15px;
+    color:#e7c980;
+    margin-bottom:18px;
+    font-weight:500;
+    letter-spacing:0.3px;
   }
 
   .video-wrapper{
@@ -81,6 +90,9 @@
   <h1 id="mainTitle">ABDZ — PORTE D’OUVERTURE</h1>
   <p class="sous-titre" id="subTitle">Une porte d’entrée vers l’univers éditorial ABDZ.</p>
 
+  <!-- ✨ TEXTE AIDE -->
+  <p class="helper" id="helperText">Cliquez sur la vidéo pour entrer.</p>
+
   <div class="video-wrapper">
     <video id="mainVideo" controls playsinline>
       <source id="videoSource" src="../ABDZ01/VIDEOS/intro.mp4" type="video/mp4">
@@ -97,6 +109,7 @@
 
   const mainTitle = document.getElementById("mainTitle");
   const subTitle = document.getElementById("subTitle");
+  const helperText = document.getElementById("helperText");
   const video = document.getElementById("mainVideo");
   const source = document.getElementById("videoSource");
   const btn = document.getElementById("actionBtn");
@@ -104,12 +117,14 @@
   if (mode === "outro") {
     mainTitle.textContent = "ABDZ — FERMETURE";
     subTitle.textContent = "Merci d’avoir parcouru l’univers ABDZ.";
+    helperText.textContent = "Cliquez sur la vidéo pour la lancer.";
     source.src = "../ABDZ01/VIDEOS/cloture.mp4";
     btn.textContent = "REVOIR L’OUVERTURE";
     btn.href = "intro.html";
   } else {
     mainTitle.textContent = "ABDZ — PORTE D’OUVERTURE";
     subTitle.textContent = "Une porte d’entrée vers l’univers éditorial ABDZ.";
+    helperText.textContent = "Cliquez sur la vidéo pour entrer.";
     source.src = "../ABDZ01/VIDEOS/intro.mp4";
     btn.textContent = "ENTRER DANS LE MAGAZINE";
     btn.href = "index.html";
