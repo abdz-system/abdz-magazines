@@ -57,12 +57,39 @@ h1{
   inset:0;
   transform-origin:left center;
   transform-style:preserve-3d;
-  transition:transform 1s cubic-bezier(.22,.61,.36,1), z-index 0s linear .5s;
+  transition:transform 1.6s cubic-bezier(.25,.8,.25,1), z-index 0s linear .8s;
   border-radius:16px;
   overflow:hidden;
-  box-shadow:0 14px 28px rgba(0,0,0,0.30);
-  background:#111;
-  border:1px solid rgba(212,166,77,0.18);
+  box-shadow:0 18px 34px rgba(0,0,0,0.34);
+  background:linear-gradient(to right,#101010,#161616 18%,#101010);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* Coin de page visuel */
+.page::before{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:120px;
+  height:120px;
+  background:linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.18) 100%);
+  clip-path:polygon(100% 0, 0 0, 100% 100%);
+  pointer-events:none;
+  z-index:3;
+  opacity:0.75;
+}
+
+/* Signature */
+.page::after{
+  content:"© ABDZ Creations®";
+  position:absolute;
+  bottom:10px;
+  right:14px;
+  font-size:11px;
+  color:rgba(255,255,255,0.58);
+  pointer-events:none;
+  z-index:4;
 }
 
 .page img{
@@ -75,27 +102,27 @@ h1{
   pointer-events:none;
 }
 
-.page::after{
-  content:"© ABDZ Creations®";
-  position:absolute;
-  bottom:10px;
-  right:14px;
-  font-size:11px;
-  color:rgba(255,255,255,0.58);
-  pointer-events:none;
-}
-
 .page.flipped{
   transform:rotateY(-180deg);
 }
 
-.page.shadow::before{
-  content:"";
+/* Ombre intérieure pour donner l’effet feuille */
+.page.shadow .page-overlay{
   position:absolute;
   inset:0;
-  background:linear-gradient(to right, rgba(0,0,0,.35), rgba(0,0,0,0) 18%, rgba(0,0,0,0) 82%, rgba(0,0,0,.18));
   pointer-events:none;
   z-index:2;
+  background:
+    linear-gradient(to right, rgba(0,0,0,.30), rgba(0,0,0,0) 16%, rgba(0,0,0,0) 82%, rgba(0,0,0,.18)),
+    linear-gradient(to bottom right, rgba(255,255,255,0.04), rgba(255,255,255,0) 28%);
+}
+
+/* Petit reflet sur le bord quand la page tourne */
+.page.edge-light{
+  box-shadow:
+    0 18px 34px rgba(0,0,0,0.34),
+    inset -10px 0 18px rgba(255,255,255,0.03),
+    inset 8px 0 14px rgba(0,0,0,0.10);
 }
 
 .nav-buttons{
@@ -141,6 +168,10 @@ button:hover{
   .viewer{padding:16px;border-radius:16px;}
   .book{height:min(72vh, 560px);}
   h1{font-size:22px;}
+  .page::before{
+    width:90px;
+    height:90px;
+  }
 }
 </style>
 </head>
@@ -179,7 +210,7 @@ let isAnimating = false;
 
 imageList.forEach((fileName, index) => {
   const page = document.createElement("div");
-  page.className = "page shadow";
+  page.className = "page shadow edge-light";
   page.style.zIndex = String(imageList.length - index);
 
   const img = document.createElement("img");
@@ -187,7 +218,11 @@ imageList.forEach((fileName, index) => {
   img.alt = fileName;
   img.draggable = false;
 
+  const overlay = document.createElement("div");
+  overlay.className = "page-overlay";
+
   page.appendChild(img);
+  page.appendChild(overlay);
   book.appendChild(page);
 });
 
@@ -212,7 +247,7 @@ function nextPage(){
 
   setTimeout(() => {
     isAnimating = false;
-  }, 1000);
+  }, 1600);
 }
 
 function prevPage(){
@@ -226,7 +261,7 @@ function prevPage(){
 
   setTimeout(() => {
     isAnimating = false;
-  }, 1000);
+  }, 1600);
 }
 
 document.addEventListener("keydown", (event) => {
