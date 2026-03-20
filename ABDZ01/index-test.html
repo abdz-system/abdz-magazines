@@ -274,11 +274,11 @@ function nextPage(){
   } else {
     currentPage += 1;
   }
-
-  if (currentPage >= pages.length) {
-    window.location.href = "intro.html?mode=outro";
-    return;
-  }
+if (currentPage >= pages.length) {
+  window.location.href = "intro-test.html?mode=outro";
+  return;
+}
+ 
 
   render();
 }
