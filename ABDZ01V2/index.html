@@ -1,1 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ABDZ01 — Magazine</title>
+<link rel="icon" type="image/png" href="../ABDZ01/IMAGES/favicon.png">
+<meta property="og:title" content="ABDZ Magazine — Issue 01">
+<meta property="og:description" content="An independent magazine where fashion meets symbols, colors, animals and emotions.">
+<meta property="og:image" content="https://abdz-system.github.io/abdz-magazines/ABDZ01/IMAGES/couverture.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdz-system.github.io/abdz-magazines/ABDZ01/">
 
+<style>
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  padding:10px;
+  font-family:Arial,sans-serif;
+  background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
+  color:#fff;
+}
+
+.viewer{
+  max-width:1200px;
+  margin:0 auto;
+  background:rgba(20,20,20,0.92);
+  border:1px solid rgba(212,166,77,0.25);
+  padding:20px;
+  border-radius:22px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.35);
+  text-align:center;
+  backdrop-filter:blur(6px);
+}
+
+.pages{
+  display:block;
+}
+
+.pages.double-layout{
+  display:flex;
+  justify-content:center;
+  gap:24px;
+}
+
+.page{
+  display:none;
+  position:relative;
+}
+
+.page.active{
+  display:block;
+}
+
+.pages.double-layout .page.active{
+  flex:0 0 45%;
+}
+
+.page img{
+  display:block;
+  width:auto;
+  max-width:100%;
+  height:auto;
+  max-height:85vh;
+  margin:auto;
+  border-radius:14px;
+  box-shadow:0 14px 28px rgba(0,0,0,0.28);
+  object-fit:contain;
+  background:#000;
+  image-rendering:auto;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+  will-change:transform;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.page::after{
+  content:"© ABDZ Creations®";
+  position:absolute;
+  bottom:8px;
+  right:12px;
+  font-size:11px;
+  color:rgba(255,255,255,0.55);
+  pointer-events:none;
+}
+
+.pages.double-layout .page.active img{
+  max-height:88vh;
+}
+
+.nav-buttons{
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  opacity:0;
+  transition:opacity 0.35s ease;
+  pointer-events:none;
+}
+
+.nav-buttons.controls-visible{
+  opacity:1;
+  pointer-events:auto;
+}
+
+button{
+  flex:1;
+  background:linear-gradient(180deg,#1d1d1d 0%,#000 100%);
+  color:#f4e3bb;
+  padding:12px 20px;
+  border:1px solid rgba(212,166,77,0.45);
+  border-radius:10px;
+  cursor:pointer;
+  font-size:15px;
+  transition:0.25s ease;
+}
+
+button:hover{
+  background:linear-gradient(180deg,#3a2a12 0%,#161616 100%);
+  transform:translateY(-1px);
+}
+
+.page-number{
+  margin-top:12px;
+  font-size:14px;
+  color:#d8c08a;
+  text-align:center;
+  letter-spacing:0.3px;
+  min-height:18px;
+}
+
+@media (max-width:1023px){
+  .viewer{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  button{
+    font-size:14px;
+    padding:11px 14px;
+  }
+
+  .page.active{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:78vh;
+  }
+
+  .page img{
+    max-height:78vh;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="viewer">
+  <div class="pages" id="pagesContainer"></div>
+
+  <div class="nav-buttons controls-visible" id="navButtons">
+    <button type="button" onclick="prevPage()">← Page précédente</button>
+    <button type="button" onclick="nextPage()">Page suivante →</button>
+  </div>
+
+  <div class="page-number" id="pageNumber"></div>
+</div>
+
+<script>
+const FIRST_NUMBERED_FILE = 2;
+const NUMBER_OF_NUMBERED_PAGES = 160;
+
+const PANORAMA_PAGES = [
+  12,31,52,83,88,93,110,113,114,118,119,128,133,146,157
+];
+
+const imageList = [
+  "couverture.png",
+  ...Array.from({ length: NUMBER_OF_NUMBERED_PAGES }, (_, i) => `${FIRST_NUMBERED_FILE + i}.png`),
+  "derniere-couverture.png"
+];
+
+const pagesContainer = document.getElementById("pagesContainer");
+const pageNumber = document.getElementById("pageNumber");
+const navButtons = document.getElementById("navButtons");
+
+imageList.forEach((fileName, index) => {
+  const page = document.createElement("div");
+  page.className = "page";
+
+  const displayNumber = index + 1;
+  if (PANORAMA_PAGES.includes(displayNumber)) {
+    page.dataset.panorama = "true";
+  }
+
+  const img = document.createElement("img");
+  img.src = `../ABDZ01/IMAGES/${fileName}`;
+  img.alt = fileName;
+  img.loading = index < 6 ? "eager" : "lazy";
+  img.decoding = "async";
+  img.draggable = false;
+
+  page.appendChild(img);
+  pagesContainer.appendChild(page);
+});
+
+const pages = Array.from(document.querySelectorAll(".page"));
+let currentPage = 0;
+let controlsTimeout;
+let touchStartX = 0;
+let touchEndX = 0;
+
+function isDesktop(){
+  return window.innerWidth >= 1024;
+}
+
+function isPanorama(index){
+  return pages[index]?.dataset?.panorama === "true";
+}
+
+function isCover(index){
+  return index === 0;
+}
+
+function isLastCover(index){
+  return index === imageList.length - 1;
+}
+
+function getLabel(index){
+  if (isCover(index)) return "Couverture";
+  if (isLastCover(index)) return "Dernière couverture";
+  return `Page ${index + 1}`;
+}
+
+function canPair(index){
+  if (!isDesktop()) return false;
+  if (index < 0 || index >= pages.length) return false;
+  if (isCover(index)) return false;
+  if (isLastCover(index)) return false;
+  if (isPanorama(index)) return false;
+
+  const nextIndex = index + 1;
+  if (nextIndex >= pages.length) return false;
+  if (isPanorama(nextIndex)) return false;
+  if (isLastCover(nextIndex)) return false;
+
+  return true;
+}
+
+function render(){
+  pages.forEach(page => page.classList.remove("active"));
+  pagesContainer.classList.remove("double-layout");
+
+  if (!pages[currentPage]) return;
+
+  if (isDesktop() && canPair(currentPage)) {
+    pages[currentPage].classList.add("active");
+    pages[currentPage + 1].classList.add("active");
+    pagesContainer.classList.add("double-layout");
+    pageNumber.textContent = `Pages ${currentPage + 1}-${currentPage + 2} / ${pages.length}`;
+    return;
+  }
+
+  pages[currentPage].classList.add("active");
+  pageNumber.textContent = `${getLabel(currentPage)} / ${pages.length}`;
+}
+
+function nextPage(){
+  if (isDesktop()) {
+    currentPage += canPair(currentPage) ? 2 : 1;
+  } else {
+    currentPage += 1;
+  }
+
+  if (currentPage >= pages.length) {
+    window.location.href = "intro.html?mode=outro";
+    return;
+  }
+
+  render();
+}
+
+function prevPage(){
+  if (isDesktop()) {
+    const previousStart = currentPage - 2;
+
+    if (currentPage <= 0) {
+      currentPage = 0;
+    } else if (previousStart >= 0 && canPair(previousStart)) {
+      currentPage = previousStart;
+    } else {
+      currentPage -= 1;
+    }
+  } else {
+    currentPage -= 1;
+  }
+
+  if (currentPage < 0) {
+    currentPage = 0;
+  }
+
+  render();
+}
+
+function showControls(){
+  navButtons.classList.add("controls-visible");
+  clearTimeout(controlsTimeout);
+  controlsTimeout = setTimeout(() => {
+    navButtons.classList.remove("controls-visible");
+  }, 2200);
+}
+
+document.addEventListener("mousemove", showControls);
+document.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+  showControls();
+});
+
+document.addEventListener("touchend", e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+document.addEventListener("keydown", (event) => {
+  showControls();
+  if (event.key === "ArrowRight") nextPage();
+  if (event.key === "ArrowLeft") prevPage();
+});
+
+document.addEventListener("click", showControls);
+
+function handleSwipe(){
+  if(touchEndX < touchStartX - 50){
+    nextPage();
+  }
+  if(touchEndX > touchStartX + 50){
+    prevPage();
+  }
+}
+
+window.addEventListener("resize", render);
+
+showControls();
+
+document.addEventListener("contextmenu", function(e){
+  e.preventDefault();
+});
+
+document.addEventListener("dragstart", function(e){
+  e.preventDefault();
+});
+
+render();
+</script>
+
+</body>
+</html>
