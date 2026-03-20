@@ -1,1 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ABDZ01 — Spread Test</title>
+<link rel="icon" type="image/png" href="../ABDZ01/IMAGES/favicon.png">
 
+<style>
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  padding:20px;
+  font-family:Arial,sans-serif;
+  background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
+  color:#fff;
+}
+
+.viewer{
+  max-width:1280px;
+  margin:0 auto;
+  background:rgba(20,20,20,0.92);
+  border:1px solid rgba(212,166,77,0.25);
+  padding:24px;
+  border-radius:22px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.35);
+  text-align:center;
+  backdrop-filter:blur(6px);
+}
+
+h1{
+  margin:0 0 18px 0;
+  font-size:28px;
+  color:#f4e3bb;
+  letter-spacing:0.5px;
+}
+
+.book-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:78vh;
+}
+
+.spread{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  width:100%;
+}
+
+.page-card{
+  position:relative;
+  width:min(42vw, 520px);
+  height:min(74vh, 680px);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 18px 34px rgba(0,0,0,0.34);
+  background:#111;
+  border:1px solid rgba(255,255,255,0.08);
+  opacity:0;
+  transform:translateY(18px) scale(0.985);
+  transition:opacity 0.7s ease, transform 0.9s cubic-bezier(.22,.61,.36,1);
+}
+
+.page-card.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.page-card img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background:#000;
+  user-select:none;
+  pointer-events:none;
+}
+
+/* coin visuel */
+.page-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:110px;
+  height:110px;
+  background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.18) 100%);
+  clip-path:polygon(100% 0, 0 0, 100% 100%);
+  pointer-events:none;
+  z-index:3;
+  opacity:0.72;
+}
+
+/* signature */
+.page-card::after{
+  content:"© ABDZ Creations®";
+  position:absolute;
+  bottom:10px;
+  right:14px;
+  font-size:11px;
+  color:rgba(255,255,255,0.58);
+  pointer-events:none;
+  z-index:4;
+}
+
+.single-cover{
+  width:min(62vw, 620px);
+}
+
+.nav-buttons{
+  margin-top:22px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+button{
+  flex:1;
+  background:linear-gradient(180deg,#1d1d1d 0%,#000 100%);
+  color:#f4e3bb;
+  padding:12px 20px;
+  border:1px solid rgba(212,166,77,0.45);
+  border-radius:10px;
+  cursor:pointer;
+  font-size:15px;
+  transition:0.25s ease;
+}
+
+button:hover{
+  background:linear-gradient(180deg,#3a2a12 0%,#161616 100%);
+  transform:translateY(-1px);
+}
+
+.page-number{
+  margin-top:14px;
+  font-size:14px;
+  color:#d8c08a;
+  letter-spacing:0.3px;
+  min-height:18px;
+}
+
+.note{
+  margin-top:8px;
+  font-size:13px;
+  color:rgba(255,255,255,0.62);
+}
+
+@media (max-width:1023px){
+  body{padding:12px;}
+  .viewer{padding:16px;border-radius:16px;}
+  h1{font-size:22px;}
+
+  .spread{
+    display:block;
+  }
+
+  .page-card,
+  .single-cover{
+    width:min(92vw, 620px);
+    height:min(72vh, 680px);
+    margin:0 auto;
+  }
+
+  .page-card + .page-card{
+    display:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="viewer">
+  <h1>ABDZ — Test vraie double page</h1>
+
+  <div class="book-wrap">
+    <div class="spread" id="spreadContainer"></div>
+  </div>
+
+  <div class="nav-buttons">
+    <button type="button" onclick="prevSpread()">← Page précédente</button>
+    <button type="button" onclick="nextSpread()">Page suivante →</button>
+  </div>
+
+  <div class="page-number" id="pageNumber"></div>
+  <div class="note">Prototype desktop double page / mobile simple page</div>
+</div>
+
+<script>
+const spreads = [
+  { type:"cover", pages:["couverture.png"] },
+  { type:"spread", pages:["2.png","3.png"] },
+  { type:"spread", pages:["4.png","5.png"] },
+  { type:"end", pages:["derniere-couverture.png"] }
+];
+
+let currentSpread = 0;
+const spreadContainer = document.getElementById("spreadContainer");
+const pageNumber = document.getElementById("pageNumber");
+
+function isDesktop(){
+  return window.innerWidth >= 1024;
+}
+
+function renderSpread(){
+  spreadContainer.innerHTML = "";
+
+  const item = spreads[currentSpread];
+  if (!item) return;
+
+  if (item.type === "cover" || item.type === "end") {
+    const card = document.createElement("div");
+    card.className = "page-card single-cover";
+
+    const img = document.createElement("img");
+    img.src = `../ABDZ01/IMAGES/${item.pages[0]}`;
+    img.alt = item.pages[0];
+    img.draggable = false;
+
+    card.appendChild(img);
+    spreadContainer.appendChild(card);
+
+    requestAnimationFrame(() => card.classList.add("show"));
+
+    if (item.type === "cover") {
+      pageNumber.textContent = `Couverture / ${spreads.length}`;
+    } else {
+      pageNumber.textContent = `Dernière couverture / ${spreads.length}`;
+    }
+    return;
+  }
+
+  if (isDesktop()) {
+    item.pages.forEach((fileName) => {
+      const card = document.createElement("div");
+      card.className = "page-card";
+
+      const img = document.createElement("img");
+      img.src = `../ABDZ01/IMAGES/${fileName}`;
+      img.alt = fileName;
+      img.draggable = false;
+
+      card.appendChild(img);
+      spreadContainer.appendChild(card);
+
+      requestAnimationFrame(() => card.classList.add("show"));
+    });
+
+    pageNumber.textContent = `Pages ${item.pages[0].replace(".png","")}–${item.pages[1].replace(".png","")} / prototype`;
+  } else {
+    const card = document.createElement("div");
+    card.className = "page-card single-cover";
+
+    const img = document.createElement("img");
+    img.src = `../ABDZ01/IMAGES/${item.pages[0]}`;
+    img.alt = item.pages[0];
+    img.draggable = false;
+
+    card.appendChild(img);
+    spreadContainer.appendChild(card);
+
+    requestAnimationFrame(() => card.classList.add("show"));
+
+    pageNumber.textContent = `Page ${item.pages[0].replace(".png","")} / prototype`;
+  }
+}
+
+function nextSpread(){
+  if (currentSpread >= spreads.length - 1) {
+    window.location.href = "intro-test.html?mode=outro";
+    return;
+  }
+
+  currentSpread += 1;
+  renderSpread();
+}
+
+function prevSpread(){
+  if (currentSpread <= 0) return;
+
+  currentSpread -= 1;
+  renderSpread();
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight") nextSpread();
+  if (event.key === "ArrowLeft") prevSpread();
+});
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive:true });
+
+document.addEventListener("touchend", e => {
+  touchEndX = e.changedTouches[0].screenX;
+  if (touchEndX < touchStartX - 50) nextSpread();
+  if (touchEndX > touchStartX + 50) prevSpread();
+}, { passive:true });
+
+window.addEventListener("resize", renderSpread);
+
+document.addEventListener("contextmenu", function(e){
+  e.preventDefault();
+});
+
+document.addEventListener("dragstart", function(e){
+  e.preventDefault();
+});
+
+renderSpread();
+</script>
+
+</body>
+</html>
