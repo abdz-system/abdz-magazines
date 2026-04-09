@@ -234,21 +234,11 @@ function nextPage(){
   } else {
     currentPage += 1;
   }
-function nextPage(){
-  if (isDesktop()) {
-    currentPage += canPair(currentPage) ? 2 : 1;
-  } else {
-    currentPage += 1;
-  }
 
   if (currentPage >= pages.length) {
     window.location.href = "intro.html?mode=outro";
     return;
   }
-
-  render();
-}
-  
 
   render();
 }
