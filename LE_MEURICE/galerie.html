@@ -64,13 +64,25 @@
     background:#0b0b0b;
     border:1px solid rgba(255,255,255,0.08);
     box-shadow:0 14px 28px rgba(0,0,0,0.28);
-    cursor:pointer;
-    transition:transform 0.25s ease, box-shadow 0.25s ease;
+    cursor:grab;
+    transition:transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
+    user-select:none;
   }
 
   .card:hover{
     transform:translateY(-4px);
     box-shadow:0 18px 34px rgba(0,0,0,0.36);
+  }
+
+  .card.dragging{
+    opacity:0.45;
+    cursor:grabbing;
+    transform:scale(0.98);
+  }
+
+  .card.drag-over{
+    outline:2px solid rgba(212,166,77,0.75);
+    outline-offset:4px;
   }
 
   .card img{
@@ -79,6 +91,7 @@
     aspect-ratio:2/3;
     object-fit:cover;
     background:#000;
+    pointer-events:none;
   }
 
   .title-overlay{
@@ -292,7 +305,7 @@
   <div class="viewer">
     <div class="topbar">
       <h1>GALERIE DES MUSES</h1>
-      <p>Cliquez sur une muse pour l’ouvrir en grand.</p>
+      <p>Glissez les muses pour changer leur ordre. Cliquez pour les ouvrir en grand.</p>
     </div>
 
     <div class="gallery-grid" id="galleryGrid"></div>
@@ -326,26 +339,74 @@
   const lightboxTitle = document.getElementById("lightboxTitle");
   const closeBtn = document.getElementById("closeBtn");
 
-  muses.forEach((muse) => {
-    const card = document.createElement("div");
-    card.className = "card";
+  let draggedIndex = null;
+  let dragMoved = false;
 
-    card.innerHTML = `
-      <img src="images/muses/${muse.file}" alt="${muse.title}" loading="lazy" draggable="false">
-      <div class="title-overlay">${muse.title}</div>
-      <div class="signature">ABDZ Creations®</div>
-    `;
+  function renderGallery() {
+    galleryGrid.innerHTML = "";
 
-    card.addEventListener("click", () => {
-      lightboxImg.src = `images/muses/${muse.file}`;
-      lightboxImg.alt = muse.title;
-      lightboxTitle.textContent = muse.title;
-      lightbox.classList.add("open");
-      document.body.style.overflow = "hidden";
+    muses.forEach((muse, index) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.draggable = true;
+      card.dataset.index = index;
+
+      card.innerHTML = `
+        <img src="images/muses/${muse.file}" alt="${muse.title}" loading="lazy" draggable="false">
+        <div class="title-overlay">${muse.title}</div>
+        <div class="signature">ABDZ Creations®</div>
+      `;
+
+      card.addEventListener("dragstart", () => {
+        draggedIndex = index;
+        dragMoved = false;
+        card.classList.add("dragging");
+      });
+
+      card.addEventListener("dragend", () => {
+        card.classList.remove("dragging");
+        document.querySelectorAll(".card").forEach(c => c.classList.remove("drag-over"));
+        setTimeout(() => {
+          draggedIndex = null;
+        }, 0);
+      });
+
+      card.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        if (draggedIndex === null || draggedIndex === index) return;
+        card.classList.add("drag-over");
+      });
+
+      card.addEventListener("dragleave", () => {
+        card.classList.remove("drag-over");
+      });
+
+      card.addEventListener("drop", (e) => {
+        e.preventDefault();
+        card.classList.remove("drag-over");
+
+        if (draggedIndex === null || draggedIndex === index) return;
+
+        const movedMuse = muses[draggedIndex];
+        muses.splice(draggedIndex, 1);
+        muses.splice(index, 0, movedMuse);
+
+        dragMoved = true;
+        renderGallery();
+      });
+
+      card.addEventListener("click", () => {
+        if (dragMoved) return;
+        lightboxImg.src = `images/muses/${muse.file}`;
+        lightboxImg.alt = muse.title;
+        lightboxTitle.textContent = muse.title;
+        lightbox.classList.add("open");
+        document.body.style.overflow = "hidden";
+      });
+
+      galleryGrid.appendChild(card);
     });
-
-    galleryGrid.appendChild(card);
-  });
+  }
 
   function closeLightbox(){
     lightbox.classList.remove("open");
@@ -374,8 +435,12 @@
   });
 
   document.addEventListener("dragstart", function(e){
-    e.preventDefault();
+    if (e.target.tagName === "IMG") {
+      e.preventDefault();
+    }
   });
+
+  renderGallery();
 </script>
 </body>
 </html>
