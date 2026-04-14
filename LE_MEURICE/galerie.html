@@ -1,1 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LE MEURICE — Galerie</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    padding:18px;
+    font-family:Arial,sans-serif;
+    background:radial-gradient(circle at top,#2e2315 0%,#111 45%,#000 100%);
+    color:#fff;
+  }
+
+  .viewer{
+    max-width:1400px;
+    margin:0 auto;
+    background:rgba(20,20,20,0.92);
+    border:1px solid rgba(212,166,77,0.25);
+    padding:20px;
+    border-radius:22px;
+    box-shadow:0 14px 40px rgba(0,0,0,0.35);
+    text-align:center;
+    backdrop-filter:blur(6px);
+  }
+
+  .topbar{
+    margin-bottom:20px;
+  }
+
+  .topbar h1{
+    margin:0 0 8px 0;
+    font-family:"Playfair Display", serif;
+    font-size:38px;
+    font-weight:600;
+    letter-spacing:1px;
+  }
+
+  .topbar p{
+    margin:0;
+    color:#d8c08a;
+    font-size:15px;
+    letter-spacing:0.3px;
+  }
+
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:22px;
+  }
+
+  .card{
+    position:relative;
+    overflow:hidden;
+    border-radius:16px;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 14px 28px rgba(0,0,0,0.28);
+    cursor:pointer;
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 18px 34px rgba(0,0,0,0.36);
+  }
+
+  .card img{
+    display:block;
+    width:100%;
+    aspect-ratio:2/3;
+    object-fit:cover;
+    background:#000;
+  }
+
+  .title-overlay{
+    position:absolute;
+    top:18px;
+    left:18px;
+    right:18px;
+    text-align:center;
+    font-family:"Playfair Display", serif;
+    font-size:24px;
+    font-weight:600;
+    color:#fff;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    text-shadow:0 2px 10px rgba(0,0,0,0.35);
+    pointer-events:none;
+  }
+
+  .signature{
+    position:absolute;
+    right:14px;
+    bottom:12px;
+    font-family:"Playfair Display", serif;
+    font-size:14px;
+    color:rgba(255,255,255,0.92);
+    pointer-events:none;
+    text-shadow:0 2px 8px rgba(0,0,0,0.35);
+  }
+
+  .bottom-actions{
+    margin-top:22px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .btn{
+    display:inline-block;
+    padding:12px 22px;
+    border-radius:999px;
+    text-decoration:none;
+    transition:0.25s ease;
+    letter-spacing:0.4px;
+    font-size:15px;
+  }
+
+  .btn-gold{
+    background:#b48b43;
+    color:#fff;
+    box-shadow:0 8px 22px rgba(0,0,0,0.35);
+  }
+
+  .btn-gold:hover{
+    background:#d4a64d;
+    transform:translateY(-2px);
+  }
+
+  .btn-dark{
+    background:linear-gradient(180deg,#1d1d1d 0%,#000 100%);
+    color:#f4e3bb;
+    border:1px solid rgba(212,166,77,0.35);
+  }
+
+  .btn-dark:hover{
+    background:linear-gradient(180deg,#3a2a12 0%,#161616 100%);
+    transform:translateY(-2px);
+  }
+
+  .lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.88);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:999;
+  }
+
+  .lightbox.open{
+    display:flex;
+  }
+
+  .lightbox-content{
+    position:relative;
+    max-width:92vw;
+    max-height:92vh;
+  }
+
+  .lightbox img{
+    display:block;
+    max-width:92vw;
+    max-height:92vh;
+    border-radius:16px;
+    box-shadow:0 16px 40px rgba(0,0,0,0.45);
+  }
+
+  .lightbox-title{
+    position:absolute;
+    top:18px;
+    left:18px;
+    right:18px;
+    text-align:center;
+    font-family:"Playfair Display", serif;
+    font-size:34px;
+    color:#fff;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    text-shadow:0 2px 10px rgba(0,0,0,0.35);
+    pointer-events:none;
+  }
+
+  .lightbox-signature{
+    position:absolute;
+    right:16px;
+    bottom:14px;
+    font-family:"Playfair Display", serif;
+    font-size:18px;
+    color:rgba(255,255,255,0.95);
+    text-shadow:0 2px 8px rgba(0,0,0,0.35);
+    pointer-events:none;
+  }
+
+  .close-btn{
+    position:absolute;
+    top:-10px;
+    right:-10px;
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:999px;
+    background:#b48b43;
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    box-shadow:0 8px 18px rgba(0,0,0,0.35);
+  }
+
+  .close-btn:hover{
+    background:#d4a64d;
+  }
+
+  @media (max-width:1023px){
+    .gallery-grid{
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .topbar h1{
+      font-size:32px;
+    }
+
+    .title-overlay{
+      font-size:20px;
+    }
+  }
+
+  @media (max-width:767px){
+    body{
+      padding:12px;
+    }
+
+    .viewer{
+      padding:14px;
+      border-radius:16px;
+    }
+
+    .gallery-grid{
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+
+    .topbar h1{
+      font-size:26px;
+    }
+
+    .topbar p{
+      font-size:14px;
+    }
+
+    .title-overlay{
+      top:16px;
+      left:14px;
+      right:14px;
+      font-size:22px;
+    }
+
+    .signature{
+      right:12px;
+      bottom:10px;
+      font-size:13px;
+    }
+
+    .lightbox-title{
+      font-size:24px;
+      top:14px;
+      left:14px;
+      right:14px;
+    }
+
+    .lightbox-signature{
+      right:12px;
+      bottom:10px;
+      font-size:14px;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <div class="viewer">
+    <div class="topbar">
+      <h1>GALERIE DES MUSES</h1>
+      <p>Cliquez sur une muse pour l’ouvrir en grand.</p>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid"></div>
+
+    <div class="bottom-actions">
+      <a class="btn btn-dark" href="transition.html">← Page précédente</a>
+      <a class="btn btn-gold" href="intro.html">REVOIR L’OUVERTURE</a>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="close-btn" id="closeBtn" aria-label="Fermer">×</button>
+      <img id="lightboxImg" src="" alt="">
+      <div class="lightbox-title" id="lightboxTitle"></div>
+      <div class="lightbox-signature">ABDZ Creations®</div>
+    </div>
+  </div>
+
+<script>
+  const muses = [
+    { file: "1.png", title: "LA BELLE EPOQUE" },
+    { file: "2.png", title: "LA CABARET" },
+    { file: "3.png", title: "LA CAVALIERE" },
+    { file: "4.png", title: "LA ROMANTIQUE" }
+  ];
+
+  const galleryGrid = document.getElementById("galleryGrid");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const lightboxTitle = document.getElementById("lightboxTitle");
+  const closeBtn = document.getElementById("closeBtn");
+
+  muses.forEach((muse) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="images/muses/${muse.file}" alt="${muse.title}" loading="lazy" draggable="false">
+      <div class="title-overlay">${muse.title}</div>
+      <div class="signature">ABDZ Creations®</div>
+    `;
+
+    card.addEventListener("click", () => {
+      lightboxImg.src = `images/muses/${muse.file}`;
+      lightboxImg.alt = muse.title;
+      lightboxTitle.textContent = muse.title;
+      lightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+    });
+
+    galleryGrid.appendChild(card);
+  });
+
+  function closeLightbox(){
+    lightbox.classList.remove("open");
+    document.body.style.overflow = "";
+    lightboxImg.src = "";
+    lightboxImg.alt = "";
+    lightboxTitle.textContent = "";
+  }
+
+  closeBtn.addEventListener("click", closeLightbox);
+
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox.classList.contains("open")) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+  });
+
+  document.addEventListener("dragstart", function(e){
+    e.preventDefault();
+  });
+</script>
+</body>
+</html>
