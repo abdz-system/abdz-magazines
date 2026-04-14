@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LE MEURICE — Ouverture / Fermeture</title>
 
-<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDSKCC1H3E"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -91,6 +90,29 @@
     background:#d4a64d;
     transform:translateY(-3px);
   }
+
+  @media (max-width:768px){
+    .container{
+      padding:18px;
+    }
+
+    h1{
+      font-size:24px;
+    }
+
+    p.sous-titre{
+      font-size:16px;
+    }
+
+    p.helper{
+      font-size:14px;
+    }
+
+    a.cta{
+      font-size:17px;
+      padding:12px 22px;
+    }
+  }
 </style>
 </head>
 
@@ -126,8 +148,8 @@
     subTitle.textContent = "Merci d’avoir parcouru l’univers éditorial du Meurice.";
     helperText.textContent = "Cliquez sur la vidéo pour la lancer.";
     source.src = "VIDEOS/fin.mp4";
-    btn.textContent = "REVOIR L’OUVERTURE";
-    btn.href = "intro.html";
+    btn.textContent = "ENTRER DANS LA GALERIE";
+    btn.href = "transition.html";
   } else {
     mainTitle.textContent = "LE MEURICE — OUVERTURE";
     subTitle.textContent = "Une entrée dans l’univers éditorial du Meurice.";
