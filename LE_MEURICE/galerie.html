@@ -266,6 +266,10 @@
       gap:16px;
     }
 
+    .card{
+      cursor:pointer;
+    }
+
     .topbar h1{
       font-size:26px;
     }
@@ -307,7 +311,7 @@
   <div class="viewer">
     <div class="topbar">
       <h1>GALERIE DES MUSES</h1>
-      <p>Glissez les muses pour changer leur ordre. Cliquez pour les ouvrir en grand.</p>
+      <p>Sur ordinateur et tablette, glissez les muses pour changer leur ordre. Cliquez pour les ouvrir en grand.</p>
     </div>
 
     <div class="gallery-grid" id="galleryGrid"></div>
@@ -341,6 +345,20 @@
   const lightboxTitle = document.getElementById("lightboxTitle");
   const closeBtn = document.getElementById("closeBtn");
 
+  let sortableInstance = null;
+
+  function enableSorting() {
+    return window.innerWidth >= 768;
+  }
+
+  function openLightbox(muse) {
+    lightboxImg.src = `images/muses/${muse.file}`;
+    lightboxImg.alt = muse.title;
+    lightboxTitle.textContent = muse.title;
+    lightbox.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
   function renderGallery() {
     galleryGrid.innerHTML = "";
 
@@ -357,23 +375,35 @@
       `;
 
       card.addEventListener("click", () => {
-        if (card.classList.contains("sortable-chosen") || card.classList.contains("sortable-ghost")) return;
+        if (
+          card.classList.contains("sortable-chosen") ||
+          card.classList.contains("sortable-ghost")
+        ) return;
 
-        lightboxImg.src = `images/muses/${muse.file}`;
-        lightboxImg.alt = muse.title;
-        lightboxTitle.textContent = muse.title;
-        lightbox.classList.add("open");
-        document.body.style.overflow = "hidden";
+        openLightbox(muse);
       });
 
       galleryGrid.appendChild(card);
     });
 
-    new Sortable(galleryGrid, {
-      animation: 220,
-      ghostClass: "sortable-ghost",
-      chosenClass: "sortable-chosen"
-    });
+    if (sortableInstance) {
+      sortableInstance.destroy();
+      sortableInstance = null;
+    }
+
+    if (enableSorting()) {
+      sortableInstance = new Sortable(galleryGrid, {
+        animation: 220,
+        ghostClass: "sortable-ghost",
+        chosenClass: "sortable-chosen",
+        onEnd: function(evt) {
+          if (evt.oldIndex === evt.newIndex) return;
+          const movedMuse = muses.splice(evt.oldIndex, 1)[0];
+          muses.splice(evt.newIndex, 0, movedMuse);
+          renderGallery();
+        }
+      });
+    }
   }
 
   function closeLightbox(){
@@ -406,6 +436,12 @@
     if (e.target.tagName === "IMG") {
       e.preventDefault();
     }
+  });
+
+  let resizeTimeout;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(renderGallery, 150);
   });
 
   renderGallery();
