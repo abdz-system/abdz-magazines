@@ -165,6 +165,7 @@
     video.removeAttribute("poster");
     btn.textContent = "ENTRER DANS LA GALERIE";
     btn.href = "transition.html";
+    video.load();
   } else {
     mainTitle.textContent = "LE MEURICE — OUVERTURE";
     subTitle.textContent = "Une entrée dans l’univers éditorial du Meurice.";
@@ -174,8 +175,6 @@
     btn.textContent = "ENTRER";
     btn.href = "index.html";
   }
-
-  video.load();
 </script>
 </body>
 </html>
