@@ -131,7 +131,14 @@
   <p class="helper" id="helperText">Cliquez sur la vidéo pour entrer.</p>
 
   <div class="video-wrapper">
-    <video id="mainVideo" controls playsinline webkit-playsinline preload="metadata">
+    <video
+      id="mainVideo"
+      controls
+      playsinline
+      webkit-playsinline
+      preload="metadata"
+      poster="VIDEOS/intro-poster.png">
+      <source id="videoSource" src="VIDEOS/intro.mp4" type="video/mp4">
       Votre navigateur ne peut pas lire cette vidéo.
     </video>
   </div>
@@ -147,21 +154,23 @@
   const subTitle = document.getElementById("subTitle");
   const helperText = document.getElementById("helperText");
   const video = document.getElementById("mainVideo");
+  const source = document.getElementById("videoSource");
   const btn = document.getElementById("actionBtn");
 
   if (mode === "outro") {
     mainTitle.textContent = "LE MEURICE — FERMETURE";
     subTitle.textContent = "Merci d’avoir parcouru l’univers éditorial du Meurice.";
     helperText.textContent = "Cliquez sur la vidéo pour la lancer.";
-    video.src = "VIDEOS/fin.mp4";
+    source.src = "VIDEOS/fin.mp4";
+    video.removeAttribute("poster");
     btn.textContent = "ENTRER DANS LA GALERIE";
     btn.href = "transition.html";
   } else {
     mainTitle.textContent = "LE MEURICE — OUVERTURE";
     subTitle.textContent = "Une entrée dans l’univers éditorial du Meurice.";
     helperText.textContent = "Cliquez sur la vidéo pour entrer.";
-    video.src = "VIDEOS/intro.mp4";
-    video.poster = "VIDEOS/intro-poster.png";
+    source.src = "VIDEOS/intro.mp4";
+    video.setAttribute("poster", "VIDEOS/intro-poster.png");
     btn.textContent = "ENTRER";
     btn.href = "index.html";
   }
