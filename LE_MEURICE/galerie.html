@@ -50,6 +50,7 @@
     color:#d8c08a;
     font-size:15px;
     letter-spacing:0.3px;
+    line-height:1.4;
   }
 
   .gallery-grid{
@@ -343,7 +344,7 @@
   <div class="viewer">
     <div class="topbar">
       <h1>GALERIE DES MUSES</h1>
-     <p>Touchez l’image pour l’ouvrir. Bouton doré : déplacer.</p>
+      <p id="galleryHelper">Touchez l’image pour l’ouvrir. Bouton doré : déplacer.</p>
     </div>
 
     <div class="gallery-grid" id="galleryGrid"></div>
@@ -376,12 +377,21 @@
   const lightboxImg = document.getElementById("lightboxImg");
   const lightboxTitle = document.getElementById("lightboxTitle");
   const closeBtn = document.getElementById("closeBtn");
+  const galleryHelper = document.getElementById("galleryHelper");
 
   let sortableInstance = null;
   let dragStarted = false;
 
   function enableSorting() {
     return window.innerWidth >= 768;
+  }
+
+  function updateHelperText() {
+    if (window.innerWidth < 768) {
+      galleryHelper.textContent = "Faites défiler la galerie vers le haut. Touchez une image pour l’ouvrir.";
+    } else {
+      galleryHelper.textContent = "Touchez l’image pour l’ouvrir. Bouton doré : déplacer.";
+    }
   }
 
   function openLightbox(muse) {
@@ -496,9 +506,13 @@
   let resizeTimeout;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(renderGallery, 150);
+    resizeTimeout = setTimeout(() => {
+      updateHelperText();
+      renderGallery();
+    }, 150);
   });
 
+  updateHelperText();
   renderGallery();
 </script>
 </body>
