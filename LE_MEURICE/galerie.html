@@ -68,6 +68,7 @@
     cursor:pointer;
     transition:transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
     user-select:none;
+    touch-action:pan-y;
   }
 
   .card:hover{
@@ -100,6 +101,7 @@
     cursor:grab;
     z-index:5;
     box-shadow:0 6px 16px rgba(0,0,0,0.3);
+    touch-action:none;
   }
 
   .drag-handle:active{
@@ -348,7 +350,7 @@
 
     <div class="bottom-actions">
       <a class="btn btn-dark" href="transition.html">← Page précédente</a>
-      <a class="btn btn-gold" href="intro.html">REVOIR L’OUVERTURE</a>
+      <a class="btn btn-gold" href="intro.html">REVENIR AU DÉBUT</a>
     </div>
   </div>
 
@@ -376,6 +378,7 @@
   const closeBtn = document.getElementById("closeBtn");
 
   let sortableInstance = null;
+  let dragStarted = false;
 
   function enableSorting() {
     return window.innerWidth >= 768;
@@ -403,8 +406,21 @@
         <div class="signature">ABDZ Creations®</div>
       `;
 
-      card.addEventListener("click", (e) => {
+      const handle = card.querySelector(".drag-handle");
+
+      handle.addEventListener("pointerdown", () => {
+        dragStarted = true;
+      });
+
+      handle.addEventListener("pointerup", () => {
+        setTimeout(() => {
+          dragStarted = false;
+        }, 80);
+      });
+
+      card.addEventListener("pointerup", (e) => {
         if (e.target.closest(".drag-handle")) return;
+        if (dragStarted) return;
         if (
           card.classList.contains("sortable-chosen") ||
           card.classList.contains("sortable-ghost")
@@ -427,11 +443,19 @@
         ghostClass: "sortable-ghost",
         chosenClass: "sortable-chosen",
         handle: ".drag-handle",
+        onStart: function() {
+          dragStarted = true;
+        },
         onEnd: function(evt) {
-          if (evt.oldIndex === evt.newIndex) return;
-          const movedMuse = muses.splice(evt.oldIndex, 1)[0];
-          muses.splice(evt.newIndex, 0, movedMuse);
-          renderGallery();
+          if (evt.oldIndex !== evt.newIndex) {
+            const movedMuse = muses.splice(evt.oldIndex, 1)[0];
+            muses.splice(evt.newIndex, 0, movedMuse);
+          }
+
+          setTimeout(() => {
+            dragStarted = false;
+            renderGallery();
+          }, 60);
         }
       });
     }
