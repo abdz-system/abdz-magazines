@@ -23,8 +23,7 @@ body{
 .viewer{
   max-width:1200px;
   margin:0 auto;
-  background:
-    linear-gradient(180deg, rgba(255,252,247,0.97) 0%, rgba(247,240,231,0.96) 100%);
+  background:linear-gradient(180deg, rgba(255,252,247,0.97) 0%, rgba(247,240,231,0.96) 100%);
   border:1px solid rgba(180,139,67,0.32);
   padding:20px;
   border-radius:22px;
@@ -92,6 +91,79 @@ body{
 
 .pages.double-layout .page.active img{
   max-height:88vh;
+}
+
+/* PAGE TEXTE */
+.text-page{
+  position:relative;
+  min-height:85vh;
+  border-radius:14px;
+  background:
+    linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(247,240,231,0.98) 100%);
+  box-shadow:0 14px 28px rgba(0,0,0,0.08);
+  overflow:hidden;
+  padding:54px 52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:left;
+}
+
+.pages.double-layout .page.active .text-page{
+  min-height:88vh;
+}
+
+.text-page::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:url("images/blason-meurice.png");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:70%;
+  opacity:0.08;
+  pointer-events:none;
+  filter:sepia(12%) saturate(65%) hue-rotate(18deg) brightness(0.82);
+}
+
+.text-page::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 62%);
+  pointer-events:none;
+}
+
+.text-inner{
+  position:relative;
+  z-index:2;
+  max-width:520px;
+  margin:0 auto;
+}
+
+.text-title{
+  font-family:Georgia, "Times New Roman", serif;
+  font-size:30px;
+  line-height:1.15;
+  letter-spacing:0.5px;
+  color:#304b3c;
+  margin:0 0 26px 0;
+  text-align:center;
+}
+
+.text-body{
+  font-size:18px;
+  line-height:1.8;
+  color:#2b2118;
+}
+
+.text-body p{
+  margin:0 0 18px 0;
+}
+
+.text-body p:last-child{
+  margin-bottom:0;
 }
 
 .nav-buttons{
@@ -169,6 +241,22 @@ button:hover{
     max-width:100%;
     text-align:right;
   }
+
+  .text-page{
+    min-height:auto;
+    padding:42px 34px;
+    width:100%;
+  }
+
+  .text-title{
+    font-size:26px;
+    margin-bottom:22px;
+  }
+
+  .text-body{
+    font-size:17px;
+    line-height:1.75;
+  }
 }
 
 @media (max-width:767px){
@@ -176,7 +264,7 @@ button:hover{
     display:none !important;
   }
 
-.page::after{
+  .page::after{
     content:"ABDZ Creations®";
     position:absolute;
     bottom:8px;
@@ -185,7 +273,25 @@ button:hover{
     color:rgba(32,24,18,0.82);
     pointer-events:none;
   }
-  
+
+  .text-page{
+    padding:30px 22px;
+  }
+
+  .text-page::before{
+    background-size:88%;
+    opacity:0.06;
+  }
+
+  .text-title{
+    font-size:22px;
+    margin-bottom:18px;
+  }
+
+  .text-body{
+    font-size:15px;
+    line-height:1.7;
+  }
 }
 </style>
 </head>
@@ -204,37 +310,64 @@ button:hover{
 </div>
 
 <script>
-const imageList = [
-  "1.png",
-  "2.png",
-  "3.png",
-  "4.png",
-  "5.png",
-  "6.png",
-  "7.png"
+const pageItems = [
+  { type: "image", file: "1.png" },
+  {
+    type: "text",
+    title: "Résonance",
+    html: `
+      <div class="text-body">
+        <p>Dans le cadre du Meurice, cette vision a trouvé une résonance toute particulière.</p>
+        <p>Née d’un dessin ancien, l’une de mes muses s’est naturellement imposée dans cet univers de raffinement, de théâtralité et de mémoire.</p>
+        <p>La découverte de l’histoire de son emblème a prolongé cette intuition, jusqu’à faire du lévrier non pas un simple détail, mais une présence symbolique venant dialoguer avec l’âme du lieu.</p>
+        <p>Cette muse, à la fois sculpturale, souveraine et presque mythologique, ne cherche pas à illustrer le Meurice au sens littéral, mais à en proposer une interprétation sensible, poétique et visuelle.</p>
+        <p>Le lieu devient alors plus qu’un décor : il devient l’écrin vivant d’une apparition pensée en résonance avec son identité.</p>
+      </div>
+    `
+  },
+  { type: "image", file: "3.png" },
+  { type: "image", file: "4.png" },
+  { type: "image", file: "5.png" },
+  { type: "image", file: "6.png" },
+  { type: "image", file: "7.png" }
 ];
 
 const pagesContainer = document.getElementById("pagesContainer");
 const pageNumber = document.getElementById("pageNumber");
 const navButtons = document.getElementById("navButtons");
 
-imageList.forEach((fileName, index) => {
+pageItems.forEach((item, index) => {
   const page = document.createElement("div");
   page.className = "page";
 
-  const img = document.createElement("img");
-  img.src = `images/${fileName}`;
-  img.alt = `Image ${index + 1}`;
-  img.loading = index < 4 ? "eager" : "lazy";
-  img.decoding = "async";
-  img.draggable = false;
+  if (item.type === "image") {
+    const img = document.createElement("img");
+    img.src = `images/${item.file}`;
+    img.alt = `Image ${index + 1}`;
+    img.loading = index < 4 ? "eager" : "lazy";
+    img.decoding = "async";
+    img.draggable = false;
 
-  const signature = document.createElement("div");
-  signature.className = "page-signature";
-  signature.textContent = " ABDZ Creations®";
+    const signature = document.createElement("div");
+    signature.className = "page-signature";
+    signature.textContent = "ABDZ Creations®";
 
-  page.appendChild(img);
-  page.appendChild(signature);
+    page.appendChild(img);
+    page.appendChild(signature);
+  }
+
+  if (item.type === "text") {
+    const textPage = document.createElement("div");
+    textPage.className = "text-page";
+    textPage.innerHTML = `
+      <div class="text-inner">
+        <h2 class="text-title">${item.title}</h2>
+        ${item.html}
+      </div>
+    `;
+    page.appendChild(textPage);
+  }
+
   pagesContainer.appendChild(page);
 });
 
