@@ -76,16 +76,19 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
-.page::after{
-  content:"© ABDZ Creations®";
-  position:absolute;
-  bottom:10px;
-  right:34px;
+
+.page-signature{
+  display:none;
+  margin-top:8px;
   font-size:11px;
-  color:rgba(32,24,18,0.82);
-  pointer-events:none;
+  color:#2b2118;
+  text-align:right;
+  padding-right:18px;
 }
 
+.pages.double-layout .page.active .page-signature{
+  display:block;
+}
 
 .pages.double-layout .page.active img{
   max-height:88vh;
@@ -145,6 +148,7 @@ button:hover{
 
   .page.active{
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
     min-height:78vh;
@@ -152,6 +156,24 @@ button:hover{
 
   .page img{
     max-height:78vh;
+  }
+
+  .page-signature{
+    display:block;
+    margin-top:8px;
+    font-size:11px;
+    color:#2b2118;
+    align-self:flex-end;
+    padding-right:18px;
+    width:100%;
+    max-width:100%;
+    text-align:right;
+  }
+}
+
+@media (max-width:767px){
+  .page-signature{
+    display:none !important;
   }
 }
 </style>
@@ -196,7 +218,12 @@ imageList.forEach((fileName, index) => {
   img.decoding = "async";
   img.draggable = false;
 
+  const signature = document.createElement("div");
+  signature.className = "page-signature";
+  signature.textContent = " ABDZ Creations®";
+
   page.appendChild(img);
+  page.appendChild(signature);
   pagesContainer.appendChild(page);
 });
 
