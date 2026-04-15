@@ -15,6 +15,8 @@
 </script>
 
 <style>
+  *{box-sizing:border-box;}
+
   body{
     margin:0;
     padding:0;
@@ -30,6 +32,7 @@
 
   .container{
     max-width:900px;
+    width:100%;
     padding:20px;
   }
 
@@ -61,6 +64,7 @@
     border-radius:16px;
     overflow:hidden;
     box-shadow:0 8px 25px rgba(0,0,0,0.5);
+    background:#000;
   }
 
   video{
@@ -112,6 +116,10 @@
       font-size:17px;
       padding:12px 22px;
     }
+
+    video{
+      max-height:62vh;
+    }
   }
 </style>
 </head>
@@ -123,8 +131,7 @@
   <p class="helper" id="helperText">Cliquez sur la vidéo pour entrer.</p>
 
   <div class="video-wrapper">
-    <video id="mainVideo" controls playsinline>
-      <source id="videoSource" src="VIDEOS/intro.mp4" type="video/mp4">
+    <video id="mainVideo" controls playsinline webkit-playsinline preload="auto">
       Votre navigateur ne peut pas lire cette vidéo.
     </video>
   </div>
@@ -140,25 +147,27 @@
   const subTitle = document.getElementById("subTitle");
   const helperText = document.getElementById("helperText");
   const video = document.getElementById("mainVideo");
-  const source = document.getElementById("videoSource");
   const btn = document.getElementById("actionBtn");
+
+  let videoPath = "VIDEOS/intro.mp4";
 
   if (mode === "outro") {
     mainTitle.textContent = "LE MEURICE — FERMETURE";
     subTitle.textContent = "Merci d’avoir parcouru l’univers éditorial du Meurice.";
     helperText.textContent = "Cliquez sur la vidéo pour la lancer.";
-    source.src = "VIDEOS/fin.mp4";
+    videoPath = "VIDEOS/fin.mp4";
     btn.textContent = "ENTRER DANS LA GALERIE";
     btn.href = "transition.html";
   } else {
     mainTitle.textContent = "LE MEURICE — OUVERTURE";
     subTitle.textContent = "Une entrée dans l’univers éditorial du Meurice.";
     helperText.textContent = "Cliquez sur la vidéo pour entrer.";
-    source.src = "VIDEOS/intro.mp4";
+    videoPath = "VIDEOS/intro.mp4";
     btn.textContent = "ENTRER";
     btn.href = "index.html";
   }
 
+  video.src = videoPath;
   video.load();
 </script>
 </body>
