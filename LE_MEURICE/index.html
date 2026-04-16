@@ -77,7 +77,8 @@ body{
   -moz-osx-font-smoothing:grayscale;
 }
 
-.page-signature{
+.page-signature,
+.text-signature{
   display:none;
   margin-top:8px;
   font-size:11px;
@@ -86,7 +87,8 @@ body{
   padding-right:18px;
 }
 
-.pages.double-layout .page.active .page-signature{
+.pages.double-layout .page.active .page-signature,
+.pages.double-layout .page.active .text-signature{
   display:block;
 }
 
@@ -109,15 +111,14 @@ body{
 }
 
 /* ordinateur */
-
 .pages.double-layout .page.active .text-page{
-  height:78vh;
-  max-height:78vh;
-  min-height:78vh;
-  margin-top:12px;
+  height:80vh;
+  max-height:80vh;
+  min-height:80vh;
+  margin-top:0;
 }
-  
-  .text-page::before{
+
+.text-page::before{
   content:"";
   position:absolute;
   inset:0;
@@ -233,7 +234,8 @@ button:hover{
     max-height:78vh;
   }
 
-  .page-signature{
+  .page-signature,
+  .text-signature{
     display:block;
     margin-top:8px;
     font-size:11px;
@@ -245,15 +247,15 @@ button:hover{
     text-align:right;
   }
 
-.text-page{
-  width:100%;
-  min-height:74vh;
-  max-height:none;
-  height:74vh;
-  padding:34px 30px;
-  margin-top:10px;
-}
-  
+  .text-page{
+    width:100%;
+    min-height:70vh;
+    max-height:none;
+    height:70vh;
+    padding:34px 30px;
+    margin-top:0;
+  }
+
   .text-page::before{
     background-size:68%;
     opacity:0.11;
@@ -276,7 +278,8 @@ button:hover{
 
 /* téléphone */
 @media (max-width:767px){
-  .page-signature{
+  .page-signature,
+  .text-signature{
     display:none !important;
   }
 
@@ -383,7 +386,13 @@ pageItems.forEach((item, index) => {
         ${item.html}
       </div>
     `;
+
+    const textSignature = document.createElement("div");
+    textSignature.className = "text-signature";
+    textSignature.textContent = "ABDZ Creations®";
+
     page.appendChild(textPage);
+    page.appendChild(textSignature);
   }
 
   pagesContainer.appendChild(page);
