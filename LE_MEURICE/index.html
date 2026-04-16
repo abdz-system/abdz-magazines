@@ -58,68 +58,52 @@ body{
   flex:0 0 45%;
 }
 
-.page img{
-  display:block;
-  width:auto;
-  max-width:100%;
-  height:auto;
-  max-height:85vh;
-  margin:auto;
+/* GABARIT COMMUN */
+.page-card{
+  position:relative;
+  width:100%;
+  height:78vh;
+  max-height:78vh;
+  min-height:78vh;
   border-radius:14px;
-  box-shadow:0 14px 28px rgba(0,0,0,0.18);
-  object-fit:contain;
+  overflow:hidden;
+  box-shadow:0 14px 28px rgba(0,0,0,0.12);
   background:#f6efe6;
+}
+
+.image-card{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+
+.image-card img{
+  display:block;
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
   image-rendering:auto;
   backface-visibility:hidden;
   transform:translateZ(0);
   will-change:transform;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
+  background:#f6efe6;
 }
 
-.page-signature,
-.text-signature{
-  display:none;
-  margin-top:8px;
-  font-size:11px;
-  color:#2b2118;
-  text-align:right;
-  padding-right:18px;
-}
-
-.pages.double-layout .page.active .page-signature,
-.pages.double-layout .page.active .text-signature{
-  display:block;
-}
-
-.pages.double-layout .page.active img{
-  max-height:88vh;
-}
-
-/* PAGE TEXTE */
-.text-page{
-  position:relative;
-  border-radius:14px;
+.text-card{
   background:linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(247,240,231,0.98) 100%);
-  box-shadow:0 14px 28px rgba(0,0,0,0.08);
-  overflow:hidden;
-  padding:46px 42px;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:left;
+  padding:46px 42px;
 }
 
-/* ordinateur */
-
-.pages.double-layout .page.active .text-page{
-  height:78vh;
-  max-height:78vh;
-  min-height:78vh;
-  margin-top:-6px;
-}
-  
-.text-page::before{
+.text-card::before{
   content:"";
   position:absolute;
   inset:0;
@@ -131,7 +115,7 @@ body{
   pointer-events:none;
 }
 
-.text-page::after{
+.text-card::after{
   content:"";
   position:absolute;
   inset:0;
@@ -168,6 +152,29 @@ body{
 
 .text-body p:last-child{
   margin-bottom:0;
+}
+
+.text-placeholder{
+  text-align:center;
+  font-size:18px;
+  line-height:1.7;
+  color:rgba(43,33,24,0.72);
+  font-style:italic;
+}
+
+.page-signature,
+.text-signature{
+  display:none;
+  margin-top:8px;
+  font-size:11px;
+  color:#2b2118;
+  text-align:right;
+  padding-right:18px;
+}
+
+.pages.double-layout .page.active .page-signature,
+.pages.double-layout .page.active .text-signature{
+  display:block;
 }
 
 .nav-buttons{
@@ -211,7 +218,7 @@ button:hover{
   min-height:18px;
 }
 
-/* tablette */
+/* TABLETTE */
 @media (max-width:1023px){
   .viewer{
     padding:14px;
@@ -228,36 +235,21 @@ button:hover{
     flex-direction:column;
     justify-content:flex-start;
     align-items:center;
-    min-height:78vh;
+    min-height:auto;
   }
 
-  .page img{
-    max-height:78vh;
-  }
-
-  .page-signature,
-  .text-signature{
-    display:block;
-    margin-top:8px;
-    font-size:11px;
-    color:#2b2118;
-    align-self:flex-end;
-    padding-right:18px;
+  .page-card{
+    height:74vh;
+    max-height:74vh;
+    min-height:74vh;
     width:100%;
-    max-width:100%;
-    text-align:right;
   }
 
-.text-page{
-  width:100%;
-  min-height:70vh;
-  max-height:none;
-  height:72vh;
-  padding:34px 30px;
-  margin-top:60px;
-}
-  
-  .text-page::before{
+  .text-card{
+    padding:36px 30px;
+  }
+
+  .text-card::before{
     background-size:68%;
     opacity:0.11;
   }
@@ -275,13 +267,30 @@ button:hover{
     font-size:17px;
     line-height:1.78;
   }
+
+  .page-signature,
+  .text-signature{
+    display:block;
+    margin-top:8px;
+    font-size:11px;
+    color:#2b2118;
+    align-self:flex-end;
+    padding-right:18px;
+    width:100%;
+    max-width:100%;
+    text-align:right;
+  }
 }
 
-/* téléphone */
+/* TÉLÉPHONE */
 @media (max-width:767px){
   .page-signature,
   .text-signature{
     display:none !important;
+  }
+
+  .page{
+    position:relative;
   }
 
   .page::after{
@@ -294,13 +303,25 @@ button:hover{
     pointer-events:none;
   }
 
-  .text-page{
-    min-height:auto;
+  .page-card{
     height:auto;
+    min-height:auto;
+    max-height:none;
+  }
+
+  .image-card{
+    padding:0;
+  }
+
+  .image-card img{
+    max-height:78vh;
+  }
+
+  .text-card{
     padding:30px 22px;
   }
 
-  .text-page::before{
+  .text-card::before{
     background-size:88%;
     opacity:0.08;
   }
@@ -310,7 +331,8 @@ button:hover{
     margin-bottom:18px;
   }
 
-  .text-body{
+  .text-body,
+  .text-placeholder{
     font-size:15px;
     line-height:1.7;
   }
@@ -334,24 +356,17 @@ button:hover{
 <script>
 const pageItems = [
   { type: "image", file: "1.png" },
-  {
-    type: "text",
-    title: "Résonance",
-    html: `
-      <div class="text-body">
-        <p>Dans le cadre du Meurice, cette vision a trouvé une résonance toute particulière.</p>
-        <p>Née d’un dessin ancien, l’une de mes muses s’est naturellement imposée dans cet univers de raffinement, de théâtralité et de mémoire.</p>
-        <p>La découverte de l’histoire de son emblème a prolongé cette intuition, jusqu’à faire du lévrier non pas un simple détail, mais une présence symbolique venant dialoguer avec l’âme du lieu.</p>
-        <p>Cette muse, à la fois sculpturale, souveraine et presque mythologique, ne cherche pas à illustrer le Meurice au sens littéral, mais à en proposer une interprétation sensible, poétique et visuelle.</p>
-        <p>Le lieu devient alors plus qu’un décor : il devient l’écrin vivant d’une apparition pensée en résonance avec son identité.</p>
-      </div>
-    `
-  },
+  { type: "text", title: "texte-p2", html: `<div class="text-placeholder">texte-p2</div>` },
   { type: "image", file: "3.png" },
-  { type: "image", file: "4.png" },
+  { type: "text", title: "texte-p4", html: `<div class="text-placeholder">texte-p4</div>` },
   { type: "image", file: "5.png" },
-  { type: "image", file: "6.png" },
-  { type: "image", file: "7.png" }
+  { type: "text", title: "texte-p6", html: `<div class="text-placeholder">texte-p6</div>` },
+  { type: "image", file: "7.png" },
+  { type: "text", title: "texte-p8", html: `<div class="text-placeholder">texte-p8</div>` },
+  { type: "image", file: "9.png" },
+  { type: "text", title: "texte-p10", html: `<div class="text-placeholder">texte-p10</div>` },
+  { type: "image", file: "11.png" },
+  { type: "text", title: "texte-p12", html: `<div class="text-placeholder">texte-p12</div>` }
 ];
 
 const pagesContainer = document.getElementById("pagesContainer");
@@ -363,6 +378,9 @@ pageItems.forEach((item, index) => {
   page.className = "page";
 
   if (item.type === "image") {
+    const card = document.createElement("div");
+    card.className = "page-card image-card";
+
     const img = document.createElement("img");
     img.src = `images/${item.file}`;
     img.alt = `Image ${index + 1}`;
@@ -374,14 +392,15 @@ pageItems.forEach((item, index) => {
     signature.className = "page-signature";
     signature.textContent = "ABDZ Creations®";
 
-    page.appendChild(img);
+    card.appendChild(img);
+    page.appendChild(card);
     page.appendChild(signature);
   }
 
   if (item.type === "text") {
-    const textPage = document.createElement("div");
-    textPage.className = "text-page";
-    textPage.innerHTML = `
+    const textCard = document.createElement("div");
+    textCard.className = "page-card text-card";
+    textCard.innerHTML = `
       <div class="text-inner">
         <h2 class="text-title">${item.title}</h2>
         ${item.html}
@@ -392,7 +411,7 @@ pageItems.forEach((item, index) => {
     textSignature.className = "text-signature";
     textSignature.textContent = "ABDZ Creations®";
 
-    page.appendChild(textPage);
+    page.appendChild(textCard);
     page.appendChild(textSignature);
   }
 
@@ -425,12 +444,12 @@ function render(){
     pages[currentPage].classList.add("active");
     pages[currentPage + 1].classList.add("active");
     pagesContainer.classList.add("double-layout");
-    pageNumber.textContent = `Images ${currentPage + 1}-${currentPage + 2} / ${pages.length}`;
+    pageNumber.textContent = `Pages ${currentPage + 1}-${currentPage + 2} / ${pages.length}`;
     return;
   }
 
   pages[currentPage].classList.add("active");
-  pageNumber.textContent = `Image ${currentPage + 1} / ${pages.length}`;
+  pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
 }
 
 function nextPage(){
@@ -498,10 +517,10 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("click", showControls);
 
 function handleSwipe(){
-  if(touchEndX < touchStartX - 50){
+  if (touchEndX < touchStartX - 50){
     nextPage();
   }
-  if(touchEndX > touchStartX + 50){
+  if (touchEndX > touchStartX + 50){
     prevPage();
   }
 }
