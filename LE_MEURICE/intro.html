@@ -46,7 +46,7 @@
     font-size:18px;
     line-height:1.4;
     opacity:0.95;
-    margin-bottom:6px;
+    margin-bottom:10px;
     font-weight:300;
   }
 
@@ -56,6 +56,7 @@
     margin-bottom:18px;
     font-weight:500;
     letter-spacing:0.3px;
+    min-height:18px;
   }
 
   .video-wrapper{
@@ -95,6 +96,10 @@
     transform:translateY(-3px);
   }
 
+  .hidden{
+    display:none !important;
+  }
+
   @media (max-width:768px){
     .container{
       padding:18px;
@@ -128,7 +133,7 @@
 <div class="container">
   <h1 id="mainTitle">LE MEURICE — OUVERTURE</h1>
   <p class="sous-titre" id="subTitle">Une entrée dans l’univers éditorial du Meurice.</p>
-  <p class="helper" id="helperText">Cliquez sur la vidéo pour entrer.</p>
+  <p class="helper" id="helperText"></p>
 
   <div class="video-wrapper">
     <video
@@ -167,22 +172,36 @@
     video.setAttribute("muted", "muted");
     btn.textContent = "ENTRER DANS LA GALERIE";
     btn.href = "transition.html";
+    btn.classList.remove("hidden");
     video.load();
 
     video.addEventListener("loadeddata", () => {
       video.play().catch(() => {});
     }, { once: true });
+
   } else {
     mainTitle.textContent = "LE MEURICE — OUVERTURE";
     subTitle.textContent = "Une entrée dans l’univers éditorial du Meurice.";
-    helperText.textContent = "Cliquez sur la vidéo pour entrer.";
+    helperText.textContent = "";
     source.src = "VIDEOS/intro.mp4";
     video.setAttribute("poster", "VIDEOS/intro-poster.png");
     video.muted = false;
     video.removeAttribute("muted");
-    btn.textContent = "ENTRER";
-    btn.href = "index.html";
+    btn.textContent = "CLIQUEZ";
+    btn.href = "#";
     video.load();
+
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      video.play().catch(() => {});
+      btn.classList.add("hidden");
+    });
+
+    video.addEventListener("ended", function(){
+      btn.textContent = "ENTRER";
+      btn.href = "index.html";
+      btn.classList.remove("hidden");
+    });
   }
 </script>
 </body>
