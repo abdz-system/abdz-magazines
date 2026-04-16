@@ -109,13 +109,15 @@ body{
 }
 
 /* ordinateur */
-.pages.double-layout .page.active .text-page{
-  height:82vh;
-  max-height:82vh;
-  min-height:82vh;
-}
 
-.text-page::before{
+.pages.double-layout .page.active .text-page{
+  height:78vh;
+  max-height:78vh;
+  min-height:78vh;
+  margin-top:12px;
+}
+  
+  .text-page::before{
   content:"";
   position:absolute;
   inset:0;
@@ -243,14 +245,15 @@ button:hover{
     text-align:right;
   }
 
-  .text-page{
-    width:100%;
-    min-height:72vh;
-    max-height:none;
-    height:72vh;
-    padding:34px 30px;
-  }
-
+.text-page{
+  width:100%;
+  min-height:74vh;
+  max-height:none;
+  height:74vh;
+  padding:34px 30px;
+  margin-top:10px;
+}
+  
   .text-page::before{
     background-size:68%;
     opacity:0.11;
