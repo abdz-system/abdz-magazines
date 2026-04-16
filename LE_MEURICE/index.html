@@ -132,11 +132,11 @@ body{
 
 .text-title{
   font-family:Georgia, "Times New Roman", serif;
-  font-size:30px;
+  font-size:28px;
   line-height:1.15;
   letter-spacing:0.5px;
   color:#b86a61;
-  margin:0 0 24px 0;
+  margin:0 0 22px 0;
   text-align:center;
 }
 
@@ -152,14 +152,6 @@ body{
 
 .text-body p:last-child{
   margin-bottom:0;
-}
-
-.text-placeholder{
-  text-align:center;
-  font-size:18px;
-  line-height:1.7;
-  color:rgba(43,33,24,0.72);
-  font-style:italic;
 }
 
 .page-signature,
@@ -259,8 +251,8 @@ button:hover{
   }
 
   .text-title{
-    font-size:28px;
-    margin-bottom:22px;
+    font-size:26px;
+    margin-bottom:20px;
   }
 
   .text-body{
@@ -331,8 +323,7 @@ button:hover{
     margin-bottom:18px;
   }
 
-  .text-body,
-  .text-placeholder{
+  .text-body{
     font-size:15px;
     line-height:1.7;
   }
@@ -356,17 +347,91 @@ button:hover{
 <script>
 const pageItems = [
   { type: "image", file: "1.png" },
-  { type: "text", title: "texte-p2", html: `<div class="text-placeholder">texte-p2</div>` },
+
+  {
+    type: "text",
+    title: "Page 2",
+    html: `
+      <div class="text-body">
+        <p>Dans le cadre du Meurice, cette vision a trouvé une résonance toute particulière.</p>
+        <p>Née d’un dessin ancien, l’une de mes muses s’est naturellement imposée dans cet univers de raffinement, de théâtralité et de mémoire.</p>
+        <p>La découverte de l’histoire de son emblème a prolongé cette intuition, jusqu’à faire du lévrier non pas un simple détail, mais une présence symbolique venant dialoguer avec l’âme du lieu.</p>
+        <p>Cette muse, à la fois sculpturale, souveraine et presque mythologique, ne cherche pas à illustrer le Meurice au sens littéral, mais à en proposer une interprétation sensible, poétique et visuelle.</p>
+        <p>Le lieu devient alors plus qu’un décor : il devient l’écrin vivant d’une apparition pensée en résonance avec son identité.</p>
+      </div>
+    `
+  },
+
   { type: "image", file: "3.png" },
-  { type: "text", title: "texte-p4", html: `<div class="text-placeholder">texte-p4</div>` },
+
+  {
+    type: "text",
+    title: "Page 4",
+    html: `
+      <div class="text-body">
+        <p>Je vous propose une nouvelle manière d’entrer dans votre lieu d’exception, à travers mes muses irréelles, pensées pour habiter avec grâce, émotion et mystère les différents espaces de votre maison.</p>
+        <p>Ma démarche est de faire exister deux mondes visuels en un seul : celui du lieu, et celui de la muse.</p>
+        <p>C’est dans cette tension entre mémoire, modernité, silence et beauté que naît mon univers.</p>
+      </div>
+    `
+  },
+
   { type: "image", file: "5.png" },
-  { type: "text", title: "texte-p6", html: `<div class="text-placeholder">texte-p6</div>` },
+
+  {
+    type: "text",
+    title: "Page 6",
+    html: `
+      <div class="text-body">
+        <p>Je ne cherche pas à produire une image réaliste au sens classique, ni à placer un personnage ordinaire dans un décor. Je fais entrer une muse irréelle dans un lieu réel d’exception, afin de créer une rencontre singulière entre imaginaire, mode et architecture.</p>
+      </div>
+    `
+  },
+
   { type: "image", file: "7.png" },
-  { type: "text", title: "texte-p8", html: `<div class="text-placeholder">texte-p8</div>` },
+
+  {
+    type: "text",
+    title: "Page 8",
+    html: `
+      <div class="text-body">
+        <p>Ma création naît d’un dialogue entre le réel et l’irréel.</p>
+        <p>Je compose des rencontres entre des lieux contemporains, forts, ancrés dans le monde, et des muses non contemporaines, irréelles, mais profondément présentes.</p>
+      </div>
+    `
+  },
+
   { type: "image", file: "9.png" },
-  { type: "text", title: "texte-p10", html: `<div class="text-placeholder">texte-p10</div>` },
+
+  {
+    type: "text",
+    title: "Page 10",
+    html: `
+      <div class="text-body">
+        <p>Ces muses ne sont pas posées dans un décor.</p>
+        <p>Dans mon regard, elles appartiennent déjà au lieu.</p>
+        <p>Comme si elles en avaient traversé le temps,</p>
+        <p>comme si leur élégance, leur mystère et leur force avaient toujours vécu entre ces murs.</p>
+        <p>L’hôtel Le Meurice, vous y entrez, son histoire vous attrape. Quand vous rentrez dans les lieux, vous êtes happé par quelque chose d’indéfinissable, par toutes les grandes têtes qui ont marqué leur empreinte dans ce lieu.</p>
+      </div>
+    `
+  },
+
   { type: "image", file: "11.png" },
-  { type: "text", title: "texte-p12", html: `<div class="text-placeholder">texte-p12</div>` }
+
+  {
+    type: "text",
+    title: "Page 12",
+    html: `
+      <div class="text-body">
+        <p>Dalí a séjourné ici. Ma muse n’efface rien. Elle rallume le décor.</p>
+        <p>On n’honore pas un artiste en le laissant immobile dans le passé. On l’honore en laissant son esprit continuer à provoquer.</p>
+        <p>Et si, aujourd’hui, l’esprit du lieu prenait la forme d’une femme ?</p>
+        <p>Ma muse ne prend pas la place de Dalí. Elle réveille son élan dans le décor.</p>
+        <p>Il a traversé ce lieu. Elle en ravive la mémoire.</p>
+      </div>
+    `
+  }
 ];
 
 const pagesContainer = document.getElementById("pagesContainer");
