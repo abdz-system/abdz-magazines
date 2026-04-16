@@ -42,6 +42,7 @@ body{
   display:flex;
   justify-content:center;
   gap:24px;
+  align-items:flex-start;
 }
 
 .page{
@@ -96,21 +97,22 @@ body{
 /* PAGE TEXTE */
 .text-page{
   position:relative;
-  min-height:85vh;
   border-radius:14px;
-  background:
-    linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(247,240,231,0.98) 100%);
+  background:linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(247,240,231,0.98) 100%);
   box-shadow:0 14px 28px rgba(0,0,0,0.08);
   overflow:hidden;
-  padding:54px 52px;
+  padding:46px 42px;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:left;
 }
 
+/* ordinateur */
 .pages.double-layout .page.active .text-page{
-  min-height:88vh;
+  height:84vh;
+  max-height:84vh;
+  min-height:84vh;
 }
 
 .text-page::before{
@@ -120,8 +122,8 @@ body{
   background-image:url("images/blason-meurice-orange-pale.png");
   background-repeat:no-repeat;
   background-position:center;
-  background-size:70%;
-  opacity:0.10;
+  background-size:64%;
+  opacity:0.11;
   pointer-events:none;
 }
 
@@ -129,15 +131,14 @@ body{
   content:"";
   position:absolute;
   inset:0;
-  background:
-    radial-gradient(circle at center, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 62%);
+  background:radial-gradient(circle at center, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 62%);
   pointer-events:none;
 }
 
 .text-inner{
   position:relative;
   z-index:2;
-  max-width:520px;
+  max-width:470px;
   margin:0 auto;
 }
 
@@ -147,18 +148,18 @@ body{
   line-height:1.15;
   letter-spacing:0.5px;
   color:#b86a61;
-  margin:0 0 26px 0;
+  margin:0 0 24px 0;
   text-align:center;
 }
 
 .text-body{
-  font-size:18px;
-  line-height:1.8;
+  font-size:17px;
+  line-height:1.72;
   color:#2b2118;
 }
 
 .text-body p{
-  margin:0 0 18px 0;
+  margin:0 0 16px 0;
 }
 
 .text-body p:last-child{
@@ -206,6 +207,7 @@ button:hover{
   min-height:18px;
 }
 
+/* tablette */
 @media (max-width:1023px){
   .viewer{
     padding:14px;
@@ -220,7 +222,7 @@ button:hover{
   .page.active{
     display:flex;
     flex-direction:column;
-    justify-content:center;
+    justify-content:flex-start;
     align-items:center;
     min-height:78vh;
   }
@@ -242,22 +244,34 @@ button:hover{
   }
 
   .text-page{
-    min-height:auto;
-    padding:42px 34px;
     width:100%;
+    min-height:78vh;
+    max-height:none;
+    height:78vh;
+    padding:40px 34px;
+  }
+
+  .text-page::before{
+    background-size:68%;
+    opacity:0.11;
+  }
+
+  .text-inner{
+    max-width:520px;
   }
 
   .text-title{
-    font-size:26px;
+    font-size:28px;
     margin-bottom:22px;
   }
 
   .text-body{
     font-size:17px;
-    line-height:1.75;
+    line-height:1.78;
   }
 }
 
+/* téléphone */
 @media (max-width:767px){
   .page-signature{
     display:none !important;
@@ -274,6 +288,8 @@ button:hover{
   }
 
   .text-page{
+    min-height:auto;
+    height:auto;
     padding:30px 22px;
   }
 
