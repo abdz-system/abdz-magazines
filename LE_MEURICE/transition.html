@@ -49,29 +49,28 @@
     margin-top:26px;
   }
 
+  /* PLUIE DORÉE */
+  @keyframes sparkleFall {
+    0% { background-position:0 0, 0 0; }
+    100% { background-position:180px 420px, 280px 520px; }
+  }
+
+  /* TEXTE QUI FLOTTE */
+  @keyframes bounceSoft {
+    0%,100% { transform:translateY(0); }
+    50% { transform:translateY(-4px); }
+  }
+
   .sparkles{
     position:absolute;
     inset:0;
     pointer-events:none;
-  }
-
-  .sparkles span{
-    position:absolute;
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:rgba(224,188,98,0.95);
-    box-shadow:0 0 12px rgba(224,188,98,0.8);
-    animation:glow 3.4s ease-in-out infinite;
-  }
-
-  .sparkles span:nth-child(odd){
-    animation-duration:4.1s;
-  }
-
-  @keyframes glow{
-    0%,100%{opacity:0.28; transform:translateY(0);}
-    50%{opacity:0.95; transform:translateY(-4px);}
+    opacity:0.8;
+    background-image:
+      radial-gradient(circle, rgba(255,215,120,0.85) 1.6px, transparent 3px),
+      radial-gradient(circle, rgba(255,215,120,0.45) 1.1px, transparent 3px);
+    background-size:120px 120px, 190px 190px;
+    animation:sparkleFall 10s linear infinite;
   }
 
   .title{
@@ -85,6 +84,7 @@
     letter-spacing:0.6px;
     color:#f4e8cf;
     text-transform:uppercase;
+    animation:bounceSoft 3.2s ease-in-out infinite;
   }
 
   .text{
@@ -144,6 +144,7 @@
     justify-content:center;
     gap:14px;
     padding:0;
+    animation:bounceSoft 2.8s ease-in-out infinite;
   }
 
   .arrow{
@@ -161,12 +162,21 @@
     z-index:2;
     max-height:0;
     overflow:hidden;
-    transition:max-height 0.45s ease, margin-top 0.35s ease;
+    opacity:0;
+    transform:translateY(-10px) rotateX(12deg);
+    transform-origin:top;
+    transition:
+      max-height 0.9s cubic-bezier(.19,1,.22,1),
+      opacity 0.55s ease-out,
+      transform 0.8s ease-out,
+      margin-top 0.35s ease;
     margin-top:0;
   }
 
   .panel.open .list-wrap{
-    max-height:1200px;
+    max-height:1400px;
+    opacity:1;
+    transform:translateY(0) rotateX(0deg);
     margin-top:24px;
   }
 
@@ -226,9 +236,8 @@
       padding:8px 0;
     }
 
-    .sparkles span{
-      width:6px;
-      height:6px;
+    .sparkles{
+      background-size:90px 90px, 150px 150px;
     }
   }
 </style>
@@ -238,17 +247,7 @@
   <div class="page">
 
     <section class="panel">
-      <div class="sparkles" aria-hidden="true">
-        <span style="top:14%; left:8%;"></span>
-        <span style="top:21%; left:22%;"></span>
-        <span style="top:10%; left:41%;"></span>
-        <span style="top:18%; left:63%;"></span>
-        <span style="top:13%; left:82%;"></span>
-        <span style="top:76%; left:11%;"></span>
-        <span style="top:70%; left:34%;"></span>
-        <span style="top:80%; left:57%;"></span>
-        <span style="top:74%; left:79%;"></span>
-      </div>
+      <div class="sparkles" aria-hidden="true"></div>
 
       <h1 class="title">UNE MUSE PEUT EN CACHER UNE AUTRE</h1>
 
@@ -264,15 +263,7 @@
     </section>
 
     <section class="panel" id="musesPanel">
-      <div class="sparkles" aria-hidden="true">
-        <span style="top:16%; left:10%;"></span>
-        <span style="top:24%; left:20%;"></span>
-        <span style="top:14%; left:36%;"></span>
-        <span style="top:18%; left:47%;"></span>
-        <span style="top:15%; left:61%;"></span>
-        <span style="top:25%; left:74%;"></span>
-        <span style="top:17%; left:89%;"></span>
-      </div>
+      <div class="sparkles" aria-hidden="true"></div>
 
       <button class="toggle" id="toggleList" type="button" aria-expanded="false" aria-controls="listWrap">
         <span>LISTE DES MUSES</span>
