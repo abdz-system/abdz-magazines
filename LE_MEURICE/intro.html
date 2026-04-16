@@ -191,17 +191,18 @@
     btn.href = "#";
     video.load();
 
-    btn.addEventListener("click", function(e){
+    btn.onclick = function(e){
       e.preventDefault();
       video.play().catch(() => {});
       btn.classList.add("hidden");
-    });
+    };
 
     video.addEventListener("ended", function(){
       btn.textContent = "ENTRER";
       btn.href = "index.html";
+      btn.onclick = null;
       btn.classList.remove("hidden");
-    });
+    }, { once: true });
   }
 </script>
 </body>
