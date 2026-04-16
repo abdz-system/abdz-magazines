@@ -160,20 +160,29 @@
   if (mode === "outro") {
     mainTitle.textContent = "LE MEURICE — FERMETURE";
     subTitle.textContent = "Merci d’avoir parcouru l’univers éditorial du Meurice.";
-    helperText.textContent = "Cliquez sur la vidéo pour la lancer.";
+    helperText.textContent = "La vidéo se lance automatiquement.";
     source.src = "VIDEOS/fin.mp4";
-    video.removeAttribute("poster");
+    video.setAttribute("poster", "VIDEOS/fin-poster.png");
+    video.muted = true;
+    video.setAttribute("muted", "muted");
     btn.textContent = "ENTRER DANS LA GALERIE";
     btn.href = "transition.html";
     video.load();
+
+    video.addEventListener("loadeddata", () => {
+      video.play().catch(() => {});
+    }, { once: true });
   } else {
     mainTitle.textContent = "LE MEURICE — OUVERTURE";
     subTitle.textContent = "Une entrée dans l’univers éditorial du Meurice.";
     helperText.textContent = "Cliquez sur la vidéo pour entrer.";
     source.src = "VIDEOS/intro.mp4";
     video.setAttribute("poster", "VIDEOS/intro-poster.png");
+    video.muted = false;
+    video.removeAttribute("muted");
     btn.textContent = "ENTRER";
     btn.href = "index.html";
+    video.load();
   }
 </script>
 </body>
