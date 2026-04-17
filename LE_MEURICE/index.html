@@ -353,11 +353,9 @@ const pageItems = [
     title: "Page 2",
     html: `
       <div class="text-body">
-        <p>Dans le cadre du Meurice, cette vision a trouvé une résonance toute particulière.</p>
-        <p>Née d’un dessin ancien, l’une de mes muses s’est naturellement imposée dans cet univers de raffinement, de théâtralité et de mémoire.</p>
-        <p>La découverte de l’histoire de son emblème a prolongé cette intuition, jusqu’à faire du lévrier non pas un simple détail, mais une présence symbolique venant dialoguer avec l’âme du lieu.</p>
-        <p>Cette muse, à la fois sculpturale, souveraine et presque mythologique, ne cherche pas à illustrer le Meurice au sens littéral, mais à en proposer une interprétation sensible, poétique et visuelle.</p>
-        <p>Le lieu devient alors plus qu’un décor : il devient l’écrin vivant d’une apparition pensée en résonance avec son identité.</p>
+        <p>Je vous propose une nouvelle manière d’entrer dans votre lieu d’exception, à travers mes muses irréelles, pensées pour habiter avec grâce, émotion et mystère les différents espaces de votre maison.</p>
+        <p>Ma démarche est de faire exister deux mondes visuels en un seul : celui du lieu, et celui de la muse.</p>
+        <p>C’est dans cette tension entre mémoire, modernité, silence et beauté que naît mon univers.</p>
       </div>
     `
   },
@@ -369,9 +367,11 @@ const pageItems = [
     title: "Page 4",
     html: `
       <div class="text-body">
-        <p>Je vous propose une nouvelle manière d’entrer dans votre lieu d’exception, à travers mes muses irréelles, pensées pour habiter avec grâce, émotion et mystère les différents espaces de votre maison.</p>
-        <p>Ma démarche est de faire exister deux mondes visuels en un seul : celui du lieu, et celui de la muse.</p>
-        <p>C’est dans cette tension entre mémoire, modernité, silence et beauté que naît mon univers.</p>
+        <p>Dans le cadre du Meurice, cette vision a trouvé une résonance toute particulière.</p>
+        <p>Née d’un dessin ancien, l’une de mes muses s’est naturellement imposée dans cet univers de raffinement, de théâtralité et de mémoire.</p>
+        <p>La découverte de l’histoire de son emblème a prolongé cette intuition, jusqu’à faire du lévrier non pas un simple détail, mais une présence symbolique venant dialoguer avec l’âme du lieu.</p>
+        <p>Cette muse, à la fois sculpturale, souveraine et presque mythologique, ne cherche pas à illustrer le Meurice au sens littéral, mais à en proposer une interprétation sensible, poétique et visuelle.</p>
+        <p>Le lieu devient alors plus qu’un décor : il devient l’écrin vivant d’une apparition pensée en résonance avec son identité.</p>
       </div>
     `
   },
@@ -431,7 +431,9 @@ const pageItems = [
         <p>Il a traversé ce lieu. Elle en ravive la mémoire.</p>
       </div>
     `
-  }
+  },
+
+  { type: "image", file: "13.png" }
 ];
 
 const pagesContainer = document.getElementById("pagesContainer");
@@ -505,7 +507,9 @@ function render(){
 
   if (!pages[currentPage]) return;
 
-  if (isDesktop() && canPair(currentPage)) {
+  const isLastPage = currentPage === pages.length - 1;
+
+  if (isDesktop() && canPair(currentPage) && !isLastPage) {
     pages[currentPage].classList.add("active");
     pages[currentPage + 1].classList.add("active");
     pagesContainer.classList.add("double-layout");
