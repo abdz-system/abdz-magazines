@@ -1,1 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google-site-verification" content="Rb-8OLqvgLhfROJCLWWktbUOBynFP2xPQkvSY2QVLFY" />
+<title>LE MEURICE — ABDZ TEST</title>
 
+<style>
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  padding:10px;
+  font-family:Arial,sans-serif;
+  color:#2b2118;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.78) 0%, rgba(248,241,231,0.72) 18%, rgba(239,228,212,0.48) 38%, rgba(232,218,200,0.18) 58%, rgba(246,239,229,0.92) 100%),
+    linear-gradient(135deg, #f7f1e8 0%, #efe3d3 34%, #f8f3ec 66%, #eadbc8 100%);
+  background-attachment:fixed;
+  perspective:1600px;
+}
+
+.viewer{
+  max-width:1200px;
+  margin:0 auto;
+  background:linear-gradient(180deg, rgba(255,252,247,0.97) 0%, rgba(247,240,231,0.96) 100%);
+  border:1px solid rgba(180,139,67,0.32);
+  padding:20px;
+  border-radius:22px;
+  box-shadow:
+    0 18px 40px rgba(92,67,36,0.12),
+    0 2px 10px rgba(0,0,0,0.04);
+  text-align:center;
+  backdrop-filter:blur(4px);
+}
+
+.pages{
+  display:block;
+}
+
+.pages.double-layout{
+  display:flex;
+  justify-content:center;
+  gap:24px;
+  align-items:flex-start;
+}
+
+.page{
+  display:none;
+  position:relative;
+  transform-style:preserve-3d;
+  transform-origin:left center;
+  backface-visibility:hidden;
+}
+
+.page.active{
+  display:block;
+  animation:pageReveal 0.75s cubic-bezier(.22,.8,.2,1);
+}
+
+@keyframes pageReveal{
+  0%{
+    opacity:0;
+    transform:rotateY(-14deg) translateX(18px) scale(0.985);
+    filter:blur(1px);
+  }
+  100%{
+    opacity:1;
+    transform:rotateY(0deg) translateX(0) scale(1);
+    filter:blur(0);
+  }
+}
+
+.pages.double-layout .page.active{
+  flex:0 0 45%;
+}
+
+/* GABARIT COMMUN */
+.page-card{
+  position:relative;
+  width:100%;
+  height:78vh;
+  max-height:78vh;
+  min-height:78vh;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 14px 28px rgba(0,0,0,0.12);
+  background:#f6efe6;
+}
+
+.image-card{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+
+.image-card img{
+  display:block;
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  image-rendering:auto;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+  will-change:transform;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  background:#f6efe6;
+}
+
+.text-card{
+  background:linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(247,240,231,0.98) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:left;
+  padding:46px 42px;
+}
+
+.text-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:url("images/blason-meurice-orange-pale.png");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:64%;
+  opacity:0.11;
+  pointer-events:none;
+}
+
+.text-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 62%);
+  pointer-events:none;
+}
+
+.text-inner{
+  position:relative;
+  z-index:2;
+  max-width:470px;
+  margin:0 auto;
+}
+
+.text-title{
+  font-family:Georgia, "Times New Roman", serif;
+  font-size:28px;
+  line-height:1.15;
+  letter-spacing:0.5px;
+  color:#b86a61;
+  margin:0 0 22px 0;
+  text-align:center;
+}
+
+.text-body{
+  font-size:17px;
+  line-height:1.72;
+  color:#2b2118;
+}
+
+.text-body p{
+  margin:0 0 16px 0;
+}
+
+.text-body p:last-child{
+  margin-bottom:0;
+}
+
+.page-signature,
+.text-signature{
+  display:none;
+  margin-top:8px;
+  font-size:11px;
+  color:#2b2118;
+  text-align:right;
+  padding-right:18px;
+}
+
+.pages.double-layout .page.active .page-signature,
+.pages.double-layout .page.active .text-signature{
+  display:block;
+}
+
+.nav-buttons{
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  opacity:0;
+  transition:opacity 0.35s ease;
+  pointer-events:none;
+}
+
+.nav-buttons.controls-visible{
+  opacity:1;
+  pointer-events:auto;
+}
+
+button{
+  flex:1;
+  background:linear-gradient(180deg,#2a2118 0%,#120f0c 100%);
+  color:#f6ead2;
+  padding:12px 20px;
+  border:1px solid rgba(180,139,67,0.5);
+  border-radius:10px;
+  cursor:pointer;
+  font-size:15px;
+  transition:0.25s ease;
+}
+
+button:hover{
+  background:linear-gradient(180deg,#4b3620 0%,#1c1712 100%);
+  transform:translateY(-1px);
+}
+
+.page-number{
+  margin-top:12px;
+  font-size:14px;
+  color:#8d6a39;
+  text-align:center;
+  letter-spacing:0.3px;
+  min-height:18px;
+}
+
+/* TABLETTE */
+@media (max-width:1023px){
+  body{ perspective:none; }
+
+  .viewer{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  button{
+    font-size:14px;
+    padding:11px 14px;
+  }
+
+  .page.active{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    min-height:auto;
+    animation:pageRevealMobile 0.45s ease-out;
+  }
+
+  @keyframes pageRevealMobile{
+    0%{ opacity:0; transform:translateX(18px); }
+    100%{ opacity:1; transform:translateX(0); }
+  }
+
+  .page-card{
+    height:74vh;
+    max-height:74vh;
+    min-height:74vh;
+    width:100%;
+  }
+
+  .text-card{
+    padding:36px 30px;
+  }
+
+  .text-card::before{
+    background-size:68%;
+    opacity:0.11;
+  }
+
+  .text-inner{
+    max-width:520px;
+  }
+
+  .text-title{
+    font-size:26px;
+    margin-bottom:20px;
+  }
+
+  .text-body{
+    font-size:17px;
+    line-height:1.78;
+  }
+
+  .page-signature,
+  .text-signature{
+    display:block;
+    margin-top:8px;
+    font-size:11px;
+    color:#2b2118;
+    align-self:flex-end;
+    padding-right:18px;
+    width:100%;
+    max-width:100%;
+    text-align:right;
+  }
+}
+
+/* TÉLÉPHONE */
+@media (max-width:767px){
+  .page-signature,
+  .text-signature{
+    display:none !important;
+  }
+
+  .page{
+    position:relative;
+  }
+
+  .page::after{
+    content:"ABDZ Creations®";
+    position:absolute;
+    bottom:8px;
+    right:12px;
+    font-size:11px;
+    color:rgba(32,24,18,0.82);
+    pointer-events:none;
+  }
+
+  .page-card{
+    height:auto;
+    min-height:auto;
+    max-height:none;
+  }
+
+  .image-card{
+    padding:0;
+  }
+
+  .image-card img{
+    max-height:78vh;
+  }
+
+  .text-card{
+    padding:30px 22px;
+  }
+
+  .text-card::before{
+    background-size:88%;
+    opacity:0.08;
+  }
+
+  .text-title{
+    font-size:22px;
+    margin-bottom:18px;
+  }
+
+  .text-body{
+    font-size:15px;
+    line-height:1.7;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="viewer">
+  <div class="pages" id="pagesContainer"></div>
+
+  <div class="nav-buttons controls-visible" id="navButtons">
+    <button type="button" onclick="prevPage()">← Page précédente</button>
+    <button type="button" onclick="nextPage()">Page suivante →</button>
+  </div>
+
+  <div class="page-number" id="pageNumber"></div>
+</div>
+
+<script>
+const pageItems = [
+  { type: "image", file: "1.png" },
+
+  {
+    type: "text",
+    title: "Page 2",
+    html: `
+      <div class="text-body">
+        <p>Je vous propose une nouvelle manière d’entrer dans votre lieu d’exception, à travers mes muses irréelles, pensées pour habiter avec grâce, émotion et mystère les différents espaces de votre maison.</p>
+        <p>Ma démarche est de faire exister deux mondes visuels en un seul : celui du lieu, et celui de la muse.</p>
+        <p>C’est dans cette tension entre mémoire, modernité, silence et beauté que naît mon univers.</p>
+      </div>
+    `
+  },
+
+  { type: "image", file: "3.png" },
+
+  {
+    type: "text",
+    title: "Page 4",
+    html: `
+      <div class="text-body">
+        <p>Dans le cadre du Meurice, cette vision a trouvé une résonance toute particulière.</p>
+        <p>Née d’un dessin ancien, l’une de mes muses s’est naturellement imposée dans cet univers de raffinement, de théâtralité et de mémoire.</p>
+        <p>La découverte de l’histoire de son emblème a prolongé cette intuition, jusqu’à faire du lévrier non pas un simple détail, mais une présence symbolique venant dialoguer avec l’âme du lieu.</p>
+        <p>Cette muse, à la fois sculpturale, souveraine et presque mythologique, ne cherche pas à illustrer le Meurice au sens littéral, mais à en proposer une interprétation sensible, poétique et visuelle.</p>
+        <p>Le lieu devient alors plus qu’un décor : il devient l’écrin vivant d’une apparition pensée en résonance avec son identité.</p>
+      </div>
+    `
+  },
+
+  { type: "image", file: "5.png" },
+
+  {
+    type: "text",
+    title: "Page 6",
+    html: `
+      <div class="text-body">
+        <p>Je ne cherche pas à produire une image réaliste au sens classique, ni à placer un personnage ordinaire dans un décor. Je fais entrer une muse irréelle dans un lieu réel d’exception, afin de créer une rencontre singulière entre imaginaire, mode et architecture.</p>
+      </div>
+    `
+  },
+
+  { type: "image", file: "7.png" },
+
+  {
+    type: "text",
+    title: "Page 8",
+    html: `
+      <div class="text-body">
+        <p>Ma création naît d’un dialogue entre le réel et l’irréel.</p>
+        <p>Je compose des rencontres entre des lieux contemporains, forts, ancrés dans le monde, et des muses non contemporaines, irréelles, mais profondément présentes.</p>
+      </div>
+    `
+  },
+
+  { type: "image", file: "9.png" },
+
+  {
+    type: "text",
+    title: "Page 10",
+    html: `
+      <div class="text-body">
+        <p>Ces muses ne sont pas posées dans un décor.</p>
+        <p>Dans mon regard, elles appartiennent déjà au lieu.</p>
+        <p>Comme si elles en avaient traversé le temps,</p>
+        <p>comme si leur élégance, leur mystère et leur force avaient toujours vécu entre ces murs.</p>
+        <p>L’hôtel Le Meurice, vous y entrez, son histoire vous attrape. Quand vous rentrez dans les lieux, vous êtes happé par quelque chose d’indéfinissable, par toutes les grandes têtes qui ont marqué leur empreinte dans ce lieu.</p>
+      </div>
+    `
+  },
+
+  { type: "image", file: "11.png" },
+
+  {
+    type: "text",
+    title: "Page 12",
+    html: `
+      <div class="text-body">
+        <p>Dalí a séjourné ici. Ma muse n’efface rien. Elle rallume le décor.</p>
+        <p>On n’honore pas un artiste en le laissant immobile dans le passé. On l’honore en laissant son esprit continuer à provoquer.</p>
+        <p>Et si, aujourd’hui, l’esprit du lieu prenait la forme d’une femme ?</p>
+        <p>Ma muse ne prend pas la place de Dalí. Elle réveille son élan dans le décor.</p>
+        <p>Il a traversé ce lieu. Elle en ravive la mémoire.</p>
+      </div>
+    `
+  },
+
+  { type: "image", file: "13.png" }
+];
+
+const pagesContainer = document.getElementById("pagesContainer");
+const pageNumber = document.getElementById("pageNumber");
+const navButtons = document.getElementById("navButtons");
+
+pageItems.forEach((item, index) => {
+  const page = document.createElement("div");
+  page.className = "page";
+
+  if (item.type === "image") {
+    const card = document.createElement("div");
+    card.className = "page-card image-card";
+
+    const img = document.createElement("img");
+    img.src = `images/${item.file}`;
+    img.alt = `Image ${index + 1}`;
+    img.loading = index < 4 ? "eager" : "lazy";
+    img.decoding = "async";
+    img.draggable = false;
+
+    const signature = document.createElement("div");
+    signature.className = "page-signature";
+    signature.textContent = "ABDZ Creations®";
+
+    card.appendChild(img);
+    page.appendChild(card);
+    page.appendChild(signature);
+  }
+
+  if (item.type === "text") {
+    const textCard = document.createElement("div");
+    textCard.className = "page-card text-card";
+    textCard.innerHTML = `
+      <div class="text-inner">
+        <h2 class="text-title">${item.title}</h2>
+        ${item.html}
+      </div>
+    `;
+
+    const textSignature = document.createElement("div");
+    textSignature.className = "text-signature";
+    textSignature.textContent = "ABDZ Creations®";
+
+    page.appendChild(textCard);
+    page.appendChild(textSignature);
+  }
+
+  pagesContainer.appendChild(page);
+});
+
+const pages = Array.from(document.querySelectorAll(".page"));
+let currentPage = 0;
+let controlsTimeout;
+let touchStartX = 0;
+let touchEndX = 0;
+
+function isDesktop(){
+  return window.innerWidth >= 1024;
+}
+
+function canPair(index){
+  if (!isDesktop()) return false;
+  if (index < 0 || index >= pages.length - 1) return false;
+  return true;
+}
+
+function render(){
+  pages.forEach(page => page.classList.remove("active"));
+  pagesContainer.classList.remove("double-layout");
+
+  if (!pages[currentPage]) return;
+
+  const isLastPage = currentPage === pages.length - 1;
+
+  if (isDesktop() && canPair(currentPage) && !isLastPage) {
+    pages[currentPage].classList.add("active");
+    pages[currentPage + 1].classList.add("active");
+    pagesContainer.classList.add("double-layout");
+    pageNumber.textContent = `Pages ${currentPage + 1}-${currentPage + 2} / ${pages.length}`;
+    return;
+  }
+
+  pages[currentPage].classList.add("active");
+  pageNumber.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+}
+
+function nextPage(){
+  if (isDesktop()) {
+    currentPage += canPair(currentPage) ? 2 : 1;
+  } else {
+    currentPage += 1;
+  }
+
+  if (currentPage >= pages.length) {
+    window.location.href = "intro.html?mode=outro";
+    return;
+  }
+
+  render();
+}
+
+function prevPage(){
+  if (isDesktop()) {
+    const previousStart = currentPage - 2;
+
+    if (currentPage <= 0) {
+      currentPage = 0;
+    } else if (previousStart >= 0 && canPair(previousStart)) {
+      currentPage = previousStart;
+    } else {
+      currentPage -= 1;
+    }
+  } else {
+    currentPage -= 1;
+  }
+
+  if (currentPage < 0) {
+    currentPage = 0;
+  }
+
+  render();
+}
+
+function showControls(){
+  navButtons.classList.add("controls-visible");
+  clearTimeout(controlsTimeout);
+  controlsTimeout = setTimeout(() => {
+    navButtons.classList.remove("controls-visible");
+  }, 2200);
+}
+
+document.addEventListener("mousemove", showControls);
+document.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+  showControls();
+});
+
+document.addEventListener("touchend", e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+document.addEventListener("keydown", (event) => {
+  showControls();
+  if (event.key === "ArrowRight") nextPage();
+  if (event.key === "ArrowLeft") prevPage();
+});
+
+document.addEventListener("click", showControls);
+
+function handleSwipe(){
+  if (touchEndX < touchStartX - 50){
+    nextPage();
+  }
+  if (touchEndX > touchStartX + 50){
+    prevPage();
+  }
+}
+
+window.addEventListener("resize", render);
+
+showControls();
+
+document.addEventListener("contextmenu", function(e){
+  e.preventDefault();
+});
+
+document.addEventListener("dragstart", function(e){
+  e.preventDefault();
+});
+
+render();
+</script>
+
+</body>
+</html>
