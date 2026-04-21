@@ -75,19 +75,20 @@
     max-height:70vh;
   }
 
-video::-webkit-media-controls-start-playback-button {
-  display: none !important;
-  -webkit-appearance: none;
-}
+  video::-webkit-media-controls-start-playback-button {
+    display:none !important;
+    -webkit-appearance:none;
+  }
 
-video::-webkit-media-controls-overlay-play-button {
-  display: none !important;
-}
+  video::-webkit-media-controls-overlay-play-button {
+    display:none !important;
+  }
 
-video::-webkit-media-controls-play-button {
-  display: none !important;
-}
-    a.cta{
+  video::-webkit-media-controls-play-button {
+    display:none !important;
+  }
+
+  a.cta{
     display:inline-block;
     margin-top:8px;
     padding:14px 28px;
@@ -143,8 +144,8 @@ video::-webkit-media-controls-play-button {
 
 <body>
 <div class="container">
-  <h1 id="mainTitle">LE MEURICE — OUVERTURE</h1>
-  <p class="sous-titre" id="subTitle">Une entrée dans l’univers éditorial du Meurice.</p>
+  <h1 id="mainTitle">LE MEURICE — PRÉLUDE</h1>
+  <p class="sous-titre" id="subTitle">Une interprétation éditoriale inspirée du lieu</p>
   <p class="helper" id="helperText"></p>
 
   <div class="video-wrapper">
@@ -192,8 +193,8 @@ video::-webkit-media-controls-play-button {
     }, { once: true });
 
   } else {
-    mainTitle.textContent = "LE MEURICE — OUVERTURE";
-    subTitle.textContent = "Une entrée dans l’univers éditorial du Meurice.";
+    mainTitle.textContent = "LE MEURICE — PRÉLUDE";
+    subTitle.textContent = "Une interprétation éditoriale inspirée du lieu";
     helperText.textContent = "";
     source.src = "VIDEOS/intro.mp4";
     video.setAttribute("poster", "VIDEOS/intro-poster.png");
