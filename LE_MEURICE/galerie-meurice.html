@@ -344,14 +344,14 @@
   <div class="viewer">
     <div class="topbar">
       <h1>GALERIE DES MUSES</h1>
-      <p id="galleryHelper">Touchez l’image pour l’ouvrir. Bouton doré : déplacer.</p>
+      <p id="galleryHelper">Touchez une image pour la découvrir. Le bouton doré permet de la déplacer.</p>
     </div>
 
     <div class="gallery-grid" id="galleryGrid"></div>
 
     <div class="bottom-actions">
       <a class="btn btn-dark" href="transition.html">← Page précédente</a>
-      <a class="btn btn-gold" href="intro.html">REVENIR AU DÉBUT</a>
+      <a class="btn btn-gold" href="fin-galerie.html">VOIR LA FINALE</a>
     </div>
   </div>
 
@@ -373,35 +373,7 @@
     { file: "5.png", title: "AZELIA" },
     { file: "6.png", title: "AZURA" },
     { file: "7.png", title: "BELLADORA" },
-    { file: "8.png", title: "BIANCA" },
-    { file: "9.png", title: "CATERINA" },
-    { file: "10.png", title: "CELESTIA" },
-    { file: "11.png", title: "DIVA" },
-    { file: "12.png", title: "DORÉLIA" },
-    { file: "13.png", title: "ELEONORA" },
-    { file: "14.png", title: "ELISABETTA" },
-    { file: "15.png", title: "ELODIA" },
-    { file: "16.png", title: "ELVIRA" },
-    { file: "17.png", title: "ESMERALDA" },
-    { file: "18.png", title: "FLORIANA" },
-    { file: "19.png", title: "GIULIANA" },
-    { file: "20.png", title: "ISADORA" },
-    { file: "21.png", title: "LORENA" },
-    { file: "22.png", title: "NOEMIA" },
-    { file: "23.png", title: "NYMPHEA" },
-    { file: "24.png", title: "ORNELLA" },
-    { file: "25.png", title: "PERLA" },
-    { file: "26.png", title: "SAYURA" },
-    { file: "27.png", title: "SCARLETTA" },
-    { file: "28.png", title: "SERAFINA" },
-    { file: "29.png", title: "SERENA" },
-    { file: "30.png", title: "SOFIA" },
-    { file: "31.png", title: "SOLÉA" },
-    { file: "32.png", title: "SWANA" },
-    { file: "33.png", title: "VALENTINA" },
-    { file: "34.png", title: "VICTORIA" },
-    { file: "35.png", title: "VITTORIA" },
-    { file: "36.png", title: "VIVIANA" }
+    { file: "8.png", title: "BIANCA" }
   ];
 
   const galleryGrid = document.getElementById("galleryGrid");
@@ -420,9 +392,9 @@
 
   function updateHelperText() {
     if (window.innerWidth < 768) {
-      galleryHelper.textContent = "Faites défiler la galerie vers le haut. Touchez une image pour l’ouvrir.";
+      galleryHelper.textContent = "Touchez une image pour la découvrir.";
     } else {
-      galleryHelper.textContent = "Touchez l’image pour l’ouvrir. Bouton doré : déplacer.";
+      galleryHelper.textContent = "Touchez une image pour la découvrir. Le bouton doré permet de la déplacer.";
     }
   }
 
@@ -549,4 +521,3 @@
 </script>
 </body>
 </html>
-
