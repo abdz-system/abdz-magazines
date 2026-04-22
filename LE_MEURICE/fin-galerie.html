@@ -1,1 +1,143 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LE MEURICE — Finale</title>
+
+<style>
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    color:#fff;
+    background:
+      radial-gradient(circle at top,#3a2d1a 0%,#111 45%,#000 100%);
+  }
+
+  .viewer{
+    width:100%;
+    max-width:980px;
+    background:rgba(20,20,20,0.94);
+    border:1px solid rgba(212,166,77,0.28);
+    border-radius:24px;
+    padding:22px;
+    text-align:center;
+    box-shadow:
+      0 14px 40px rgba(0,0,0,0.38),
+      0 0 28px rgba(180,139,67,0.08);
+    backdrop-filter:blur(6px);
+  }
+
+  .title{
+    margin:0 0 14px 0;
+    font-family:"Playfair Display","Times New Roman",serif;
+    font-size:34px;
+    font-weight:600;
+    letter-spacing:1px;
+    color:#f4e8cf;
+    text-transform:uppercase;
+  }
+
+  .video-wrap{
+    border-radius:18px;
+    overflow:hidden;
+    background:#000;
+    box-shadow:0 14px 30px rgba(0,0,0,0.4);
+  }
+
+  video{
+    display:block;
+    width:100%;
+    max-height:76vh;
+    background:#000;
+  }
+
+  .actions{
+    margin-top:18px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .btn{
+    display:inline-block;
+    padding:14px 28px;
+    border-radius:999px;
+    text-decoration:none;
+    background:#b48b43;
+    color:#fff;
+    font-size:17px;
+    letter-spacing:0.5px;
+    font-weight:500;
+    text-transform:uppercase;
+    box-shadow:0 8px 22px rgba(0,0,0,0.35);
+    transition:0.25s ease;
+  }
+
+  .btn:hover{
+    background:#d4a64d;
+    transform:translateY(-2px);
+  }
+
+  @media (max-width:768px){
+    body{
+      padding:12px;
+    }
+
+    .viewer{
+      padding:14px;
+      border-radius:18px;
+    }
+
+    .title{
+      font-size:24px;
+      margin-bottom:12px;
+    }
+
+    video{
+      max-height:62vh;
+    }
+
+    .btn{
+      font-size:15px;
+      padding:12px 22px;
+    }
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="viewer">
+    <h1 class="title">FINALE</h1>
+
+    <div class="video-wrap">
+      <video
+        controls
+        autoplay
+        muted
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        poster="VIDEOS/fin-galerie-poster.png">
+        <source src="VIDEOS/fin-galerie.mp4" type="video/mp4">
+        Votre navigateur ne peut pas lire cette vidéo.
+      </video>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="intro.html">REVENIR AU DÉBUT</a>
+    </div>
+  </div>
+</body>
+</html>
