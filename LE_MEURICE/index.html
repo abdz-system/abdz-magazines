@@ -189,10 +189,11 @@ body{
 }
 
 .nav-buttons{
-  margin-top:20px;
+  margin-top:18px;
   display:flex;
-  justify-content:space-between;
-  gap:12px;
+  justify-content:center;
+  align-items:center;
+  gap:34px;
   opacity:0;
   transition:opacity 0.35s ease;
   pointer-events:none;
@@ -203,24 +204,35 @@ body{
   pointer-events:auto;
 }
 
-button{
-  flex:1;
-  background:linear-gradient(180deg,#2a2118 0%,#120f0c 100%);
-  color:#f6ead2;
-  padding:12px 20px;
-  border:1px solid rgba(180,139,67,0.5);
-  border-radius:10px;
+.nav-arrow{
+  width:0;
+  height:0;
+  padding:0;
+  border:none;
+  background:transparent;
   cursor:pointer;
-  font-size:15px;
+  filter:drop-shadow(0 4px 7px rgba(0,0,0,0.18));
   transition:0.25s ease;
 }
 
-button:hover{
-  background:linear-gradient(180deg,#4b3620 0%,#1c1712 100%);
-  transform:translateY(-1px);
+.nav-prev{
+  border-top:14px solid transparent;
+  border-bottom:14px solid transparent;
+  border-right:22px solid #b48b43;
 }
 
-.page-number{
+.nav-next{
+  border-top:14px solid transparent;
+  border-bottom:14px solid transparent;
+  border-left:22px solid #b48b43;
+}
+
+.nav-arrow:hover{
+  transform:translateY(-1px) scale(1.08);
+  filter:drop-shadow(0 5px 9px rgba(0,0,0,0.24));
+}
+
+  .page-number{
   margin-top:12px;
   font-size:14px;
   color:#8d6a39;
@@ -238,11 +250,6 @@ button:hover{
   .viewer{
     padding:14px;
     border-radius:16px;
-  }
-
-  button{
-    font-size:14px;
-    padding:11px 14px;
   }
 
   .page.active{
@@ -397,10 +404,24 @@ button:hover{
     gap:8px;
   }
 
-  button{
-    font-size:13px;
-    padding:10px 12px;
-  }
+.nav-buttons{
+  margin-top:10px;
+  gap:28px;
+}
+
+.nav-prev{
+  border-top:11px solid transparent;
+  border-bottom:11px solid transparent;
+  border-right:18px solid #b48b43;
+}
+
+.nav-next{
+  border-top:11px solid transparent;
+  border-bottom:11px solid transparent;
+  border-left:18px solid #b48b43;
+}
+
+  
 
   .page-number{
     font-size:12px;
@@ -416,11 +437,11 @@ button:hover{
 <div class="viewer">
   <div class="pages" id="pagesContainer"></div>
 
-  <div class="nav-buttons controls-visible" id="navButtons">
-    <button type="button" onclick="prevPage()">← Page précédente</button>
-    <button type="button" onclick="nextPage()">Page suivante →</button>
-  </div>
-
+<div class="nav-buttons controls-visible" id="navButtons">
+  <button class="nav-arrow nav-prev" type="button" onclick="prevPage()" aria-label="Page précédente"></button>
+  <button class="nav-arrow nav-next" type="button" onclick="nextPage()" aria-label="Page suivante"></button>
+</div>
+  
   <div class="page-number" id="pageNumber"></div>
 </div>
 
