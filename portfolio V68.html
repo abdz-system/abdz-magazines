@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ABDZ Portfolio V68</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="app" aria-live="polite">
+      <section id="cover" class="screen is-active" aria-label="Ouverture ABDZ">
+        <figure class="visual-frame">
+          <img src="images/ouverture.png" alt="Portfolio ABDZ 2025/2026 - ouverture" />
+          <button id="enterButton" class="enter-button" type="button" aria-label="Entrer dans le portfolio">
+            <span class="touch-pulse pulse-one" aria-hidden="true"></span>
+            <span class="touch-pulse pulse-two" aria-hidden="true"></span>
+            <span class="touch-pulse pulse-three" aria-hidden="true"></span>
+          </button>
+        </figure>
+      </section>
+
+      <section id="summary" class="screen" aria-label="Sommaire ABDZ">
+        <figure class="visual-frame">
+          <img src="images/sommaire.png" alt="Sommaire ABDZ" />
+          <div id="summaryLinks" class="summary-links" aria-label="Lignes du sommaire"></div>
+          <button id="summaryReturnHome" class="summary-home-link" type="button" hidden>RETOUR ACCUEIL</button>
+        </figure>
+      </section>
+
+      <section id="detail" class="screen" aria-label="Page portfolio ABDZ">
+        <div class="toolbar">
+          <button id="backButton" class="ui-button" type="button">Sommaire</button>
+          <span id="counter" class="counter">01 / 12</span>
+        </div>
+
+        <figure class="visual-frame">
+          <img id="pageImage" src="images/01-12.png" alt="Portfolio ABDZ - page 01 sur 12" />
+          <div id="cardLinks" class="card-links" aria-label="Liens carte de visite"></div>
+          <div id="pageLinks" class="page-links" aria-label="Liens de page"></div>
+        </figure>
+
+        <button id="prevButton" class="slide-button slide-prev" type="button" aria-label="Page précédente">‹</button>
+        <button id="nextButton" class="slide-button slide-next" type="button" aria-label="Page suivante">›</button>
+      </section>
+    </main>
+
+    <div id="videoModal" class="video-modal" hidden role="dialog" aria-modal="true" aria-label="Lecteur video">
+      <div class="video-panel">
+        <button id="closeVideo" class="video-close" type="button" aria-label="Fermer la video">FERMER</button>
+        <video id="portfolioVideo" controls playsinline preload="metadata"></video>
+      </div>
+    </div>
+
+    <div id="siteModal" class="site-modal" hidden role="dialog" aria-modal="true" aria-label="Lien interactif">
+      <div class="site-panel">
+        <button id="closeSite" class="site-close" type="button" aria-label="Fermer le lien">FERMER</button>
+        <iframe id="siteFrame" title="Lien interactif ABDZ" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div id="galleryModal" class="gallery-modal" hidden role="dialog" aria-modal="true" aria-label="Galerie accessoires">
+      <div class="gallery-panel">
+        <button id="closeGallery" class="gallery-close" type="button" aria-label="Fermer la galerie">FERMER</button>
+        <button id="prevGallery" class="gallery-nav gallery-prev" type="button" aria-label="Visuel precedent">‹</button>
+        <img id="galleryImage" src="images/accessoires/1-accessoire.png" alt="Accessoire ABDZ 1 sur 5" />
+        <button id="nextGallery" class="gallery-nav gallery-next" type="button" aria-label="Visuel suivant">›</button>
+        <div id="galleryCounter" class="gallery-counter">1 / 5</div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
