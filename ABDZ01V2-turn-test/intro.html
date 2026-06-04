@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABDZ Magazine — Turn Test</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  background:radial-gradient(circle at 50% 38%, #3a2914 0%, #101010 48%, #000 100%);
+  color:#f7ead0;
+  font-family:Arial,sans-serif;
+}
+.cover{
+  width:min(92vw,560px);
+  text-align:center;
+}
+.cover img{
+  width:100%;
+  max-height:78svh;
+  object-fit:contain;
+  border-radius:16px;
+  box-shadow:0 22px 60px rgba(0,0,0,.55);
+}
+.enter{
+  margin-top:18px;
+  border:1px solid rgba(225,180,90,.65);
+  background:rgba(20,14,8,.78);
+  color:#f9e9c9;
+  border-radius:999px;
+  padding:12px 22px;
+  font-size:14px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+  <main class="cover">
+    <img src="../ABDZ01/IMAGES/couverture.png" alt="ABDZ Magazine couverture">
+    <button class="enter" type="button" onclick="location.href='index.html'">Entrer</button>
+  </main>
+</body>
+</html>
