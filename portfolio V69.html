@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ABDZ Creations - Portfolio 2025/2026</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="v69.css" />
+  </head>
+  <body>
+    <main id="app" aria-live="polite">
+      <section id="cover" class="screen is-active" aria-label="Ouverture ABDZ">
+        <figure class="visual-frame">
+          <img src="images/ouverture.png" alt="Portfolio ABDZ 2025/2026 - ouverture" />
+          <button id="enterButton" class="enter-button" type="button" aria-label="Entrer dans le portfolio">
+            <span class="touch-pulse pulse-one" aria-hidden="true"></span>
+            <span class="touch-pulse pulse-two" aria-hidden="true"></span>
+            <span class="touch-pulse pulse-three" aria-hidden="true"></span>
+          </button>
+        </figure>
+      </section>
+
+      <section id="summary" class="screen" aria-label="Sommaire ABDZ">
+        <div class="summary-shell">
+          <header class="summary-header">
+            <img src="images/logo-abdz-final.png" alt="ABDZ Creations" />
+            <div>
+              <p class="eyebrow">Portfolio 2025/2026</p>
+              <h1>ABDZ Creations<sup>®</sup></h1>
+              <p>Signature créative indépendante d'une styliste autodidacte</p>
+            </div>
+          </header>
+          <p class="portfolio-disclosure">Les projets présentés sont des créations propriétaires, des univers créatifs autonomes et des études créatives personnelles développés par ABDZ.</p>
+          <div class="summary-groups" id="summaryLinks" aria-label="Sommaire du portfolio">
+            <section class="summary-group summary-intro">
+              <p class="group-label">Signature créative indépendante</p>
+              <button type="button" data-page="0"><span>01</span><strong>Qui suis-je ?</strong><small>Vision, positionnement et savoir-faire</small></button>
+            </section>
+            <section class="summary-group summary-signatures">
+              <p class="group-label">Créations propriétaires ABDZ</p>
+              <button type="button" data-page="1"><span>02</span><strong>Caméléon</strong><small>Parfum et mécanisme breveté</small></button>
+              <button type="button" data-page="2"><span>03</span><strong>Innocence</strong><small>Bague manifeste</small></button>
+              <button type="button" data-page="3"><span>04</span><strong>Muses Metamorphosis</strong><small>Univers créatif autonome</small></button>
+              <button type="button" data-page="4"><span>05</span><strong>ABDZ Magazine</strong><small>Édition et direction artistique</small></button>
+            </section>
+            <section class="summary-group">
+              <p class="group-label">Univers, études et applications</p>
+              <button type="button" data-page="5"><span>06</span><strong>Accessoires ABDZ</strong><small>Univers créatif autonome</small></button>
+              <button type="button" data-page="6"><span>07</span><strong>Lieux d'exception</strong><small>Étude créative non commandée</small></button>
+              <button type="button" data-page="7"><span>08</span><strong>Studio ABDZ</strong><small>Espace créatif virtuel, demain lieu physique</small></button>
+              <button type="button" data-page="8"><span>09</span><strong>Ambassadrices ABDZ</strong><small>Univers créatif autonome</small></button>
+              <button type="button" data-page="9"><span>10</span><strong>Vidéos et YouTube</strong></button>
+              <button type="button" data-page="10"><span>11</span><strong>Slogans ABDZ</strong><small>Écriture et identité de marque</small></button>
+              <button type="button" data-page="11"><span>12</span><strong>Contact</strong></button>
+            </section>
+          </div>
+          <button id="summaryReturnHome" class="summary-home-link" type="button">Retour accueil</button>
+        </div>
+      </section>
+
+      <section id="detail" class="screen" aria-label="Page portfolio ABDZ">
+        <div class="toolbar">
+          <button id="backButton" class="ui-button" type="button">Sommaire</button>
+          <div class="project-meta">
+            <div class="project-heading"><span id="projectCategory"></span><strong id="projectTitle"></strong></div>
+            <div id="interactionBadge" class="interaction-badge" hidden></div>
+          </div>
+          <span id="counter" class="counter">01 / 12</span>
+        </div>
+
+        <article id="profilePage" class="profile-page">
+          <div class="profile-logo"><img src="images/logo-abdz-final.png" alt="ABDZ Creations" /></div>
+          <div class="profile-copy">
+            <p class="eyebrow">Signature créative indépendante</p>
+            <h1>ABDZ Creations</h1>
+            <p class="profile-role">Styliste et créatrice autodidacte</p>
+            <ul class="profile-credentials">
+              <li>Fondatrice d'ABDZ Magazine</li>
+              <li>Mode · Art · Symboles</li>
+              <li>Mécanisme de parfum — Brevet</li>
+            </ul>
+            <p>Styliste et créatrice autodidacte, j'ai construit ABDZ Creations® à travers des projets personnels menés de l'idée jusqu'à leur réalisation.</p>
+            <p>J'imagine des univers visuels à partir d'une histoire, d'un objet, d'un lieu ou d'une identité. L'intelligence artificielle fait partie de mes outils, mais la vision, la direction artistique et les choix créatifs sont les miens.</p>
+            <p>Aujourd'hui, j'ouvre cet univers à des collaborations avec des marques, artistes et organisations.</p>
+            <div class="capabilities" aria-label="Savoir-faire">
+              <span>Direction artistique</span><span>Storytelling visuel</span><span>Identité</span><span>Campagnes</span><span>Visuels et vidéos</span>
+            </div>
+            <div class="profile-actions">
+              <button id="discoverButton" class="primary-action" type="button">Découvrir les projets</button>
+              <button id="offerButton" class="profile-link-button" type="button">Offre commerciale</button>
+              <a href="mailto:esmeralda@fashion19.fr">esmeralda@fashion19.fr</a>
+            </div>
+            <p class="profile-signature">AI is my medium. ABDZ is my voice.</p>
+          </div>
+        </article>
+
+        <figure id="projectFrame" class="visual-frame">
+          <img id="pageImage" src="images/03-12.png" alt="Portfolio ABDZ" />
+          <div id="cardLinks" class="card-links" aria-label="Liens carte de visite"></div>
+          <div id="pageLinks" class="page-links" aria-label="Liens de page"></div>
+        </figure>
+
+        <button id="prevButton" class="slide-button slide-prev" type="button" aria-label="Page précédente">&lsaquo;</button>
+        <button id="nextButton" class="slide-button slide-next" type="button" aria-label="Page suivante">&rsaquo;</button>
+      </section>
+    </main>
+
+    <div id="videoModal" class="video-modal" hidden role="dialog" aria-modal="true" aria-label="Lecteur vidéo">
+      <div class="video-panel">
+        <div id="videoSequenceCounter" class="video-sequence-counter" hidden>1 / 4</div>
+        <button id="closeVideo" class="video-close" type="button" aria-label="Fermer la vidéo">Fermer</button>
+        <video id="portfolioVideo" controls playsinline preload="metadata"></video>
+      </div>
+    </div>
+    <div id="siteModal" class="site-modal" hidden role="dialog" aria-modal="true" aria-label="Lien interactif">
+      <div class="site-panel">
+        <button id="closeSite" class="site-close" type="button" aria-label="Fermer le lien">Fermer</button>
+        <iframe id="siteFrame" title="Lien interactif ABDZ" loading="lazy"></iframe>
+      </div>
+    </div>
+    <div id="galleryModal" class="gallery-modal" hidden role="dialog" aria-modal="true" aria-label="Galerie accessoires">
+      <div class="gallery-panel">
+        <button id="closeGallery" class="gallery-close" type="button" aria-label="Fermer la galerie">Fermer</button>
+        <button id="prevGallery" class="gallery-nav gallery-prev" type="button" aria-label="Visuel précédent">&lsaquo;</button>
+        <img id="galleryImage" src="images/accessoires/1-accessoire.png" alt="Accessoire ABDZ 1 sur 5" />
+        <button id="nextGallery" class="gallery-nav gallery-next" type="button" aria-label="Visuel suivant">&rsaquo;</button>
+        <div id="galleryCounter" class="gallery-counter">1 / 5</div>
+      </div>
+    </div>
+    <div id="offerModal" class="offer-modal" hidden role="dialog" aria-modal="true" aria-label="Offre commerciale ABDZ">
+      <div class="offer-panel">
+        <div class="offer-toolbar">
+          <strong>ABDZ Creations — Offre commerciale</strong>
+          <button id="closeOffer" class="offer-close" type="button">Fermer</button>
+        </div>
+        <div id="offerPages" class="offer-pages" aria-live="polite"></div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="offer-viewer.js"></script>
+  </body>
+</html>
