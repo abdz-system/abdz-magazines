@@ -234,9 +234,34 @@ body{
   background:rgba(214,169,77,.18);
   color:#fff5c9;
 }
+.portfolio-return{
+  position:fixed;
+  top:max(14px,env(safe-area-inset-top));
+  right:max(14px,env(safe-area-inset-right));
+  z-index:60;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(255,215,130,.85);
+  border-radius:999px;
+  padding:11px 16px;
+  color:#fff3cf;
+  background:rgba(8,7,5,.9);
+  box-shadow:0 0 24px rgba(214,169,77,.24);
+  font:700 11px/1 Arial,sans-serif;
+  letter-spacing:.08em;
+  text-decoration:none;
+  text-transform:uppercase;
+  backdrop-filter:blur(8px);
+}
+.portfolio-return:hover{background:rgba(70,45,14,.94)}
+@media (max-width:700px){
+  .portfolio-return{top:8px;right:8px;padding:9px 12px;font-size:9px}
+}
 </style>
 </head>
 <body>
+<a class="portfolio-return" href="https://abdz-system.github.io/abdz-portfolio/#sommaire" aria-label="Fermer le magazine et revenir au sommaire">✕ Fermer le magazine</a>
 <audio id="ambientMusicA" src="../ABDZ01/AUDIOS/abdz-music.mp3" preload="auto"></audio>
 <audio id="ambientMusicB" src="../ABDZ01/AUDIOS/abdz-music.mp3" preload="auto"></audio>
 <main class="viewer">
