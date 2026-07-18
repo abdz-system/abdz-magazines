@@ -92,10 +92,34 @@
     background:#d4a64d;
     transform:translateY(-3px);
   }
+
+  a.portfolio-return{
+    position:fixed;
+    top:max(14px,env(safe-area-inset-top));
+    right:max(14px,env(safe-area-inset-right));
+    z-index:20;
+    display:inline-flex;
+    align-items:center;
+    border:1px solid rgba(255,215,130,.85);
+    border-radius:999px;
+    padding:11px 16px;
+    color:#fff3cf;
+    background:rgba(8,7,5,.9);
+    box-shadow:0 0 24px rgba(214,169,77,.24);
+    font:700 11px/1 Arial,sans-serif;
+    letter-spacing:.08em;
+    text-decoration:none;
+    text-transform:uppercase;
+  }
+  a.portfolio-return:hover{background:rgba(70,45,14,.94);transform:none}
+  @media (max-width:700px){
+    a.portfolio-return{top:8px;right:8px;padding:9px 12px;font-size:9px}
+  }
 </style>
 </head>
 
 <body>
+<a class="portfolio-return" href="https://abdz-system.github.io/abdz-portfolio/#sommaire" aria-label="Fermer le magazine et revenir au sommaire">✕ Fermer le magazine</a>
 <div class="container">
   <h1 id="mainTitle">ABDZ — PORTE D’OUVERTURE</h1>
   <p class="sous-titre" id="subTitle">Une porte d’entrée vers l’univers éditorial ABDZ.</p>
