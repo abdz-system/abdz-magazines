@@ -261,7 +261,7 @@ body{
 </style>
 </head>
 <body>
-<a class="portfolio-return" href="https://abdz-system.github.io/abdz-portfolio/#sommaire" aria-label="Fermer le magazine et revenir au sommaire">✕ Fermer le magazine</a>
+<a class="portfolio-return" id="portfolioReturn" href="https://abdz-system.github.io/abdz-portfolio/#sommaire" aria-label="Fermer le magazine">✕ Fermer le magazine</a>
 <audio id="ambientMusicA" src="../ABDZ01/AUDIOS/abdz-music.mp3" preload="auto"></audio>
 <audio id="ambientMusicB" src="../ABDZ01/AUDIOS/abdz-music.mp3" preload="auto"></audio>
 <main class="viewer">
@@ -277,6 +277,17 @@ body{
   </footer>
 </main>
 <script>
+const magazineParams = new URLSearchParams(window.location.search);
+const magazineFrom = magazineParams.get("from");
+const portfolioReturn = document.getElementById("portfolioReturn");
+portfolioReturn.addEventListener("click", event => {
+  if (magazineFrom !== "unreal-girl") return;
+  event.preventDefault();
+  window.close();
+  window.setTimeout(() => {
+    portfolioReturn.textContent = "FERMEZ CET ONGLET POUR REVENIR";
+  }, 180);
+});
 const musicTracks = [
   document.getElementById("ambientMusicA"),
   document.getElementById("ambientMusicB")
@@ -467,7 +478,7 @@ function goToPage(nextIndex, direction){
   if (isAnimating) return;
   if (nextIndex < 0) nextIndex = 0;
   if (nextIndex >= pages.length) {
-    window.location.href = "intro.html?mode=outro";
+    window.location.href = `intro.html?mode=outro${magazineFrom ? `&from=${encodeURIComponent(magazineFrom)}` : ""}`;
     return;
   }
   isAnimating = true;
